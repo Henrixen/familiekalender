@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ukeplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F5F1;
+    --surface:#FFFFFF;
+    --surface-alt:#FAFAF7;
+    --ink:#1E2420;
+    --ink-soft:#848C82;
+    --line:#E7E9E2;
+    --milla:#E1508C;
+    --milla-soft:#FCE4EF;
+    --jonathan:#2FA36B;
+    --jonathan-soft:#E1F4EA;
+    --today:#E29A34;
+    --today-soft:#FBEBD1;
+    --skole:#A7ABA0;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(30,36,32,.04), 0 4px 14px rgba(30,36,32,.05);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-user-select:none;user-select:none;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1600px;margin:0 auto;padding:18px 24px 90px;}
+
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .mark{width:34px;height:34px;flex:none;}
+  .brand h1{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin:0;letter-spacing:-0.01em;line-height:1;}
+  .brand .sub{font-size:12px;color:var(--ink-soft);display:block;margin-top:1px;}
+  .weeknav{display:flex;align-items:center;gap:10px;}
+  .weeknav button{
+    width:36px;height:36px;border-radius:50%;border:none;
+    background:var(--surface);font-size:16px;color:var(--ink);cursor:pointer;box-shadow:var(--shadow);
+  }
+  .weeknav .range{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;min-width:170px;text-align:center;}
+  .weeknav .thisweek{
+    font-size:12px;font-weight:600;color:var(--jonathan);border:none;border-radius:20px;
+    padding:8px 14px;background:var(--jonathan-soft);cursor:pointer;
+  }
+  .clock{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:var(--ink-soft);}
+
+  /* hero matpakke banner */
+  .hero{
+    display:flex;align-items:center;gap:22px;background:var(--surface);
+    border-radius:var(--radius);padding:14px 22px;margin-bottom:14px;box-shadow:var(--shadow);
+  }
+  .hero .label{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  .hero .items{display:flex;gap:30px;flex-wrap:wrap;}
+  .hero .child{display:flex;align-items:center;gap:9px;}
+  .hero .child .glyph{font-size:16px;line-height:1;}
+  .hero .child .name{font-weight:700;font-size:15px;}
+  .hero .child.milla .name{color:var(--milla);}
+  .hero .child.jonathan .name{color:var(--jonathan);}
+  .hero .lunchrow{display:flex;gap:4px;}
+  .hero .lunchrow svg{width:20px;height:17px;}
+  .hero .count{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);margin-left:1px;}
+  .hero.noschool{color:var(--ink-soft);font-style:italic;}
+
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+  .day{
+    background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);
+    display:flex;flex-direction:column;min-height:440px;overflow:hidden;
+  }
+  .day.weekend{background:var(--surface-alt);box-shadow:none;border:1px solid var(--line);}
+  .day.today{box-shadow:0 0 0 2px var(--today), var(--shadow);}
+  .day .dhead{padding:12px 13px 9px;border-bottom:1px solid var(--line);}
+  .day .dname{font-family:'Fraunces',serif;font-size:17px;font-weight:600;}
+  .day.today .dname{color:var(--today);}
+  .day .ddate{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);}
+  .lunch{display:flex;gap:9px;padding:8px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .lunch .lchild{display:flex;align-items:center;gap:3px;}
+  .lunch svg{width:15px;height:13px;}
+  .dtop{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+  .sharedadd{
+    width:22px;height:22px;flex:none;border-radius:50%;border:none;
+    background:var(--surface-alt);color:var(--ink-soft);font-size:14px;line-height:1;cursor:pointer;
+  }
+  .shared{padding:7px 10px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);}
+  .split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:120px;}
+  .col{padding:8px 6px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
+  .col.milla{border-right:1px solid var(--line);}
+  .colfoot{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 8px 8px;}
+  .miniadd{
+    padding:5px 4px;border-radius:8px;border:1px dashed var(--line);background:none;
+    color:var(--ink-soft);font-size:11.5px;cursor:pointer;font-weight:600;
+  }
+  .miniadd:active{background:var(--surface-alt);}
+  .husk{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px 10px;border-top:1px solid var(--line);align-items:center;}
+  .huskchip{
+    display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;
+    font-size:11px;font-weight:600;background:var(--surface-alt);cursor:pointer;
+  }
+  .huskchip.milla{background:var(--milla-soft);color:#9c2f63;}
+  .huskchip.jonathan{background:var(--jonathan-soft);color:#1f7a4c;}
+  .huskchip.begge{background:var(--today-soft);color:#8a5a12;}
+  .huskadd{
+    border:1px dashed var(--line);background:none;border-radius:20px;padding:4px 10px;
+    font-size:11px;color:var(--ink-soft);cursor:pointer;font-weight:600;
+  }
+  .body-items{flex:1;padding:9px 10px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;}
+  .empty{color:var(--ink-soft);font-size:12px;text-align:center;padding:14px 6px;}
+  .item{
+    border-radius:11px;padding:7px 9px;font-size:12.5px;line-height:1.3;position:relative;
+    border-left:3px solid var(--ink-soft);background:var(--surface-alt);cursor:pointer;
+    display:flex;gap:7px;align-items:flex-start;
+  }
+  .day.weekend .item{background:var(--surface);}
+  .item .emo{font-size:15px;line-height:1.2;flex:none;}
+  .item .t{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;}
+  .item .ti{font-weight:600;margin-top:1px;}
+  .item .who{font-size:10.5px;color:var(--ink-soft);margin-top:1px;}
+  .item.milla{border-left-color:var(--milla);}
+  .item.jonathan{border-left-color:var(--jonathan);}
+  .item.begge{border-left-color:var(--today);}
+  .item.skole{border-left-color:var(--skole);background:transparent;border:1px dashed var(--line);border-left-width:3px;}
+  .addbtn{
+    margin:7px 10px 10px;padding:8px;border-radius:10px;border:1px dashed var(--line);
+    background:none;color:var(--ink-soft);font-size:12.5px;cursor:pointer;font-weight:600;
+  }
+  .addbtn:active{background:var(--surface-alt);}
+
+  .fab{
+    position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;font-size:22px;box-shadow:0 6px 18px rgba(30,36,32,.28);cursor:pointer;
+  }
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(20,24,17,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:20px;padding:22px;width:100%;max-width:440px;
+    max-height:88vh;overflow-y:auto;
+  }
+  .modal h2{font-family:'Fraunces',serif;font-size:22px;margin:0 0 14px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px;font-weight:600;}
+  .field input[type=text],.field input[type=time],.field select,.field textarea{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:15px;font-family:inherit;background:var(--surface);
+  }
+  .row2{display:flex;gap:10px;}
+  .row2 .field{flex:1;}
+  .whopick{display:flex;gap:8px;}
+  .whopick button{
+    flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:13px;font-weight:600;
+  }
+  .whopick button.active.milla{background:var(--milla-soft);border-color:var(--milla);color:var(--milla);}
+  .whopick button.active.jonathan{background:var(--jonathan-soft);border-color:var(--jonathan);color:var(--jonathan);}
+  .whopick button.active.begge{background:var(--today-soft);border-color:var(--today);color:#8a5a12;}
+  .typepick{display:flex;gap:8px;margin-bottom:14px;}
+  .typepick button{flex:1;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13px;cursor:pointer;}
+  .typepick button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:16px;color:var(--ink-soft);}
+  .modalbtns{display:flex;gap:10px;margin-top:6px;}
+  .btn{flex:1;padding:12px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;}
+  .btn.primary{background:var(--ink);color:#fff;}
+  .btn.ghost{background:var(--surface-alt);color:var(--ink);}
+  .btn.danger{background:#fbe2df;color:#a3392b;}
+  .tabs{display:flex;gap:6px;margin-bottom:16px;}
+  .tabs button{flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13px;cursor:pointer;}
+  .tabs button.active{background:var(--ink);color:#fff;}
+  .rulegrid{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px;}
+  .rulegrid th{font-weight:600;color:var(--ink-soft);padding:4px 2px;font-size:11px;}
+  .rulegrid td{text-align:center;padding:4px 2px;}
+  .stepper{display:flex;align-items:center;justify-content:center;gap:4px;}
+  .stepper button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--surface-alt);font-size:14px;cursor:pointer;}
+  .stepper span{font-family:'IBM Plex Mono',monospace;width:16px;text-align:center;}
+  .tplist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:12px;}
+  .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;}
+  .hint{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
+  .preview{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin:12px 0;}
+  .prevrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;}
+  .prevrow input{margin:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="20" r="13" fill="#E1508C"/>
+        <circle cx="26" cy="16" r="10" fill="#2FA36B"/>
+        <circle cx="20" cy="14" r="3" fill="#FAFAF7"/>
+      </svg>
+      <div>
+        <h1>Ukeplan</h1>
+        <span class="sub">Milla &amp; Jonathan</span>
+      </div>
+    </div>
+    <div class="weeknav">
+      <button id="prevWeek">‹</button>
+      <div class="range" id="weekRange">–</div>
+      <button id="nextWeek">›</button>
+      <button class="thisweek" id="thisWeekBtn">I dag</button>
+    </div>
+    <div class="clock" id="clock">--:--</div>
+  </header>
+
+  <div class="hero" id="hero"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<button class="fab" id="settingsFab" title="Innstillinger">⚙</button>
+
+<!-- Event modal -->
+<div class="overlay" id="eventOverlay">
+  <div class="modal">
+    <h2 id="eventTitle">Ny aktivitet</h2>
+    <div class="field">
+      <label>Dag</label>
+      <select id="fDay"></select>
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <div class="typepick" id="fType">
+        <button data-v="aktivitet" class="active">📅 Aktivitet</button>
+        <button data-v="skole">🏫 Skole</button>
+        <button data-v="husk">🎒 Husk å ta med</button>
+      </div>
+    </div>
+    <div class="row2" id="timeRow">
+      <div class="field"><label>Fra</label><input type="time" id="fStart" value="15:00"></div>
+      <div class="field"><label>Til (valgfritt)</label><input type="time" id="fEnd"></div>
+    </div>
+    <div class="field">
+      <label id="fTitleLabel">Hva</label>
+      <input type="text" id="fTitle" placeholder="F.eks. Fotballtrening">
+    </div>
+    <div class="field">
+      <label>Hvem</label>
+      <div class="whopick" id="fWho">
+        <button data-v="Milla" class="milla">⚽ Milla</button>
+        <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
+        <button data-v="Begge" class="begge">✨ Begge</button>
+      </div>
+    </div>
+    <label class="chk" id="repeatRow"><input type="checkbox" id="fRepeat"> Gjenta hver uke (fast del av ukeplanen)</label>
+    <div class="modalbtns">
+      <button class="btn danger" id="fDelete" style="display:none;">Slett</button>
+      <button class="btn ghost" id="fCancel">Avbryt</button>
+      <button class="btn primary" id="fSave">Lagre</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal" style="max-width:520px;">
+    <h2>Innstillinger</h2>
+    <div class="tabs">
+      <button class="active" data-tab="matpakker">Matpakker</button>
+      <button data-tab="ukeplan">Fast ukeplan</button>
+      <button data-tab="spond">Importer fra Spond</button>
+    </div>
+
+    <div id="tab-matpakker">
+      <p class="hint">Antall matpakker som trengs hver dag, per barn.</p>
+      <table class="rulegrid" id="ruleTable"></table>
+    </div>
+
+    <div id="tab-ukeplan" style="display:none;">
+      <p class="hint">Dette er den faste ukeplanen (skole m.m.) som gjentas hver uke.</p>
+      <div class="tplist" id="tplList"></div>
+      <button class="btn ghost" id="tplAdd" style="width:100%;">+ Legg til fast avtale</button>
+    </div>
+
+    <div id="tab-spond" style="display:none;">
+      <p class="hint">Ingen automatisk kobling ennå, men du kan lime inn innhold her. To måter:<br>
+      <b>1) Kalenderfil (anbefalt):</b> lim inn rå ICS-tekst (den som starter med "BEGIN:VCALENDAR") — f.eks. fra Spond sin kalender-lenke (Innstillinger → Kalendersynkronisering i Spond-appen) eller eksportert fra Apple Kalender. Tolkes automatisk og nøyaktig.<br>
+      <b>2) Fritekst:</b> lim inn en enkel liste, så gjetter vi dag/klokkeslett.<br>
+      Legges til i uken som vises nå (<span id="spondWeekLbl"></span>).</p>
+      <textarea id="spondInput" rows="6" placeholder="F.eks.:
+BEGIN:VCALENDAR
+BEGIN:VEVENT
+...
+eller enkelt:
+Mandag 17:00 Fotballtrening - Jonathan
+Onsdag 16:30-17:30 Håndball Milla"></textarea>
+      <button class="btn ghost" id="spondParse" style="width:100%;margin-top:10px;">Tolk tekst</button>
+      <div class="preview" id="spondPreview"></div>
+      <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte</button>
+    </div>
+
+    <div class="modalbtns">
+      <button class="btn primary" id="settingsClose" style="flex:1;">Lukk</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ---------- Supabase-backed storage shim ----------
+// Erstatter Claude-artifact sin innebygde window.storage med en ekte database,
+// slik at appen fungerer når den ligger på egen URL (f.eks. Vercel).
+// Fyll inn egne verdier fra Supabase-prosjektet ditt (Project Settings → API):
+const SUPABASE_URL = 'https://DITT-PROSJEKT.supabase.co';
+const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+window.storage = {
+  async get(key){
+    const { data, error } = await sb.from('store').select('value').eq('key', key).maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    return { key, value: data.value, shared: false };
+  },
+  async set(key, value){
+    const { error } = await sb.from('store').upsert({ key, value, updated_at: new Date().toISOString() });
+    if (error) throw error;
+    return { key, value, shared: false };
+  },
+  async delete(key){
+    const { error } = await sb.from('store').delete().eq('key', key);
+    if (error) throw error;
+    return { key, deleted: true, shared: false };
+  },
+  async list(prefix){
+    let q = sb.from('store').select('key');
+    if (prefix) q = q.like('key', prefix + '%');
+    const { data, error } = await q;
+    if (error) throw error;
+    return { keys: (data || []).map(d => d.key) };
+  }
+};
+</script>
+<script>
+const WD = ['Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag','Søndag'];
+const WD_SHORT = ['man','tir','ons','tor','fre','lør','søn'];
+const MONTHS = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+function pad(n){return n.toString().padStart(2,'0');}
+function isoDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function mondayOf(d){
+  const x = new Date(d); const day = (x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x;
+}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function fmtRange(monday){
+  const sun = addDays(monday,6);
+  const sameMonth = monday.getMonth()===sun.getMonth();
+  return sameMonth
+    ? `${monday.getDate()}.–${sun.getDate()}. ${MONTHS[monday.getMonth()]}`
+    : `${monday.getDate()}. ${MONTHS[monday.getMonth()]} – ${sun.getDate()}. ${MONTHS[sun.getMonth()]}`;
+}
+
+const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 14L10 3.2L18 14H2Z" fill="${color}"/>
+  <path d="M4.6 11.1H15.4" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.92"/>
+  <circle cx="10" cy="7.6" r="0.9" fill="white" opacity="0.75"/>
+</svg>`;
+
+// ---------- state ----------
+let weekStart = mondayOf(new Date());
+let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] } };
+let template = [];
+let weekEvents = [];
+let editing = null; // {type:'template'|'week', id} or null for new
+
+const DEFAULT_TEMPLATE = () => ([
+  {id:uid(), day:0, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
+  {id:uid(), day:1, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
+  {id:uid(), day:2, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
+  {id:uid(), day:3, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
+  {id:uid(), day:4, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
+]);
+
+// ---------- storage ----------
+async function loadAll(){
+  try{
+    const s = await window.storage.get('settings');
+    if(s && s.value) settings = JSON.parse(s.value);
+  }catch(e){ /* use defaults */ }
+  try{
+    const t = await window.storage.get('template');
+    if(t && t.value) template = JSON.parse(t.value);
+    else template = DEFAULT_TEMPLATE();
+  }catch(e){ template = DEFAULT_TEMPLATE(); }
+  await loadWeek();
+}
+async function saveSettings(){
+  try{ await window.storage.set('settings', JSON.stringify(settings)); }catch(e){ console.error('save settings failed', e); }
+}
+async function saveTemplate(){
+  try{ await window.storage.set('template', JSON.stringify(template)); }catch(e){ console.error('save template failed', e); }
+}
+async function loadWeek(){
+  const key = 'week:'+isoDate(weekStart);
+  try{
+    const w = await window.storage.get(key);
+    weekEvents = (w && w.value) ? JSON.parse(w.value) : [];
+  }catch(e){ weekEvents = []; }
+}
+async function saveWeek(){
+  const key = 'week:'+isoDate(weekStart);
+  try{ await window.storage.set(key, JSON.stringify(weekEvents)); }catch(e){ console.error('save week failed', e); }
+}
+
+// ---------- rendering ----------
+function todayIndex(){
+  const t = new Date(); const tm = mondayOf(t);
+  if(isoDate(tm)!==isoDate(weekStart)) return -1;
+  return (t.getDay()+6)%7;
+}
+
+function matpakkeFor(child, dayIdx){
+  const arr = settings.matpakkeRule[child];
+  return arr ? (arr[dayIdx]||0) : 0;
+}
+
+function renderHero(){
+  const idx = todayIndex();
+  const hero = document.getElementById('hero');
+  if(idx===-1){
+    hero.classList.add('noschool');
+    hero.innerHTML = `<span class="label">📅 Viser en annen uke</span>`;
+    return;
+  }
+  hero.classList.remove('noschool');
+  const m = matpakkeFor('Milla', idx), j = matpakkeFor('Jonathan', idx);
+  hero.innerHTML = `
+    <span class="label">🥪 I dag trengs</span>
+    <div class="items">
+      <div class="child milla">
+        <span class="glyph">⚽</span>
+        <span class="name">Milla</span>
+        <div class="lunchrow">${Array(m).fill(0).map(()=>lunchboxSVG('#E1508C')).join('')}</div>
+        <span class="count">${m} stk</span>
+      </div>
+      <div class="child jonathan">
+        <span class="glyph">🏒</span>
+        <span class="name">Jonathan</span>
+        <div class="lunchrow">${Array(j).fill(0).map(()=>lunchboxSVG('#2FA36B')).join('')}</div>
+        <span class="count">${j} stk</span>
+      </div>
+    </div>`;
+}
+
+function itemsForDay(dayIdx){
+  const t = template.filter(i=>i.day===dayIdx).map(i=>({...i, _src:'template'}));
+  const w = weekEvents.filter(i=>i.day===dayIdx).map(i=>({...i, _src:'week'}));
+  return [...t, ...w].sort((a,b)=> (a.start||'').localeCompare(b.start||''));
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  const idx = todayIndex();
+  grid.innerHTML = WD.map((name,i)=>{
+    const date = addDays(weekStart,i);
+    const weekend = i>=5;
+    const items = itemsForDay(i);
+    const schedule = items.filter(it=>it.type!=='husk');
+    const husk = items.filter(it=>it.type==='husk');
+    const shared = schedule.filter(it=> it.type==='skole' || it.who==='Begge');
+    const millaItems = schedule.filter(it=> it.who==='Milla');
+    const jonathanItems = schedule.filter(it=> it.who==='Jonathan');
+    const m = matpakkeFor('Milla', i), j = matpakkeFor('Jonathan', i);
+    return `
+    <div class="day ${weekend?'weekend':''} ${i===idx?'today':''}">
+      <div class="dhead">
+        <div class="dtop">
+          <div>
+            <div class="dname">${name}</div>
+            <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
+          </div>
+          <button class="sharedadd" data-day="${i}" title="Legg til felles">+</button>
+        </div>
+      </div>
+      <div class="lunch">
+        <div class="lchild">${Array(m).fill(0).map(()=>lunchboxSVG('#E1508C')).join('')}</div>
+        <div class="lchild">${Array(j).fill(0).map(()=>lunchboxSVG('#2FA36B')).join('')}</div>
+      </div>
+      ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
+      <div class="split">
+        <div class="col milla">
+          ${millaItems.length? millaItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
+        </div>
+        <div class="col jonathan">
+          ${jonathanItems.length? jonathanItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
+        </div>
+      </div>
+      <div class="colfoot">
+        <button class="miniadd" data-day="${i}" data-who="Milla">⚽ +</button>
+        <button class="miniadd" data-day="${i}" data-who="Jonathan">🏒 +</button>
+      </div>
+      <div class="husk">
+        ${husk.map(it=>renderHusk(it)).join('')}
+        <button class="huskadd" data-day="${i}">🎒 Husk +</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.sharedadd').forEach(b=>{
+    b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'aktivitet'));
+  });
+  grid.querySelectorAll('.miniadd').forEach(b=>{
+    b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, b.dataset.who, 'aktivitet'));
+  });
+  grid.querySelectorAll('.huskadd').forEach(b=>{
+    b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'husk'));
+  });
+  grid.querySelectorAll('.item, .huskchip').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const src = el.dataset.src, id = el.dataset.id;
+      const list = src==='template'? template : weekEvents;
+      const it = list.find(x=>x.id===id);
+      if(it) openEventModal(it, it.day, src);
+    });
+  });
+}
+
+const EMOJI_RULES = [
+  [/fotball/i,'⚽'], [/håndball|handball/i,'🤾'], [/hockey|kølle/i,'🏒'], [/svøm/i,'🏊'], [/dans/i,'💃'],
+  [/musikk|piano|gitar|korps|kor\b/i,'🎵'], [/tegn|kunst|maling/i,'🎨'],
+  [/bursdag/i,'🎂'], [/turn|gym/i,'🤸'], [/\bski\b|slalåm/i,'⛷️'],
+  [/skole/i,'📚'], [/lesing|bibliotek/i,'📖'], [/spond/i,'📅'],
+  [/tannlege|lege|time/i,'🩺'], [/bursdagsselskap|selskap/i,'🎈']
+];
+function emojiFor(it){
+  if(it.type==='skole') return '📚';
+  const hit = EMOJI_RULES.find(([rx])=>rx.test(it.title));
+  return hit ? hit[1] : '✨';
+}
+function renderItem(it){
+  const whoClass = it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase();
+  const timeStr = it.end ? `${it.start}–${it.end}` : it.start;
+  return `<div class="item ${whoClass}" data-src="${it._src}" data-id="${it.id}">
+    <span class="emo">${emojiFor(it)}</span>
+    <div>
+      <div class="t">${timeStr}</div>
+      <div class="ti">${it.title}</div>
+      ${it.type!=='skole' && it.who==='Begge' ? `<div class="who">Begge</div>` : ''}
+    </div>
+  </div>`;
+}
+function renderHusk(it){
+  const cls = (it.who||'Begge').toLowerCase();
+  const glyph = it.who==='Milla' ? '⚽' : it.who==='Jonathan' ? '🏒' : '🎒';
+  return `<div class="huskchip ${cls}" data-src="${it._src}" data-id="${it.id}">
+    <span>${glyph}</span><span>${it.title}</span>
+  </div>`;
+}
+
+function renderWeekLabel(){
+  document.getElementById('weekRange').textContent = fmtRange(weekStart);
+  document.getElementById('spondWeekLbl').textContent = fmtRange(weekStart);
+}
+
+function renderClock(){
+  const now = new Date();
+  document.getElementById('clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+}
+
+async function renderAll(){
+  renderWeekLabel();
+  renderHero();
+  renderGrid();
+}
+
+// ---------- event modal ----------
+const eventOverlay = document.getElementById('eventOverlay');
+let currentWho = 'Begge';
+let currentType = 'aktivitet';
+
+function updateTypeUI(){
+  document.querySelectorAll('#fType button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.v===currentType);
+  });
+  const isHusk = currentType==='husk';
+  document.getElementById('timeRow').style.display = isHusk ? 'none' : 'flex';
+  document.getElementById('repeatRow').style.display = isHusk ? 'none' : 'flex';
+  document.getElementById('fTitleLabel').textContent = isHusk ? 'Hva må huskes / tas med' : 'Hva';
+  document.getElementById('fTitle').placeholder = isHusk ? 'F.eks. Saft, bursdagsgave, badetøy' : 'F.eks. Fotballtrening';
+}
+document.getElementById('fType').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  currentType = b.dataset.v; updateTypeUI();
+});
+
+function openEventModal(item, dayIdx, src, presetWho, presetType){
+  editing = item ? {id:item.id, src} : null;
+  document.getElementById('eventTitle').textContent = item ? 'Rediger' : 'Ny oppføring';
+  const daySel = document.getElementById('fDay');
+  daySel.innerHTML = WD.map((n,i)=>`<option value="${i}">${n}</option>`).join('');
+  daySel.value = dayIdx!=null ? dayIdx : 0;
+  document.getElementById('fStart').value = item ? item.start : '15:00';
+  document.getElementById('fEnd').value = item && item.end ? item.end : '';
+  document.getElementById('fTitle').value = item ? item.title : '';
+  currentWho = item ? item.who : (presetWho || 'Begge');
+  updateWhoButtons();
+  currentType = item ? item.type : (presetType || 'aktivitet');
+  updateTypeUI();
+  document.getElementById('fRepeat').checked = item ? src==='template' : false;
+  document.getElementById('fDelete').style.display = item ? 'block' : 'none';
+  eventOverlay.classList.add('open');
+}
+function updateWhoButtons(){
+  document.querySelectorAll('#fWho button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.v===currentWho);
+  });
+}
+document.getElementById('fWho').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  currentWho = b.dataset.v; updateWhoButtons();
+});
+document.getElementById('fCancel').addEventListener('click', ()=> eventOverlay.classList.remove('open'));
+document.getElementById('fSave').addEventListener('click', async ()=>{
+  const day = parseInt(document.getElementById('fDay').value);
+  const isHusk = currentType==='husk';
+  const start = isHusk ? '' : (document.getElementById('fStart').value || '00:00');
+  const end = isHusk ? '' : (document.getElementById('fEnd').value || '');
+  const title = document.getElementById('fTitle').value.trim() || (isHusk?'Husk':'Aktivitet');
+  const repeat = !isHusk && document.getElementById('fRepeat').checked;
+  const who = currentWho;
+
+  // remove from old location if editing and target list changed
+  if(editing){
+    if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
+    else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
+  }
+  const obj = {id: editing?editing.id:uid(), day, start, end, title, who, type:currentType};
+  if(repeat) template.push(obj); else weekEvents.push(obj);
+  await saveTemplate(); await saveWeek();
+  eventOverlay.classList.remove('open');
+  renderAll();
+});
+document.getElementById('fDelete').addEventListener('click', async ()=>{
+  if(!editing) return;
+  if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
+  else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
+  await saveTemplate(); await saveWeek();
+  eventOverlay.classList.remove('open');
+  renderAll();
+});
+
+// ---------- settings modal ----------
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsFab').addEventListener('click', ()=>{
+  renderRuleTable(); renderTplList();
+  settingsOverlay.classList.add('open');
+});
+document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    ['matpakker','ukeplan','spond'].forEach(t=>{
+      document.getElementById('tab-'+t).style.display = (t===b.dataset.tab)?'block':'none';
+    });
+  });
+});
+
+function renderRuleTable(){
+  const tbl = document.getElementById('ruleTable');
+  tbl.innerHTML = `<tr><th></th>${WD_SHORT.map(d=>`<th>${d}</th>`).join('')}</tr>` +
+    ['Milla','Jonathan'].map(child=>`
+      <tr><th style="text-align:left;color:${child==='Milla'?'#E1508C':'#2FA36B'};">${child}</th>
+      ${WD.map((_,i)=>`
+        <td><div class="stepper">
+          <button data-child="${child}" data-day="${i}" data-d="-1">–</button>
+          <span id="rv-${child}-${i}">${settings.matpakkeRule[child][i]}</span>
+          <button data-child="${child}" data-day="${i}" data-d="1">+</button>
+        </div></td>`).join('')}
+      </tr>`).join('');
+  tbl.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', async ()=>{
+      const c = b.dataset.child, d = parseInt(b.dataset.day), delta = parseInt(b.dataset.d);
+      const cur = settings.matpakkeRule[c][d];
+      settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur+delta));
+      document.getElementById(`rv-${c}-${d}`).textContent = settings.matpakkeRule[c][d];
+      await saveSettings();
+      renderHero(); renderGrid();
+    });
+  });
+}
+
+function renderTplList(){
+  const list = document.getElementById('tplList');
+  const sorted = [...template].sort((a,b)=> a.day-b.day || a.start.localeCompare(b.start));
+  list.innerHTML = sorted.length ? sorted.map(it=>`
+    <div class="tplitem" data-id="${it.id}">
+      <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title} (${it.who})</span>
+      <span>✏️</span>
+    </div>`).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
+  list.querySelectorAll('.tplitem').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const it = template.find(x=>x.id===el.dataset.id);
+      settingsOverlay.classList.remove('open');
+      openEventModal(it, it.day, 'template');
+    });
+  });
+}
+document.getElementById('tplAdd').addEventListener('click', ()=>{
+  settingsOverlay.classList.remove('open');
+  openEventModal(null, 0);
+  document.getElementById('fRepeat').checked = true;
+});
+
+// ---------- Spond paste-import ----------
+const DAY_RX = new RegExp(WD.map(w=>w.toLowerCase()).join('|'),'i');
+const TIME_RX = /(\d{1,2})[:.](\d{2})(?:\s*-\s*(\d{1,2})[:.](\d{2}))?/;
+let parsedSpond = [];
+
+function unescapeICS(s){
+  return (s||'').replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\').trim();
+}
+function unfoldICS(text){
+  const raw = text.split(/\r?\n/);
+  const out = [];
+  raw.forEach(line=>{
+    if(/^[ \t]/.test(line) && out.length) out[out.length-1] += line.slice(1);
+    else out.push(line);
+  });
+  return out;
+}
+function parseICSDate(val){
+  // val like 20260824 or 20260824T170000 or 20260824T170000Z
+  const m = val.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?/);
+  if(!m) return null;
+  const [,y,mo,d,h,mi,s,z] = m;
+  if(h===undefined) return {date:new Date(+y,+mo-1,+d), allDay:true};
+  if(z) return {date:new Date(Date.UTC(+y,+mo-1,+d,+h,+mi,+s)), allDay:false};
+  return {date:new Date(+y,+mo-1,+d,+h,+mi,+s), allDay:false};
+}
+function parseICS(text){
+  const lines = unfoldICS(text);
+  const results = [];
+  let cur = null;
+  lines.forEach(line=>{
+    if(line.startsWith('BEGIN:VEVENT')){ cur = {}; return; }
+    if(line.startsWith('END:VEVENT')){
+      if(cur && cur.dtstart){
+        const startInfo = parseICSDate(cur.dtstart);
+        if(startInfo && !startInfo.allDay){
+          const diff = Math.floor((new Date(startInfo.date.getFullYear(),startInfo.date.getMonth(),startInfo.date.getDate()) - new Date(weekStart.getFullYear(),weekStart.getMonth(),weekStart.getDate())) / 86400000);
+          if(diff>=0 && diff<=6){
+            const endInfo = cur.dtend ? parseICSDate(cur.dtend) : null;
+            const title = unescapeICS(cur.summary) || 'Aktivitet';
+            let who='Begge';
+            const hay = title + ' ' + unescapeICS(cur.description||'');
+            if(/milla/i.test(hay) && !/jonathan/i.test(hay)) who='Milla';
+            else if(/jonathan/i.test(hay) && !/milla/i.test(hay)) who='Jonathan';
+            results.push({
+              day: diff,
+              start: `${pad(startInfo.date.getHours())}:${pad(startInfo.date.getMinutes())}`,
+              end: endInfo && !endInfo.allDay ? `${pad(endInfo.date.getHours())}:${pad(endInfo.date.getMinutes())}` : '',
+              title, who, include:true
+            });
+          }
+        }
+      }
+      cur = null; return;
+    }
+    if(!cur) return;
+    if(line.startsWith('DTSTART')) cur.dtstart = line.split(':').pop();
+    else if(line.startsWith('DTEND')) cur.dtend = line.split(':').pop();
+    else if(line.startsWith('SUMMARY')) cur.summary = line.slice(line.indexOf(':')+1);
+    else if(line.startsWith('DESCRIPTION')) cur.description = line.slice(line.indexOf(':')+1);
+  });
+  return results;
+}
+
+document.getElementById('spondParse').addEventListener('click', ()=>{
+  const text = document.getElementById('spondInput').value;
+  if(/BEGIN:VCALENDAR|BEGIN:VEVENT/.test(text)){
+    parsedSpond = parseICS(text);
+    renderSpondPreview();
+    return;
+  }
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  parsedSpond = [];
+  lines.forEach(line=>{
+    const dayMatch = line.match(DAY_RX);
+    const timeMatch = line.match(TIME_RX);
+    if(!dayMatch && !timeMatch) return; // skip lines we can't place at all
+    const dayIdx = dayMatch ? WD.findIndex(w=>w.toLowerCase()===dayMatch[0].toLowerCase()) : todayIndexOrZero();
+    let start='15:00', end='';
+    if(timeMatch){
+      start = `${pad(parseInt(timeMatch[1]))}:${timeMatch[2]}`;
+      if(timeMatch[3]) end = `${pad(parseInt(timeMatch[3]))}:${timeMatch[4]}`;
+    }
+    let who = 'Begge';
+    if(/milla/i.test(line) && !/jonathan/i.test(line)) who='Milla';
+    else if(/jonathan/i.test(line) && !/milla/i.test(line)) who='Jonathan';
+    let title = line
+      .replace(dayMatch?dayMatch[0]:'', '')
+      .replace(timeMatch?timeMatch[0]:'', '')
+      .replace(/milla|jonathan/ig,'')
+      .replace(/[-–,]/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+    if(!title) title = 'Aktivitet';
+    parsedSpond.push({day:dayIdx, start, end, title, who, include:true});
+  });
+  renderSpondPreview();
+});
+function todayIndexOrZero(){ const i=todayIndex(); return i===-1?0:i; }
+
+function renderSpondPreview(){
+  const box = document.getElementById('spondPreview');
+  if(!parsedSpond.length){
+    box.innerHTML = '<div class="hint">Fant ingen linjer å tolke. Sjekk at hver linje har dag og/eller klokkeslett.</div>';
+    document.getElementById('spondAdd').style.display='none';
+    return;
+  }
+  box.innerHTML = parsedSpond.map((p,idx)=>`
+    <label class="prevrow"><input type="checkbox" data-idx="${idx}" checked>
+      ${WD[p.day]} ${p.start}${p.end?'–'+p.end:''} · ${p.title} (${p.who})
+    </label>`).join('');
+  box.querySelectorAll('input').forEach(cb=>{
+    cb.addEventListener('change', ()=>{ parsedSpond[cb.dataset.idx].include = cb.checked; });
+  });
+  document.getElementById('spondAdd').style.display='block';
+}
+document.getElementById('spondAdd').addEventListener('click', async ()=>{
+  parsedSpond.filter(p=>p.include).forEach(p=>{
+    weekEvents.push({id:uid(), day:p.day, start:p.start, end:p.end, title:p.title, who:p.who, type:'aktivitet'});
+  });
+  await saveWeek();
+  document.getElementById('spondInput').value='';
+  document.getElementById('spondPreview').innerHTML='';
+  document.getElementById('spondAdd').style.display='none';
+  settingsOverlay.classList.remove('open');
+  renderAll();
+});
+
+// ---------- week navigation ----------
+document.getElementById('prevWeek').addEventListener('click', async ()=>{
+  weekStart = addDays(weekStart,-7); await loadWeek(); renderAll();
+});
+document.getElementById('nextWeek').addEventListener('click', async ()=>{
+  weekStart = addDays(weekStart,7); await loadWeek(); renderAll();
+});
+document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
+  weekStart = mondayOf(new Date()); await loadWeek(); renderAll();
+});
+
+// close overlays on backdrop click
+[eventOverlay, settingsOverlay].forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
+});
+
+// ---------- init ----------
+(async function init(){
+  await loadAll();
+  renderAll();
+  renderClock();
+  setInterval(renderClock, 15000);
+  setInterval(async ()=>{ // keep "today" highlight fresh across midnight
+    const wasIdx = todayIndex();
+    renderClock();
+  }, 60000);
+})();
+</script>
+</body>
+</html>
