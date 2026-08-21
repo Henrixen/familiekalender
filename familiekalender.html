@@ -314,23 +314,23 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 window.storage = {
   async get(key){
-    const { data, error } = await sb.from('store').select('value').eq('key', key).maybeSingle();
+    const { data, error } = await sb.from('family_store').select('value').eq('key', key).maybeSingle();
     if (error) throw error;
     if (!data) return null;
     return { key, value: data.value, shared: false };
   },
   async set(key, value){
-    const { error } = await sb.from('store').upsert({ key, value, updated_at: new Date().toISOString() });
+    const { error } = await sb.from('family_store').upsert({ key, value, updated_at: new Date().toISOString() });
     if (error) throw error;
     return { key, value, shared: false };
   },
   async delete(key){
-    const { error } = await sb.from('store').delete().eq('key', key);
+    const { error } = await sb.from('family_store').delete().eq('key', key);
     if (error) throw error;
     return { key, deleted: true, shared: false };
   },
   async list(prefix){
-    let q = sb.from('store').select('key');
+    let q = sb.from('family_store').select('key');
     if (prefix) q = q.like('key', prefix + '%');
     const { data, error } = await q;
     if (error) throw error;
