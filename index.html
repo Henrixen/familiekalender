@@ -5,24 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ukeplan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F4F5F1;
+    --bg:#FFF8F0;
     --surface:#FFFFFF;
-    --surface-alt:#FAFAF7;
-    --ink:#1E2420;
-    --ink-soft:#848C82;
-    --line:#E7E9E2;
-    --milla:#E1508C;
-    --milla-soft:#FCE4EF;
-    --jonathan:#2FA36B;
-    --jonathan-soft:#E1F4EA;
-    --today:#E29A34;
-    --today-soft:#FBEBD1;
-    --skole:#A7ABA0;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(30,36,32,.04), 0 4px 14px rgba(30,36,32,.05);
+    --surface-alt:#FFFBF5;
+    --ink:#2B2118;
+    --ink-soft:#9A8D80;
+    --line:#F0E4D6;
+    --milla:#FF4FA0;
+    --milla-soft:#FFE1F0;
+    --jonathan:#2ECC71;
+    --jonathan-soft:#DFFBEA;
+    --today:#FFAE2E;
+    --today-soft:#FFF1D6;
+    --skole:#8F97C7;
+    --radius:20px;
+    --shadow:0 3px 0 rgba(43,33,24,.05), 0 10px 24px rgba(43,33,24,.09);
+  }
+  [data-theme="mork"]{
+    --bg:#171815;
+    --surface:#212320;
+    --surface-alt:#282A26;
+    --ink:#F3F0EA;
+    --ink-soft:#8C8F86;
+    --line:#33352F;
+    --milla:#FF6FB4;
+    --milla-soft:#3A2430;
+    --jonathan:#3FDE8C;
+    --jonathan-soft:#1E3327;
+    --today:#FFC15C;
+    --today-soft:#3A2E14;
+    --skole:#9BA3DA;
+    --shadow:0 3px 0 rgba(0,0,0,.25), 0 10px 24px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;height:100%;}
@@ -38,27 +54,32 @@
   /* header */
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand .mark{width:34px;height:34px;flex:none;}
-  .brand h1{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin:0;letter-spacing:-0.01em;line-height:1;}
+  .brand .mark{
+    width:38px;height:38px;flex:none;border-radius:12px;
+    background:linear-gradient(135deg, var(--milla) 50%, var(--jonathan) 50%);
+    display:flex;align-items:center;justify-content:center;font-size:19px;
+    box-shadow:0 3px 0 rgba(43,33,24,.08);
+  }
+  .brand h1{font-family:'Inter',sans-serif;font-weight:800;font-size:23px;margin:0;letter-spacing:-0.01em;line-height:1;}
   .brand .sub{font-size:12px;color:var(--ink-soft);display:block;margin-top:1px;}
   .weeknav{display:flex;align-items:center;gap:10px;}
   .weeknav button{
     width:36px;height:36px;border-radius:50%;border:none;
     background:var(--surface);font-size:16px;color:var(--ink);cursor:pointer;box-shadow:var(--shadow);
   }
-  .weeknav .range{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;min-width:170px;text-align:center;}
+  .weeknav .range{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;min-width:170px;text-align:center;}
   .weeknav .thisweek{
     font-size:12px;font-weight:600;color:var(--jonathan);border:none;border-radius:20px;
     padding:8px 14px;background:var(--jonathan-soft);cursor:pointer;
   }
-  .clock{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:var(--ink-soft);}
+  .clock{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:19px;font-weight:600;color:var(--ink-soft);}
 
   /* hero matpakke banner */
   .hero{
     display:flex;align-items:center;gap:22px;background:var(--surface);
     border-radius:var(--radius);padding:14px 22px;margin-bottom:14px;box-shadow:var(--shadow);
   }
-  .hero .label{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  .hero .label{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
   .hero .items{display:flex;gap:30px;flex-wrap:wrap;}
   .hero .child{display:flex;align-items:center;gap:9px;}
   .hero .child .glyph{font-size:16px;line-height:1;}
@@ -67,7 +88,7 @@
   .hero .child.jonathan .name{color:var(--jonathan);}
   .hero .lunchrow{display:flex;gap:4px;}
   .hero .lunchrow svg{width:20px;height:17px;}
-  .hero .count{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);margin-left:1px;}
+  .hero .count{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-soft);margin-left:1px;}
   .hero.noschool{color:var(--ink-soft);font-style:italic;}
 
   /* grid */
@@ -79,9 +100,9 @@
   .day.weekend{background:var(--surface-alt);box-shadow:none;border:1px solid var(--line);}
   .day.today{box-shadow:0 0 0 2px var(--today), var(--shadow);}
   .day .dhead{padding:12px 13px 9px;border-bottom:1px solid var(--line);}
-  .day .dname{font-family:'Fraunces',serif;font-size:17px;font-weight:600;}
+  .day .dname{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;font-weight:600;}
   .day.today .dname{color:var(--today);}
-  .day .ddate{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);}
+  .day .ddate{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:11px;color:var(--ink-soft);}
   .lunch{display:flex;gap:9px;padding:8px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
   .lunch .lchild{display:flex;align-items:center;gap:3px;}
   .lunch svg{width:15px;height:13px;}
@@ -94,6 +115,8 @@
   .split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:120px;}
   .col{padding:8px 6px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
   .col.milla{border-right:1px solid var(--line);}
+  [data-theme="myk"] .col.milla{background:var(--milla-soft);border-right:1px solid var(--surface);}
+  [data-theme="myk"] .col.jonathan{background:var(--jonathan-soft);}
   .colfoot{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 8px 8px;}
   .miniadd{
     padding:5px 4px;border-radius:8px;border:1px dashed var(--line);background:none;
@@ -113,30 +136,53 @@
     font-size:11px;color:var(--ink-soft);cursor:pointer;font-weight:600;
   }
   .body-items{flex:1;padding:9px 10px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;}
-  .empty{color:var(--ink-soft);font-size:12px;text-align:center;padding:14px 6px;}
+  .empty{color:var(--ink-soft);font-size:11.5px;text-align:center;padding:14px 6px;}
   .item{
-    border-radius:11px;padding:7px 9px;font-size:12.5px;line-height:1.3;position:relative;
-    border-left:3px solid var(--ink-soft);background:var(--surface-alt);cursor:pointer;
-    display:flex;gap:7px;align-items:flex-start;
+    border-radius:13px;padding:8px 10px;font-size:12.5px;line-height:1.3;position:relative;
+    border:none;background:var(--ink-soft);color:#fff;cursor:pointer;
+    display:flex;gap:6px;align-items:flex-start;box-shadow:0 2px 6px rgba(30,36,32,.08);
   }
-  .day.weekend .item{background:var(--surface);}
-  .item .emo{font-size:15px;line-height:1.2;flex:none;}
-  .item .t{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;}
-  .item .ti{font-weight:600;margin-top:1px;}
-  .item .who{font-size:10.5px;color:var(--ink-soft);margin-top:1px;}
-  .item.milla{border-left-color:var(--milla);}
-  .item.jonathan{border-left-color:var(--jonathan);}
-  .item.begge{border-left-color:var(--today);}
-  .item.skole{border-left-color:var(--skole);background:transparent;border:1px dashed var(--line);border-left-width:3px;}
+  .item .emo{font-size:14px;line-height:1.2;flex:none;}
+  .item .t{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-weight:600;font-size:10.5px;color:rgba(255,255,255,.85);}
+  .item .ti{font-weight:700;margin-top:1px;color:#fff;}
+  .item .who{font-size:10px;color:rgba(255,255,255,.8);margin-top:1px;}
+  .item.milla{background:var(--milla);}
+  .item.jonathan{background:var(--jonathan);}
+  .item.begge{background:var(--today);}
+  .item.skole{background:var(--skole);}
   .addbtn{
     margin:7px 10px 10px;padding:8px;border-radius:10px;border:1px dashed var(--line);
     background:none;color:var(--ink-soft);font-size:12.5px;cursor:pointer;font-weight:600;
   }
   .addbtn:active{background:var(--surface-alt);}
 
+  .bottomrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  .panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;min-height:180px;}
+  .panelhead{font-weight:800;font-size:15px;margin-bottom:10px;}
+  .shoplist{flex:1;display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:180px;}
+  .shopitem{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:13px;cursor:pointer;}
+  .shopitem .box{width:16px;height:16px;border-radius:5px;border:2px solid var(--ink-soft);flex:none;}
+  .shopitem.done{opacity:.45;}
+  .shopitem.done .txt{text-decoration:line-through;}
+  .shopitem.done .box{background:var(--jonathan);border-color:var(--jonathan);}
+  .shopitem .txt{flex:1;}
+  .shopitem .del{color:var(--ink-soft);font-size:14px;cursor:pointer;padding:0 4px;}
+  .shopempty{color:var(--ink-soft);font-size:12px;text-align:center;padding:14px 6px;}
+  .shopadd{display:flex;gap:6px;margin-top:8px;}
+  .shopadd input{flex:1;padding:9px 11px;border-radius:10px;border:1px solid var(--line);font-size:13px;font-family:inherit;}
+  .shopadd button{width:38px;border-radius:10px;border:none;background:var(--ink);color:#fff;font-size:17px;cursor:pointer;}
+  .photoframe{flex:1;position:relative;border-radius:14px;overflow:hidden;background:var(--surface-alt);min-height:150px;display:flex;align-items:center;justify-content:center;}
+  .photoframe img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease;}
+  .photoframe img.show{opacity:1;}
+  .photoempty{color:var(--ink-soft);font-size:12px;text-align:center;padding:20px;}
+  .photodots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:4px;z-index:2;}
+  .photodots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);}
+  .photodots span.active{background:#fff;}
+
   .fab{
-    position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;
-    background:var(--ink);color:#fff;border:none;font-size:22px;box-shadow:0 6px 18px rgba(30,36,32,.28);cursor:pointer;
+    position:fixed;bottom:20px;right:20px;width:54px;height:54px;border-radius:50%;
+    background:linear-gradient(135deg, var(--milla), var(--jonathan));color:#fff;border:none;
+    font-size:22px;box-shadow:0 3px 0 rgba(43,33,24,.12), 0 8px 20px rgba(43,33,24,.22);cursor:pointer;
   }
 
   /* modal */
@@ -146,7 +192,7 @@
     background:var(--surface);border-radius:20px;padding:22px;width:100%;max-width:440px;
     max-height:88vh;overflow-y:auto;
   }
-  .modal h2{font-family:'Fraunces',serif;font-size:22px;margin:0 0 14px;}
+  .modal h2{font-family:'Inter',sans-serif;font-weight:800;font-size:22px;margin:0 0 14px;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px;font-weight:600;}
   .field input[type=text],.field input[type=time],.field select,.field textarea{
@@ -178,7 +224,7 @@
   .rulegrid td{text-align:center;padding:4px 2px;}
   .stepper{display:flex;align-items:center;justify-content:center;gap:4px;}
   .stepper button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--surface-alt);font-size:14px;cursor:pointer;}
-  .stepper span{font-family:'IBM Plex Mono',monospace;width:16px;text-align:center;}
+  .stepper span{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;width:16px;text-align:center;}
   .tplist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:12px;}
   .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;}
   .hint{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
@@ -191,11 +237,7 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="20" r="13" fill="#E1508C"/>
-        <circle cx="26" cy="16" r="10" fill="#2FA36B"/>
-        <circle cx="20" cy="14" r="3" fill="#FAFAF7"/>
-      </svg>
+      <div class="mark">🏡</div>
       <div>
         <h1>Ukeplan</h1>
         <span class="sub">Milla &amp; Jonathan</span>
@@ -212,6 +254,23 @@
 
   <div class="hero" id="hero"></div>
   <div class="grid" id="grid"></div>
+
+  <div class="bottomrow">
+    <div class="panel">
+      <div class="panelhead">🛒 Handle og Huske</div>
+      <div class="shoplist" id="shopList"></div>
+      <div class="shopadd">
+        <input type="text" id="shopInput" placeholder="Legg til vare…">
+        <button id="shopAddBtn">+</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead">📷 Bilder</div>
+      <div class="photoframe" id="photoFrame">
+        <div class="photoempty" id="photoEmpty">Ingen bilder lagt til ennå — se Innstillinger → Bilder</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <button class="fab" id="settingsFab" title="Innstillinger">⚙</button>
@@ -265,6 +324,8 @@
       <button class="active" data-tab="matpakker">Matpakker</button>
       <button data-tab="ukeplan">Fast ukeplan</button>
       <button data-tab="spond">Importer fra Spond</button>
+      <button data-tab="bilder">Bilder</button>
+      <button data-tab="tema">Tema</button>
     </div>
 
     <div id="tab-matpakker">
@@ -293,6 +354,24 @@ Onsdag 16:30-17:30 Håndball Milla"></textarea>
       <button class="btn ghost" id="spondParse" style="width:100%;margin-top:10px;">Tolk tekst</button>
       <div class="preview" id="spondPreview"></div>
       <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte</button>
+    </div>
+
+    <div id="tab-bilder" style="display:none;">
+      <p class="hint">Ekte, direkte kobling til et delt Apple-album er ikke mulig fra en ren nettside — Apple har ingen offentlig API for det, og nettleseren stoppes av sikkerhetsregler (CORS) fra å hente det selv. Løsningen under er manuell: lim inn direkte bildelenker, én per linje — bildene roterer nederst til høyre på tavlen.<br>
+      Tips: åpne det delte albumet i nettleseren, høyreklikk et bilde → "Kopier bildeadresse".<br><br>
+      <b>Vil du ha ekte automatisk sync?</b> Det er mulig, men krever litt mer — en liten server-funksjon på Vercel som henter albumet på våre vegne. Si ifra, så bygger jeg det (trenger album-lenken din for å teste).</p>
+      <textarea id="photoInput" rows="5" placeholder="https://.../bilde1.jpg
+https://.../bilde2.jpg"></textarea>
+      <button class="btn primary" id="photoSave" style="width:100%;margin-top:10px;">Lagre bilder</button>
+    </div>
+
+    <div id="tab-tema" style="display:none;">
+      <p class="hint">Velg fargetema for tavlen.</p>
+      <div class="typepick" id="themePick" style="margin-bottom:0;">
+        <button data-v="lys">☀️ Lys</button>
+        <button data-v="myk">🎨 Myk pastell</button>
+        <button data-v="mork">🌙 Mørk</button>
+      </div>
     </div>
 
     <div class="modalbtns">
@@ -366,7 +445,7 @@ const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http
 
 // ---------- state ----------
 let weekStart = mondayOf(new Date());
-let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] } };
+let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys' };
 let template = [];
 let weekEvents = [];
 let editing = null; // {type:'template'|'week', id} or null for new
@@ -381,16 +460,25 @@ const DEFAULT_TEMPLATE = () => ([
 
 // ---------- storage ----------
 async function loadAll(){
-  try{
-    const s = await window.storage.get('settings');
-    if(s && s.value) settings = JSON.parse(s.value);
-  }catch(e){ /* use defaults */ }
-  try{
-    const t = await window.storage.get('template');
-    if(t && t.value) template = JSON.parse(t.value);
-    else template = DEFAULT_TEMPLATE();
-  }catch(e){ template = DEFAULT_TEMPLATE(); }
-  await loadWeek();
+  const [sRes, tRes, wRes] = await Promise.allSettled([
+    window.storage.get('settings'),
+    window.storage.get('template'),
+    window.storage.get('week:'+isoDate(weekStart))
+  ]);
+  if(sRes.status==='fulfilled' && sRes.value && sRes.value.value){
+    try{ settings = JSON.parse(sRes.value.value); }catch(e){}
+  }
+  if(!settings.theme) settings.theme = 'lys';
+  if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
+    try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
+  } else {
+    template = DEFAULT_TEMPLATE();
+  }
+  if(wRes.status==='fulfilled' && wRes.value && wRes.value.value){
+    try{ weekEvents = JSON.parse(wRes.value.value); }catch(e){ weekEvents = []; }
+  } else {
+    weekEvents = [];
+  }
 }
 async function saveSettings(){
   try{ await window.storage.set('settings', JSON.stringify(settings)); }catch(e){ console.error('save settings failed', e); }
@@ -438,13 +526,13 @@ function renderHero(){
       <div class="child milla">
         <span class="glyph">⚽</span>
         <span class="name">Milla</span>
-        <div class="lunchrow">${Array(m).fill(0).map(()=>lunchboxSVG('#E1508C')).join('')}</div>
+        <div class="lunchrow">${Array(m).fill(0).map(()=>lunchboxSVG('#FF4FA0')).join('')}</div>
         <span class="count">${m} stk</span>
       </div>
       <div class="child jonathan">
         <span class="glyph">🏒</span>
         <span class="name">Jonathan</span>
-        <div class="lunchrow">${Array(j).fill(0).map(()=>lunchboxSVG('#2FA36B')).join('')}</div>
+        <div class="lunchrow">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
         <span class="count">${j} stk</span>
       </div>
     </div>`;
@@ -481,8 +569,8 @@ function renderGrid(){
         </div>
       </div>
       <div class="lunch">
-        <div class="lchild">${Array(m).fill(0).map(()=>lunchboxSVG('#E1508C')).join('')}</div>
-        <div class="lchild">${Array(j).fill(0).map(()=>lunchboxSVG('#2FA36B')).join('')}</div>
+        <div class="lchild">${Array(m).fill(0).map(()=>lunchboxSVG('#FF4FA0')).join('')}</div>
+        <div class="lchild">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
       </div>
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
       <div class="split">
@@ -650,7 +738,7 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList();
+  renderRuleTable(); renderTplList(); updateThemeButtons();
   settingsOverlay.classList.add('open');
 });
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
@@ -658,17 +746,34 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
-    ['matpakker','ukeplan','spond'].forEach(t=>{
+    ['matpakker','ukeplan','spond','bilder','tema'].forEach(t=>{
       document.getElementById('tab-'+t).style.display = (t===b.dataset.tab)?'block':'none';
     });
   });
+});
+
+// ---------- tema ----------
+function applyTheme(name){
+  document.documentElement.setAttribute('data-theme', name);
+}
+function updateThemeButtons(){
+  document.querySelectorAll('#themePick button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.v===settings.theme);
+  });
+}
+document.getElementById('themePick').addEventListener('click', async (e)=>{
+  const b = e.target.closest('button'); if(!b) return;
+  settings.theme = b.dataset.v;
+  applyTheme(settings.theme);
+  updateThemeButtons();
+  await saveSettings();
 });
 
 function renderRuleTable(){
   const tbl = document.getElementById('ruleTable');
   tbl.innerHTML = `<tr><th></th>${WD_SHORT.map(d=>`<th>${d}</th>`).join('')}</tr>` +
     ['Milla','Jonathan'].map(child=>`
-      <tr><th style="text-align:left;color:${child==='Milla'?'#E1508C':'#2FA36B'};">${child}</th>
+      <tr><th style="text-align:left;color:${child==='Milla'?'#FF4FA0':'#2ECC71'};">${child}</th>
       ${WD.map((_,i)=>`
         <td><div class="stepper">
           <button data-child="${child}" data-day="${i}" data-d="-1">–</button>
@@ -849,6 +954,89 @@ document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
   weekStart = mondayOf(new Date()); await loadWeek(); renderAll();
 });
 
+// ---------- Handleliste ----------
+let shoppingList = [];
+async function loadShopping(){
+  try{
+    const r = await window.storage.get('shopping');
+    shoppingList = (r && r.value) ? JSON.parse(r.value) : [];
+  }catch(e){ shoppingList = []; }
+}
+async function saveShopping(){
+  try{ await window.storage.set('shopping', JSON.stringify(shoppingList)); }catch(e){ console.error('save shopping failed', e); }
+}
+function renderShopping(){
+  const box = document.getElementById('shopList');
+  if(!shoppingList.length){
+    box.innerHTML = '<div class="shopempty">Listen er tom</div>';
+    return;
+  }
+  box.innerHTML = shoppingList.map(it=>`
+    <div class="shopitem ${it.done?'done':''}" data-id="${it.id}">
+      <span class="box"></span>
+      <span class="txt">${it.text}</span>
+      <span class="del">✕</span>
+    </div>`).join('');
+  box.querySelectorAll('.shopitem').forEach(el=>{
+    el.querySelector('.box, .txt').addEventListener('click', async ()=>{
+      const it = shoppingList.find(x=>x.id===el.dataset.id);
+      it.done = !it.done;
+      await saveShopping(); renderShopping();
+    });
+    el.querySelector('.del').addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      shoppingList = shoppingList.filter(x=>x.id!==el.dataset.id);
+      await saveShopping(); renderShopping();
+    });
+  });
+}
+document.getElementById('shopAddBtn').addEventListener('click', addShopItem);
+document.getElementById('shopInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addShopItem(); });
+async function addShopItem(){
+  const input = document.getElementById('shopInput');
+  const text = input.value.trim();
+  if(!text) return;
+  shoppingList.push({id:uid(), text, done:false});
+  input.value='';
+  await saveShopping(); renderShopping();
+}
+
+// ---------- Bilder (rotasjon) ----------
+let photos = [];
+let photoIdx = 0;
+async function loadPhotos(){
+  try{
+    const r = await window.storage.get('photos');
+    photos = (r && r.value) ? JSON.parse(r.value) : [];
+  }catch(e){ photos = []; }
+}
+async function savePhotos(){
+  try{ await window.storage.set('photos', JSON.stringify(photos)); }catch(e){ console.error('save photos failed', e); }
+}
+function renderPhotos(){
+  const frame = document.getElementById('photoFrame');
+  if(!photos.length){
+    frame.innerHTML = '<div class="photoempty" id="photoEmpty">Ingen bilder lagt til ennå — se Innstillinger → Bilder</div>';
+    return;
+  }
+  photoIdx = photoIdx % photos.length;
+  frame.innerHTML = photos.map((url,i)=>`<img src="${url}" class="${i===photoIdx?'show':''}">`).join('') +
+    `<div class="photodots">${photos.map((_,i)=>`<span class="${i===photoIdx?'active':''}"></span>`).join('')}</div>`;
+}
+function nextPhoto(){
+  if(!photos.length) return;
+  photoIdx = (photoIdx+1) % photos.length;
+  renderPhotos();
+}
+document.getElementById('photoSave').addEventListener('click', async ()=>{
+  const lines = document.getElementById('photoInput').value.split('\n').map(l=>l.trim()).filter(l=>/^https?:\/\//i.test(l));
+  photos = lines;
+  photoIdx = 0;
+  await savePhotos();
+  renderPhotos();
+  settingsOverlay.classList.remove('open');
+});
+
 // close overlays on backdrop click
 [eventOverlay, settingsOverlay].forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
@@ -857,9 +1045,15 @@ document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
 // ---------- init ----------
 (async function init(){
   await loadAll();
+  applyTheme(settings.theme);
+  await Promise.all([loadShopping(), loadPhotos()]);
   renderAll();
+  renderShopping();
+  renderPhotos();
+  document.getElementById('photoInput').value = photos.join('\n');
   renderClock();
   setInterval(renderClock, 15000);
+  setInterval(nextPhoto, 7000);
   setInterval(async ()=>{ // keep "today" highlight fresh across midnight
     const wasIdx = todayIndex();
     renderClock();
