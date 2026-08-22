@@ -115,11 +115,10 @@
   .colheads{display:grid;grid-template-columns:1fr 1fr;padding:10px 6px 6px;}
   .avbadge{position:relative;display:inline-flex;}
   .mpbadge{
-    position:absolute;bottom:-4px;right:-8px;color:#fff;font-weight:800;
-    height:17px;padding:0 6px 0 3px;border-radius:20px;display:flex;align-items:center;gap:2px;
-    box-shadow:0 0 0 2px var(--surface);font-size:10px;white-space:nowrap;
+    position:absolute;bottom:-6px;right:-8px;color:#fff;font-weight:800;
+    min-width:22px;height:22px;padding:0 6px;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:2px;
+    box-shadow:0 0 0 2.5px var(--surface);font-size:13px;white-space:nowrap;line-height:1;z-index:2;
   }
-  .mpbadge svg{width:11px;height:9px;flex:none;}
   .colheadname.milla .mpbadge{background:var(--milla);}
   .colheadname.jonathan .mpbadge{background:var(--jonathan);}
   .colheadname{display:flex;align-items:center;justify-content:center;}
@@ -676,10 +675,10 @@ function renderGrid(){
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
       <div class="colheads">
         <div class="colheadname milla">
-          <span class="avbadge">${avatarHTML('Milla',36)}${m>0?`<span class="mpbadge">${lunchboxSVG('#fff')}${m}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Milla',36)}${m>0?`<span class="mpbadge">🥪${m}</span>`:''}</span>
         </div>
         <div class="colheadname jonathan">
-          <span class="avbadge">${avatarHTML('Jonathan',36)}${j>0?`<span class="mpbadge">${lunchboxSVG('#fff')}${j}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Jonathan',36)}${j>0?`<span class="mpbadge">🥪${j}</span>`:''}</span>
         </div>
       </div>
       <div class="split">
