@@ -112,21 +112,22 @@
     background:var(--surface-alt);color:var(--ink-soft);font-size:14px;line-height:1;cursor:pointer;
   }
   .shared{padding:7px 10px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);}
-  .colheads{display:grid;grid-template-columns:1fr 1fr;padding:8px 6px 4px;}
+  .colheads{display:grid;grid-template-columns:1fr 1fr;padding:10px 6px 6px;}
   .avbadge{position:relative;display:inline-flex;}
   .mpbadge{
-    position:absolute;bottom:-3px;right:-4px;color:#fff;font-size:9px;font-weight:800;
-    width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 0 0 2px var(--surface);
+    position:absolute;bottom:-4px;right:-8px;color:#fff;font-weight:800;
+    height:17px;padding:0 6px 0 3px;border-radius:20px;display:flex;align-items:center;gap:2px;
+    box-shadow:0 0 0 2px var(--surface);font-size:10px;white-space:nowrap;
   }
+  .mpbadge svg{width:11px;height:9px;flex:none;}
   .colheadname.milla .mpbadge{background:var(--milla);}
   .colheadname.jonathan .mpbadge{background:var(--jonathan);}
   .colheadname{display:flex;align-items:center;justify-content:center;}
   .colheadname .glyph, .colheadname{font-size:0;}
-  .colheadname img, .colheadname .avcircle{box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px currentColor;}
-  .colheadname img{width:24px;height:24px;border-radius:50%;object-fit:cover;}
-  .colheadname.milla{color:var(--milla);font-size:22px;}
-  .colheadname.jonathan{color:var(--jonathan);font-size:22px;}
+  .colheadname img, .colheadname .avcircle{box-shadow:0 0 0 2px var(--surface), 0 0 0 4px currentColor;}
+  .colheadname img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+  .colheadname.milla{color:var(--milla);font-size:32px;}
+  .colheadname.jonathan{color:var(--jonathan);font-size:32px;}
   .split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:120px;}
   .col{padding:8px 6px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
   .col.milla{border-right:1px solid var(--line);}
@@ -173,18 +174,25 @@
 
   .starpanel{margin-top:12px;min-height:auto;}
   .starcols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .starhead{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .starhead{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
   .starhead .avwrap{flex:none;}
   .starhead .sname{font-weight:700;font-size:13px;flex:1;}
   .starhead .pts{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
   .starhead.milla .pts{background:var(--milla-soft);color:var(--milla);}
   .starhead.jonathan .pts{background:var(--jonathan-soft);color:var(--jonathan);}
+  .progresswrap{height:7px;border-radius:20px;background:var(--surface-alt);overflow:hidden;margin-bottom:8px;}
+  .progressfill{height:100%;border-radius:20px;transition:width .3s ease;}
+  .starcol.milla .progressfill{background:var(--milla);}
+  .starcol.jonathan .progressfill{background:var(--jonathan);}
+  .rewardhit{font-size:11.5px;font-weight:700;color:var(--today);background:var(--today-soft);border-radius:10px;padding:6px 9px;margin-bottom:8px;}
   .chorelist{display:flex;flex-direction:column;gap:6px;}
-  .chore{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:10px;background:var(--surface-alt);font-size:12.5px;cursor:pointer;}
-  .chore .cbox{width:15px;height:15px;border-radius:5px;border:2px solid var(--ink-soft);flex:none;}
-  .chore.done{opacity:.5;}
-  .chore.done .ctxt{text-decoration:line-through;}
-  .chore.done .cbox{background:var(--today);border-color:var(--today);}
+  .chore{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12.5px;cursor:pointer;}
+  .chore .cbox{
+    width:18px;height:18px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;color:#fff;
+  }
+  .starcol.milla .chore .cbox{background:var(--milla);}
+  .starcol.jonathan .chore .cbox{background:var(--jonathan);}
   .chore .ctxt{flex:1;}
   .chore .cpts{font-size:11px;color:var(--ink-soft);}
   .avwrap img,.glyph img{border-radius:50%;object-fit:cover;display:inline-block;vertical-align:middle;}
@@ -251,12 +259,12 @@
   .tabs{display:flex;gap:6px;margin-bottom:16px;}
   .tabs button{flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13px;cursor:pointer;}
   .tabs button.active{background:var(--ink);color:#fff;}
-  .rulegrid{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px;}
-  .rulegrid th{font-weight:600;color:var(--ink-soft);padding:4px 2px;font-size:11px;}
-  .rulegrid td{text-align:center;padding:4px 2px;}
-  .stepper{display:flex;align-items:center;justify-content:center;gap:4px;}
-  .stepper button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--surface-alt);font-size:14px;cursor:pointer;}
-  .stepper span{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;width:16px;text-align:center;}
+  .rulegrid{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:10px;}
+  .rulegrid th{font-weight:700;color:var(--ink-soft);padding:8px 6px;font-size:12px;}
+  .rulegrid td{text-align:center;padding:8px 6px;}
+  .stepper{display:flex;align-items:center;justify-content:center;gap:5px;}
+  .stepper button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface-alt);font-size:15px;cursor:pointer;}
+  .stepper span{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;width:16px;text-align:center;font-size:14px;}
   .tplist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:12px;}
   .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;}
   .hint{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
@@ -287,7 +295,10 @@
   <div class="grid" id="grid"></div>
 
   <div class="panel starpanel">
-    <div class="panelhead">⭐ Stjerner — for å hjelpe til hjemme</div>
+    <div class="panelhead" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>⭐ Stjerner — for å hjelpe til hjemme</span>
+      <button class="sharedadd" id="starQuickAdd" title="Legg til gjøremål">+</button>
+    </div>
     <div class="starcols" id="starCols"></div>
   </div>
 
@@ -354,7 +365,7 @@
 
 <!-- Settings modal -->
 <div class="overlay" id="settingsOverlay">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal" style="max-width:680px;">
     <h2>Innstillinger</h2>
     <div class="tabs">
       <button class="active" data-tab="matpakker">Matpakker</button>
@@ -405,22 +416,54 @@ https://.../bilde2.jpg"></textarea>
 
     <div id="tab-tema" style="display:none;">
       <p class="hint">Velg fargetema for tavlen.</p>
-      <div class="typepick" id="themePick" style="margin-bottom:0;">
+      <div class="typepick" id="themePick" style="margin-bottom:16px;">
         <button data-v="lys">☀️ Lys</button>
         <button data-v="myk">🎨 Myk pastell</button>
         <button data-v="mork">🌙 Mørk</button>
       </div>
+      <p class="hint">Egne farger på aktivitetene (overstyrer temaet over):</p>
+      <div class="row2">
+        <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:38px;padding:2px;"></div>
+        <div class="field"><label>Jonathan</label><input type="color" id="colJonathan" style="height:38px;padding:2px;"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Skole / felles aktivitet</label><input type="color" id="colSkole" style="height:38px;padding:2px;"></div>
+        <div class="field"><label>Merkefarge (i dag, "Begge")</label><input type="color" id="colToday" style="height:38px;padding:2px;"></div>
+      </div>
+      <button class="btn ghost" id="colorReset" style="width:100%;">Tilbakestill til temafarger</button>
     </div>
 
     <div id="tab-profil" style="display:none;">
-      <p class="hint">Legg til et bilde av hver av barna (direkte bildelenke). Tomt felt = ikonet vises som før.</p>
-      <div class="field"><label>🌸 Milla — bildelenke</label><input type="text" id="avMilla" placeholder="https://..."></div>
-      <div class="field"><label>🌿 Jonathan — bildelenke</label><input type="text" id="avJonathan" placeholder="https://..."></div>
+      <p class="hint">Last opp et bilde direkte fra PC/Mac/telefon, eller lim inn en bildelenke. Tomt felt = ikonet vises som før (fargesirkel med forbokstav).</p>
+      <div class="field">
+        <label>⚽ Milla</label>
+        <input type="file" id="fileMilla" accept="image/*" style="margin-bottom:6px;">
+        <input type="text" id="avMilla" placeholder="…eller lim inn en https-lenke">
+        <span class="hint" id="avMillaStatus" style="display:block;margin-top:4px;"></span>
+      </div>
+      <div class="field">
+        <label>🏒 Jonathan</label>
+        <input type="file" id="fileJonathan" accept="image/*" style="margin-bottom:6px;">
+        <input type="text" id="avJonathan" placeholder="…eller lim inn en https-lenke">
+        <span class="hint" id="avJonathanStatus" style="display:block;margin-top:4px;"></span>
+      </div>
       <button class="btn primary" id="avatarSave" style="width:100%;">Lagre bilder</button>
     </div>
 
     <div id="tab-stjerner" style="display:none;">
-      <p class="hint">Gjøremål som gir stjernepoeng når de hukes av. Poengene nullstilles ikke — de bygger seg opp over tid.</p>
+      <p class="hint">Trykk på et gjøremål på tavlen for å legge det til — en voksen taster inn koden for å godkjenne. Poengene bygger seg opp gjennom uken og nullstilles automatisk hver mandag.</p>
+      <div class="field"><label>Voksen-kode (for å godkjenne når barna trykker)</label><input type="text" id="starPin" placeholder="f.eks. 1234"></div>
+      <div class="row2">
+        <div class="field"><label>⚽ Milla — ukemål (poeng)</label><input type="text" id="goalMilla" value="100"></div>
+        <div class="field"><label>🏒 Jonathan — ukemål (poeng)</label><input type="text" id="goalJonathan" value="100"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Belønning Milla</label><input type="text" id="rewardMilla" placeholder="F.eks. sykkel, is, Vipps"></div>
+        <div class="field"><label>Belønning Jonathan</label><input type="text" id="rewardJonathan" placeholder="F.eks. fotball, is, Vipps"></div>
+      </div>
+      <button class="btn primary" id="starSettingsSave" style="width:100%;margin-bottom:16px;">Lagre</button>
+
+      <p class="hint">Faste gjøremål:</p>
       <div class="tplist" id="choreList"></div>
       <div class="field"><label>Hvem</label>
         <div class="whopick" id="choreWho">
@@ -541,6 +584,10 @@ async function loadAll(){
   if(!settings.avatars) settings.avatars = {Milla:'',Jonathan:''};
   if(!settings.chores) settings.chores = [];
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
+  if(!settings.customColors) settings.customColors = {};
+  if(!settings.pin) settings.pin = '1234';
+  if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
+  if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
     try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
   } else {
@@ -610,7 +657,7 @@ function renderGrid(){
     const items = itemsForDay(i);
     const schedule = items.filter(it=>it.type!=='husk');
     const husk = items.filter(it=>it.type==='husk');
-    const shared = schedule.filter(it=> it.type==='skole' || it.who==='Begge');
+    const shared = schedule.filter(it=> it.who==='Begge');
     const millaItems = schedule.filter(it=> it.who==='Milla');
     const jonathanItems = schedule.filter(it=> it.who==='Jonathan');
     const m = matpakkeFor('Milla', i), j = matpakkeFor('Jonathan', i);
@@ -628,10 +675,10 @@ function renderGrid(){
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
       <div class="colheads">
         <div class="colheadname milla">
-          <span class="avbadge">${avatarHTML('Milla',24)}${m>0?`<span class="mpbadge">${m}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Milla',36)}${m>0?`<span class="mpbadge">${lunchboxSVG('#fff')}${m}</span>`:''}</span>
         </div>
         <div class="colheadname jonathan">
-          <span class="avbadge">${avatarHTML('Jonathan',24)}${j>0?`<span class="mpbadge">${j}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Jonathan',36)}${j>0?`<span class="mpbadge">${lunchboxSVG('#fff')}${j}</span>`:''}</span>
         </div>
       </div>
       <div class="split">
@@ -798,7 +845,7 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
@@ -817,6 +864,19 @@ document.querySelectorAll('.tabs button').forEach(b=>{
 // ---------- tema ----------
 function applyTheme(name){
   document.documentElement.setAttribute('data-theme', name);
+  applyCustomColors();
+}
+function applyCustomColors(){
+  const c = settings.customColors || {};
+  const root = document.documentElement.style;
+  root.setProperty('--milla', c.milla || '');
+  root.setProperty('--jonathan', c.jonathan || '');
+  root.setProperty('--skole', c.skole || '');
+  root.setProperty('--today', c.today || '');
+  // if left empty, removeProperty falls back to the theme's own value
+  ['milla','jonathan','skole','today'].forEach(k=>{
+    if(!c[k]) root.removeProperty('--'+k);
+  });
 }
 function updateThemeButtons(){
   document.querySelectorAll('#themePick button').forEach(b=>{
@@ -828,6 +888,31 @@ document.getElementById('themePick').addEventListener('click', async (e)=>{
   settings.theme = b.dataset.v;
   applyTheme(settings.theme);
   updateThemeButtons();
+  await saveSettings();
+});
+function fillColorInputs(){
+  const c = settings.customColors || {};
+  const cs = getComputedStyle(document.documentElement);
+  document.getElementById('colMilla').value = c.milla || cs.getPropertyValue('--milla').trim() || '#ff4fa0';
+  document.getElementById('colJonathan').value = c.jonathan || cs.getPropertyValue('--jonathan').trim() || '#2f80ed';
+  document.getElementById('colSkole').value = c.skole || cs.getPropertyValue('--skole').trim() || '#a69b8d';
+  document.getElementById('colToday').value = c.today || cs.getPropertyValue('--today').trim() || '#ffae2e';
+}
+['colMilla','colJonathan','colSkole','colToday'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', async ()=>{
+    if(!settings.customColors) settings.customColors = {};
+    settings.customColors.milla = document.getElementById('colMilla').value;
+    settings.customColors.jonathan = document.getElementById('colJonathan').value;
+    settings.customColors.skole = document.getElementById('colSkole').value;
+    settings.customColors.today = document.getElementById('colToday').value;
+    applyCustomColors();
+    await saveSettings();
+  });
+});
+document.getElementById('colorReset').addEventListener('click', async ()=>{
+  settings.customColors = {};
+  applyCustomColors();
+  fillColorInputs();
   await saveSettings();
 });
 
@@ -1017,48 +1102,68 @@ document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
 });
 
 // ---------- Stjerner (gjøremål) ----------
-let choreState = {}; // {choreId: true} for today
-async function loadChoreState(){
+let starWeekKey = null;
+let weeklyPoints = {Milla:0, Jonathan:0};
+async function loadWeeklyPoints(){
+  starWeekKey = 'starweek:'+isoDate(mondayOf(new Date()));
   try{
-    const r = await window.storage.get('chorestate:'+isoDate(new Date()));
-    choreState = (r && r.value) ? JSON.parse(r.value) : {};
-  }catch(e){ choreState = {}; }
+    const r = await window.storage.get(starWeekKey);
+    weeklyPoints = (r && r.value) ? JSON.parse(r.value) : {Milla:0,Jonathan:0};
+  }catch(e){ weeklyPoints = {Milla:0,Jonathan:0}; }
 }
-async function saveChoreState(){
-  try{ await window.storage.set('chorestate:'+isoDate(new Date()), JSON.stringify(choreState)); }catch(e){ console.error('save chorestate failed', e); }
+async function saveWeeklyPoints(){
+  try{ await window.storage.set(starWeekKey, JSON.stringify(weeklyPoints)); }catch(e){ console.error('save weekly points failed', e); }
 }
 function renderStars(){
   const box = document.getElementById('starCols');
   box.innerHTML = ['Milla','Jonathan'].map(who=>{
     const list = settings.chores.filter(c=>c.who===who);
+    const pts = weeklyPoints[who]||0;
+    const goal = (settings.weeklyGoal && settings.weeklyGoal[who]) || 100;
+    const pct = Math.min(100, Math.round(pts/goal*100));
+    const reached = pts>=goal;
+    const reward = settings.rewardText && settings.rewardText[who];
     return `
-    <div class="starcol">
+    <div class="starcol ${who.toLowerCase()}">
       <div class="starhead ${who.toLowerCase()}">
         <span class="avwrap glyph">${avatarHTML(who,26)}</span>
         <span class="sname">${who}</span>
-        <span class="pts">⭐ ${settings.points[who]||0}</span>
+        <span class="pts">⭐ ${pts}/${goal}</span>
       </div>
+      <div class="progresswrap"><div class="progressfill" style="width:${pct}%"></div></div>
+      ${reached? `<div class="rewardhit">🎉 Ukemål nådd!${reward?' Belønning: '+reward:''}</div>` : ''}
       <div class="chorelist">
-        ${list.length? list.map(c=>{
-          const done = !!choreState[c.id];
-          return `<div class="chore ${done?'done':''}" data-id="${c.id}" data-who="${who}" data-pts="${c.points}">
-            <span class="cbox"></span><span class="ctxt">${c.title}</span><span class="cpts">+${c.points}</span>
-          </div>`;
-        }).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
+        ${list.length? list.map(c=>`
+          <div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
+            <span class="cbox">+</span><span class="ctxt">${c.title}</span><span class="cpts">+${c.points}</span>
+          </div>`).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
       </div>
     </div>`;
   }).join('');
   box.querySelectorAll('.chore').forEach(el=>{
     el.addEventListener('click', async ()=>{
-      const id = el.dataset.id, who = el.dataset.who, pts = parseInt(el.dataset.pts)||0;
-      const done = !choreState[id];
-      choreState[id] = done;
-      settings.points[who] = (settings.points[who]||0) + (done ? pts : -pts);
-      await saveChoreState(); await saveSettings();
+      const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title;
+      const code = prompt(`En voksen taster koden for å godkjenne "${title}" (${who}):`);
+      if(code===null) return;
+      if(code !== (settings.pin || '1234')){
+        alert('Feil kode.');
+        return;
+      }
+      weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
+      await saveWeeklyPoints();
       renderStars();
     });
   });
 }
+document.getElementById('starQuickAdd').addEventListener('click', ()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelector('.tabs button[data-tab="stjerner"]').classList.add('active');
+  ['matpakker','ukeplan','spond','bilder','tema','profil','stjerner'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = (t==='stjerner')?'block':'none';
+  });
+  renderChoreList();
+  settingsOverlay.classList.add('open');
+});
 function renderChoreList(){
   const list = document.getElementById('choreList');
   list.innerHTML = settings.chores.length ? settings.chores.map(c=>`
@@ -1089,6 +1194,59 @@ document.getElementById('choreAdd').addEventListener('click', async ()=>{
   document.getElementById('choreTitle').value='';
   await saveSettings();
   renderChoreList(); renderStars();
+});
+function fillStarSettingsInputs(){
+  document.getElementById('starPin').value = settings.pin || '1234';
+  document.getElementById('goalMilla').value = (settings.weeklyGoal && settings.weeklyGoal.Milla) || 100;
+  document.getElementById('goalJonathan').value = (settings.weeklyGoal && settings.weeklyGoal.Jonathan) || 100;
+  document.getElementById('rewardMilla').value = (settings.rewardText && settings.rewardText.Milla) || '';
+  document.getElementById('rewardJonathan').value = (settings.rewardText && settings.rewardText.Jonathan) || '';
+}
+document.getElementById('starSettingsSave').addEventListener('click', async ()=>{
+  settings.pin = document.getElementById('starPin').value.trim() || '1234';
+  settings.weeklyGoal = {
+    Milla: parseInt(document.getElementById('goalMilla').value) || 100,
+    Jonathan: parseInt(document.getElementById('goalJonathan').value) || 100
+  };
+  settings.rewardText = {
+    Milla: document.getElementById('rewardMilla').value.trim(),
+    Jonathan: document.getElementById('rewardJonathan').value.trim()
+  };
+  await saveSettings();
+  renderStars();
+});
+async function uploadAvatarFile(file, who, statusEl){
+  statusEl.textContent = 'Laster opp…';
+  const path = `${who.toLowerCase()}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'_')}`;
+  try{
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`, {
+      method:'POST',
+      headers:{
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer '+SUPABASE_ANON_KEY,
+        'Content-Type': file.type || 'application/octet-stream'
+      },
+      body: file
+    });
+    if(!res.ok) throw new Error(await res.text());
+    const url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
+    statusEl.textContent = '✓ Lastet opp';
+    return url;
+  }catch(e){
+    statusEl.textContent = 'Opplasting feilet — sjekk at "avatars"-bucketen finnes i Supabase (se supabase-setup.sql)';
+    console.error('avatar upload failed', e);
+    return null;
+  }
+}
+document.getElementById('fileMilla').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const url = await uploadAvatarFile(file, 'Milla', document.getElementById('avMillaStatus'));
+  if(url) document.getElementById('avMilla').value = url;
+});
+document.getElementById('fileJonathan').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const url = await uploadAvatarFile(file, 'Jonathan', document.getElementById('avJonathanStatus'));
+  if(url) document.getElementById('avJonathan').value = url;
 });
 document.getElementById('avatarSave').addEventListener('click', async ()=>{
   settings.avatars.Milla = document.getElementById('avMilla').value.trim();
@@ -1188,7 +1346,7 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
 
 // ---------- init ----------
 (async function init(){
-  await Promise.all([loadAll(), loadShopping(), loadPhotos(), loadChoreState()]);
+  await Promise.all([loadAll(), loadShopping(), loadPhotos(), loadWeeklyPoints()]);
   applyTheme(settings.theme);
   renderStars();
   renderAll();
