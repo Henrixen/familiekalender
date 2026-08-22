@@ -184,7 +184,8 @@
   .progressfill{height:100%;border-radius:20px;transition:width .3s ease;}
   .starcol.milla .progressfill{background:var(--milla);}
   .starcol.jonathan .progressfill{background:var(--jonathan);}
-  .rewardhit{font-size:11.5px;font-weight:700;color:var(--today);background:var(--today-soft);border-radius:10px;padding:6px 9px;margin-bottom:8px;}
+  .rewardlabel{font-size:11.5px;font-weight:700;color:var(--ink-soft);background:var(--surface-alt);border-radius:10px;padding:6px 9px;margin-bottom:8px;}
+  .rewardlabel.reached{color:var(--today);background:var(--today-soft);}
   .chorelist{display:flex;flex-direction:column;gap:6px;}
   .chore{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12.5px;cursor:pointer;}
   .chore .cbox{
@@ -690,8 +691,8 @@ function renderGrid(){
         </div>
       </div>
       <div class="colfoot">
-        <button class="miniadd" data-day="${i}" data-who="Milla">⚽ +</button>
-        <button class="miniadd" data-day="${i}" data-who="Jonathan">🏒 +</button>
+        <button class="miniadd" data-day="${i}" data-who="Milla">+</button>
+        <button class="miniadd" data-day="${i}" data-who="Jonathan">+</button>
       </div>
       <div class="husk">
         ${husk.map(it=>renderHusk(it)).join('')}
@@ -1131,7 +1132,7 @@ function renderStars(){
         <span class="pts">⭐ ${pts}/${goal}</span>
       </div>
       <div class="progresswrap"><div class="progressfill" style="width:${pct}%"></div></div>
-      ${reached? `<div class="rewardhit">🎉 Ukemål nådd!${reward?' Belønning: '+reward:''}</div>` : ''}
+      ${reward? `<div class="rewardlabel ${reached?'reached':''}">${reached?'🎉 ':'🎁 '}${reward}</div>` : ''}
       <div class="chorelist">
         ${list.length? list.map(c=>`
           <div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
