@@ -112,6 +112,12 @@
     background:var(--surface-alt);color:var(--ink-soft);font-size:14px;line-height:1;cursor:pointer;
   }
   .shared{padding:7px 10px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);}
+  .colheads{display:grid;grid-template-columns:1fr 1fr;padding:8px 6px 4px;}
+  .colheadname{display:flex;align-items:center;justify-content:center;}
+  .colheadname .glyph, .colheadname{font-size:0;}
+  .colheadname img{width:24px;height:24px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px currentColor;}
+  .colheadname.milla{color:var(--milla);font-size:22px;}
+  .colheadname.jonathan{color:var(--jonathan);font-size:22px;}
   .split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:120px;}
   .col{padding:8px 6px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
   .col.milla{border-right:1px solid var(--line);}
@@ -628,6 +634,10 @@ function renderGrid(){
         <div class="lchild">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
       </div>
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
+      <div class="colheads">
+        <div class="colheadname milla">${avatarHTML('Milla',24)}</div>
+        <div class="colheadname jonathan">${avatarHTML('Jonathan',24)}</div>
+      </div>
       <div class="split">
         <div class="col milla">
           ${millaItems.length? millaItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
