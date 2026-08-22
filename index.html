@@ -16,11 +16,11 @@
     --line:#F0E4D6;
     --milla:#FF4FA0;
     --milla-soft:#FFE1F0;
-    --jonathan:#2ECC71;
-    --jonathan-soft:#DFFBEA;
+    --jonathan:#2F80ED;
+    --jonathan-soft:#DCEAFB;
     --today:#FFAE2E;
     --today-soft:#FFF1D6;
-    --skole:#8F97C7;
+    --skole:#A69B8D;
     --radius:20px;
     --shadow:0 3px 0 rgba(43,33,24,.05), 0 10px 24px rgba(43,33,24,.09);
   }
@@ -33,11 +33,11 @@
     --line:#33352F;
     --milla:#FF6FB4;
     --milla-soft:#3A2430;
-    --jonathan:#3FDE8C;
-    --jonathan-soft:#1E3327;
+    --jonathan:#5B9CF6;
+    --jonathan-soft:#1E2E45;
     --today:#FFC15C;
     --today-soft:#3A2E14;
-    --skole:#9BA3DA;
+    --skole:#B3A896;
     --shadow:0 3px 0 rgba(0,0,0,.25), 0 10px 24px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -113,9 +113,18 @@
   }
   .shared{padding:7px 10px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);}
   .colheads{display:grid;grid-template-columns:1fr 1fr;padding:8px 6px 4px;}
+  .avbadge{position:relative;display:inline-flex;}
+  .mpbadge{
+    position:absolute;bottom:-3px;right:-4px;color:#fff;font-size:9px;font-weight:800;
+    width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 2px var(--surface);
+  }
+  .colheadname.milla .mpbadge{background:var(--milla);}
+  .colheadname.jonathan .mpbadge{background:var(--jonathan);}
   .colheadname{display:flex;align-items:center;justify-content:center;}
   .colheadname .glyph, .colheadname{font-size:0;}
-  .colheadname img{width:24px;height:24px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px currentColor;}
+  .colheadname img, .colheadname .avcircle{box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px currentColor;}
+  .colheadname img{width:24px;height:24px;border-radius:50%;object-fit:cover;}
   .colheadname.milla{color:var(--milla);font-size:22px;}
   .colheadname.jonathan{color:var(--jonathan);font-size:22px;}
   .split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:120px;}
@@ -275,7 +284,6 @@
     <div class="clock" id="clock">--:--</div>
   </header>
 
-  <div class="hero" id="hero"></div>
   <div class="grid" id="grid"></div>
 
   <div class="panel starpanel">
@@ -492,8 +500,10 @@ function fmtRange(monday){
 
 function avatarHTML(who, size){
   const url = settings.avatars && settings.avatars[who];
-  if(url) return `<img src="${url}" style="width:${size}px;height:${size}px;">`;
-  return who==='Milla' ? '⚽' : who==='Jonathan' ? '🏒' : '✨';
+  if(url) return `<img class="avcircle" src="${url}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;">`;
+  const initial = who==='Milla' ? 'M' : who==='Jonathan' ? 'J' : '?';
+  const bg = who==='Milla' ? 'var(--milla)' : who==='Jonathan' ? 'var(--jonathan)' : 'var(--today)';
+  return `<span class="avcircle" style="display:inline-flex;align-items:center;justify-content:center;width:${size}px;height:${size}px;border-radius:50%;background:${bg};color:#fff;font-weight:800;font-size:${Math.round(size*0.46)}px;">${initial}</span>`;
 }
 const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M2 14L10 3.2L18 14H2Z" fill="${color}"/>
@@ -517,6 +527,7 @@ const DEFAULT_TEMPLATE = () => ([
 ]);
 
 // ---------- storage ----------
+const weekCache = {}; // isoDate(weekStart) -> weekEvents array, so revisited weeks load instantly
 async function loadAll(){
   const [sRes, tRes, wRes] = await Promise.allSettled([
     window.storage.get('settings'),
@@ -540,6 +551,7 @@ async function loadAll(){
   } else {
     weekEvents = [];
   }
+  weekCache[isoDate(weekStart)] = weekEvents;
 }
 async function saveSettings(){
   try{ await window.storage.set('settings', JSON.stringify(settings)); }catch(e){ console.error('save settings failed', e); }
@@ -548,15 +560,27 @@ async function saveTemplate(){
   try{ await window.storage.set('template', JSON.stringify(template)); }catch(e){ console.error('save template failed', e); }
 }
 async function loadWeek(){
-  const key = 'week:'+isoDate(weekStart);
+  const key = isoDate(weekStart);
+  if(weekCache[key]){
+    // instant from cache; refresh quietly in the background in case another device changed it
+    weekEvents = weekCache[key];
+    window.storage.get('week:'+key).then(w=>{
+      const fresh = (w && w.value) ? JSON.parse(w.value) : [];
+      weekCache[key] = fresh;
+      if(isoDate(weekStart)===key){ weekEvents = fresh; renderAll(); }
+    }).catch(()=>{});
+    return;
+  }
   try{
-    const w = await window.storage.get(key);
+    const w = await window.storage.get('week:'+key);
     weekEvents = (w && w.value) ? JSON.parse(w.value) : [];
   }catch(e){ weekEvents = []; }
+  weekCache[key] = weekEvents;
 }
 async function saveWeek(){
-  const key = 'week:'+isoDate(weekStart);
-  try{ await window.storage.set(key, JSON.stringify(weekEvents)); }catch(e){ console.error('save week failed', e); }
+  const key = isoDate(weekStart);
+  weekCache[key] = weekEvents;
+  try{ await window.storage.set('week:'+key, JSON.stringify(weekEvents)); }catch(e){ console.error('save week failed', e); }
 }
 
 // ---------- rendering ----------
@@ -569,34 +593,6 @@ function todayIndex(){
 function matpakkeFor(child, dayIdx){
   const arr = settings.matpakkeRule[child];
   return arr ? (arr[dayIdx]||0) : 0;
-}
-
-function renderHero(){
-  const idx = todayIndex();
-  const hero = document.getElementById('hero');
-  if(idx===-1){
-    hero.classList.add('noschool');
-    hero.innerHTML = `<span class="label">📅 Viser en annen uke</span>`;
-    return;
-  }
-  hero.classList.remove('noschool');
-  const m = matpakkeFor('Milla', idx), j = matpakkeFor('Jonathan', idx);
-  hero.innerHTML = `
-    <span class="label">🥪 I dag trengs</span>
-    <div class="items">
-      <div class="child milla">
-        <span class="glyph">${avatarHTML("Milla",20)}</span>
-        <span class="name">Milla</span>
-        <div class="lunchrow">${Array(m).fill(0).map(()=>lunchboxSVG('#FF4FA0')).join('')}</div>
-        <span class="count">${m} stk</span>
-      </div>
-      <div class="child jonathan">
-        <span class="glyph">${avatarHTML("Jonathan",20)}</span>
-        <span class="name">Jonathan</span>
-        <div class="lunchrow">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
-        <span class="count">${j} stk</span>
-      </div>
-    </div>`;
 }
 
 function itemsForDay(dayIdx){
@@ -629,14 +625,14 @@ function renderGrid(){
           <button class="sharedadd" data-day="${i}" title="Legg til felles">+</button>
         </div>
       </div>
-      <div class="lunch">
-        <div class="lchild">${Array(m).fill(0).map(()=>lunchboxSVG('#FF4FA0')).join('')}</div>
-        <div class="lchild">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
-      </div>
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
       <div class="colheads">
-        <div class="colheadname milla">${avatarHTML('Milla',24)}</div>
-        <div class="colheadname jonathan">${avatarHTML('Jonathan',24)}</div>
+        <div class="colheadname milla">
+          <span class="avbadge">${avatarHTML('Milla',24)}${m>0?`<span class="mpbadge">${m}</span>`:''}</span>
+        </div>
+        <div class="colheadname jonathan">
+          <span class="avbadge">${avatarHTML('Jonathan',24)}${j>0?`<span class="mpbadge">${j}</span>`:''}</span>
+        </div>
       </div>
       <div class="split">
         <div class="col milla">
@@ -720,7 +716,6 @@ function renderClock(){
 
 async function renderAll(){
   renderWeekLabel();
-  renderHero();
   renderGrid();
 }
 
@@ -840,7 +835,7 @@ function renderRuleTable(){
   const tbl = document.getElementById('ruleTable');
   tbl.innerHTML = `<tr><th></th>${WD_SHORT.map(d=>`<th>${d}</th>`).join('')}</tr>` +
     ['Milla','Jonathan'].map(child=>`
-      <tr><th style="text-align:left;color:${child==='Milla'?'#FF4FA0':'#2ECC71'};">${child}</th>
+      <tr><th style="text-align:left;color:${child==='Milla'?'#FF4FA0':'#2F80ED'};">${child}</th>
       ${WD.map((_,i)=>`
         <td><div class="stepper">
           <button data-child="${child}" data-day="${i}" data-d="-1">–</button>
@@ -855,7 +850,7 @@ function renderRuleTable(){
       settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur+delta));
       document.getElementById(`rv-${c}-${d}`).textContent = settings.matpakkeRule[c][d];
       await saveSettings();
-      renderHero(); renderGrid();
+      renderGrid();
     });
   });
 }
@@ -1193,9 +1188,8 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
 
 // ---------- init ----------
 (async function init(){
-  await loadAll();
+  await Promise.all([loadAll(), loadShopping(), loadPhotos(), loadChoreState()]);
   applyTheme(settings.theme);
-  await Promise.all([loadShopping(), loadPhotos(), loadChoreState()]);
   renderStars();
   renderAll();
   renderShopping();
