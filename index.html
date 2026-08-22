@@ -156,6 +156,23 @@
   }
   .addbtn:active{background:var(--surface-alt);}
 
+  .starpanel{margin-top:12px;min-height:auto;}
+  .starcols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .starhead{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .starhead .avwrap{flex:none;}
+  .starhead .sname{font-weight:700;font-size:13px;flex:1;}
+  .starhead .pts{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+  .starhead.milla .pts{background:var(--milla-soft);color:var(--milla);}
+  .starhead.jonathan .pts{background:var(--jonathan-soft);color:var(--jonathan);}
+  .chorelist{display:flex;flex-direction:column;gap:6px;}
+  .chore{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:10px;background:var(--surface-alt);font-size:12.5px;cursor:pointer;}
+  .chore .cbox{width:15px;height:15px;border-radius:5px;border:2px solid var(--ink-soft);flex:none;}
+  .chore.done{opacity:.5;}
+  .chore.done .ctxt{text-decoration:line-through;}
+  .chore.done .cbox{background:var(--today);border-color:var(--today);}
+  .chore .ctxt{flex:1;}
+  .chore .cpts{font-size:11px;color:var(--ink-soft);}
+  .avwrap img,.glyph img{border-radius:50%;object-fit:cover;display:inline-block;vertical-align:middle;}
   .bottomrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
   .panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;min-height:180px;}
   .panelhead{font-weight:800;font-size:15px;margin-bottom:10px;}
@@ -255,6 +272,11 @@
   <div class="hero" id="hero"></div>
   <div class="grid" id="grid"></div>
 
+  <div class="panel starpanel">
+    <div class="panelhead">⭐ Stjerner — for å hjelpe til hjemme</div>
+    <div class="starcols" id="starCols"></div>
+  </div>
+
   <div class="bottomrow">
     <div class="panel">
       <div class="panelhead">🛒 Handle og Huske</div>
@@ -326,6 +348,8 @@
       <button data-tab="spond">Importer fra Spond</button>
       <button data-tab="bilder">Bilder</button>
       <button data-tab="tema">Tema</button>
+      <button data-tab="profil">Profil</button>
+      <button data-tab="stjerner">Stjerner</button>
     </div>
 
     <div id="tab-matpakker">
@@ -372,6 +396,29 @@ https://.../bilde2.jpg"></textarea>
         <button data-v="myk">🎨 Myk pastell</button>
         <button data-v="mork">🌙 Mørk</button>
       </div>
+    </div>
+
+    <div id="tab-profil" style="display:none;">
+      <p class="hint">Legg til et bilde av hver av barna (direkte bildelenke). Tomt felt = ikonet vises som før.</p>
+      <div class="field"><label>🌸 Milla — bildelenke</label><input type="text" id="avMilla" placeholder="https://..."></div>
+      <div class="field"><label>🌿 Jonathan — bildelenke</label><input type="text" id="avJonathan" placeholder="https://..."></div>
+      <button class="btn primary" id="avatarSave" style="width:100%;">Lagre bilder</button>
+    </div>
+
+    <div id="tab-stjerner" style="display:none;">
+      <p class="hint">Gjøremål som gir stjernepoeng når de hukes av. Poengene nullstilles ikke — de bygger seg opp over tid.</p>
+      <div class="tplist" id="choreList"></div>
+      <div class="field"><label>Hvem</label>
+        <div class="whopick" id="choreWho">
+          <button data-v="Milla" class="milla active">⚽ Milla</button>
+          <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
+        <div class="field" style="max-width:90px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
+      </div>
+      <button class="btn ghost" id="choreAdd" style="width:100%;">+ Legg til gjøremål</button>
     </div>
 
     <div class="modalbtns">
@@ -437,6 +484,11 @@ function fmtRange(monday){
     : `${monday.getDate()}. ${MONTHS[monday.getMonth()]} – ${sun.getDate()}. ${MONTHS[sun.getMonth()]}`;
 }
 
+function avatarHTML(who, size){
+  const url = settings.avatars && settings.avatars[who];
+  if(url) return `<img src="${url}" style="width:${size}px;height:${size}px;">`;
+  return who==='Milla' ? '⚽' : who==='Jonathan' ? '🏒' : '✨';
+}
 const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M2 14L10 3.2L18 14H2Z" fill="${color}"/>
   <path d="M4.6 11.1H15.4" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.92"/>
@@ -445,7 +497,7 @@ const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http
 
 // ---------- state ----------
 let weekStart = mondayOf(new Date());
-let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys' };
+let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys', avatars:{Milla:'',Jonathan:''}, chores:[], points:{Milla:0,Jonathan:0} };
 let template = [];
 let weekEvents = [];
 let editing = null; // {type:'template'|'week', id} or null for new
@@ -469,6 +521,9 @@ async function loadAll(){
     try{ settings = JSON.parse(sRes.value.value); }catch(e){}
   }
   if(!settings.theme) settings.theme = 'lys';
+  if(!settings.avatars) settings.avatars = {Milla:'',Jonathan:''};
+  if(!settings.chores) settings.chores = [];
+  if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
     try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
   } else {
@@ -524,13 +579,13 @@ function renderHero(){
     <span class="label">🥪 I dag trengs</span>
     <div class="items">
       <div class="child milla">
-        <span class="glyph">⚽</span>
+        <span class="glyph">${avatarHTML("Milla",20)}</span>
         <span class="name">Milla</span>
         <div class="lunchrow">${Array(m).fill(0).map(()=>lunchboxSVG('#FF4FA0')).join('')}</div>
         <span class="count">${m} stk</span>
       </div>
       <div class="child jonathan">
-        <span class="glyph">🏒</span>
+        <span class="glyph">${avatarHTML("Jonathan",20)}</span>
         <span class="name">Jonathan</span>
         <div class="lunchrow">${Array(j).fill(0).map(()=>lunchboxSVG('#2ECC71')).join('')}</div>
         <span class="count">${j} stk</span>
@@ -738,7 +793,9 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList();
+  document.getElementById('avMilla').value = settings.avatars.Milla || '';
+  document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
 });
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
@@ -746,7 +803,7 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
-    ['matpakker','ukeplan','spond','bilder','tema'].forEach(t=>{
+    ['matpakker','ukeplan','spond','bilder','tema','profil','stjerner'].forEach(t=>{
       document.getElementById('tab-'+t).style.display = (t===b.dataset.tab)?'block':'none';
     });
   });
@@ -954,6 +1011,88 @@ document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
   weekStart = mondayOf(new Date()); await loadWeek(); renderAll();
 });
 
+// ---------- Stjerner (gjøremål) ----------
+let choreState = {}; // {choreId: true} for today
+async function loadChoreState(){
+  try{
+    const r = await window.storage.get('chorestate:'+isoDate(new Date()));
+    choreState = (r && r.value) ? JSON.parse(r.value) : {};
+  }catch(e){ choreState = {}; }
+}
+async function saveChoreState(){
+  try{ await window.storage.set('chorestate:'+isoDate(new Date()), JSON.stringify(choreState)); }catch(e){ console.error('save chorestate failed', e); }
+}
+function renderStars(){
+  const box = document.getElementById('starCols');
+  box.innerHTML = ['Milla','Jonathan'].map(who=>{
+    const list = settings.chores.filter(c=>c.who===who);
+    return `
+    <div class="starcol">
+      <div class="starhead ${who.toLowerCase()}">
+        <span class="avwrap glyph">${avatarHTML(who,26)}</span>
+        <span class="sname">${who}</span>
+        <span class="pts">⭐ ${settings.points[who]||0}</span>
+      </div>
+      <div class="chorelist">
+        ${list.length? list.map(c=>{
+          const done = !!choreState[c.id];
+          return `<div class="chore ${done?'done':''}" data-id="${c.id}" data-who="${who}" data-pts="${c.points}">
+            <span class="cbox"></span><span class="ctxt">${c.title}</span><span class="cpts">+${c.points}</span>
+          </div>`;
+        }).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
+      </div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.chore').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.id, who = el.dataset.who, pts = parseInt(el.dataset.pts)||0;
+      const done = !choreState[id];
+      choreState[id] = done;
+      settings.points[who] = (settings.points[who]||0) + (done ? pts : -pts);
+      await saveChoreState(); await saveSettings();
+      renderStars();
+    });
+  });
+}
+function renderChoreList(){
+  const list = document.getElementById('choreList');
+  list.innerHTML = settings.chores.length ? settings.chores.map(c=>`
+    <div class="tplitem" data-id="${c.id}">
+      <span>${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
+      <span class="del" style="cursor:pointer;">✕</span>
+    </div>`).join('') : '<div class="hint">Ingen gjøremål ennå.</div>';
+  list.querySelectorAll('.tplitem .del').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.closest('.tplitem').dataset.id;
+      settings.chores = settings.chores.filter(c=>c.id!==id);
+      await saveSettings();
+      renderChoreList(); renderStars();
+    });
+  });
+}
+let choreWhoSel = 'Milla';
+document.getElementById('choreWho').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  choreWhoSel = b.dataset.v;
+  document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x===b));
+});
+document.getElementById('choreAdd').addEventListener('click', async ()=>{
+  const title = document.getElementById('choreTitle').value.trim();
+  const points = parseInt(document.getElementById('chorePoints').value) || 1;
+  if(!title) return;
+  settings.chores.push({id:uid(), who:choreWhoSel, title, points});
+  document.getElementById('choreTitle').value='';
+  await saveSettings();
+  renderChoreList(); renderStars();
+});
+document.getElementById('avatarSave').addEventListener('click', async ()=>{
+  settings.avatars.Milla = document.getElementById('avMilla').value.trim();
+  settings.avatars.Jonathan = document.getElementById('avJonathan').value.trim();
+  await saveSettings();
+  renderAll(); renderStars();
+  settingsOverlay.classList.remove('open');
+});
+
 // ---------- Handleliste ----------
 let shoppingList = [];
 async function loadShopping(){
@@ -1046,7 +1185,8 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
 (async function init(){
   await loadAll();
   applyTheme(settings.theme);
-  await Promise.all([loadShopping(), loadPhotos()]);
+  await Promise.all([loadShopping(), loadPhotos(), loadChoreState()]);
+  renderStars();
   renderAll();
   renderShopping();
   renderPhotos();
