@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ukeplan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -495,19 +496,51 @@ const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const LOCAL_CACHE_PREFIX = 'familiekalender:v1:';
+
+function localCacheGet(key){
+  try{
+    const value = localStorage.getItem(LOCAL_CACHE_PREFIX + key);
+    return value == null ? null : { key, value, shared:false };
+  }catch(e){ return null; }
+}
+function localCacheSet(key, value){
+  try{ localStorage.setItem(LOCAL_CACHE_PREFIX + key, value); }catch(e){}
+}
+function localCacheDelete(key){
+  try{ localStorage.removeItem(LOCAL_CACHE_PREFIX + key); }catch(e){}
+}
+
 window.storage = {
+  getCached(key){
+    return localCacheGet(key);
+  },
   async get(key){
     const { data, error } = await sb.from('family_store').select('value').eq('key', key).maybeSingle();
     if (error) throw error;
     if (!data) return null;
+    localCacheSet(key, data.value);
     return { key, value: data.value, shared: false };
   },
+  async getMany(keys){
+    const { data, error } = await sb.from('family_store').select('key,value').in('key', keys);
+    if (error) throw error;
+    const result = {};
+    (data || []).forEach(row=>{
+      localCacheSet(row.key, row.value);
+      result[row.key] = { key:row.key, value:row.value, shared:false };
+    });
+    return result;
+  },
   async set(key, value){
+    // Optimistic local cache: next page load can paint immediately.
+    localCacheSet(key, value);
     const { error } = await sb.from('family_store').upsert({ key, value, updated_at: new Date().toISOString() });
     if (error) throw error;
     return { key, value, shared: false };
   },
   async delete(key){
+    localCacheDelete(key);
     const { error } = await sb.from('family_store').delete().eq('key', key);
     if (error) throw error;
     return { key, deleted: true, shared: false };
@@ -608,21 +641,31 @@ async function saveTemplate(){
 }
 async function loadWeek(){
   const key = isoDate(weekStart);
+  const storageKey = 'week:'+key;
+
+  // Memory cache first, then persistent browser cache.
   if(weekCache[key]){
-    // instant from cache; refresh quietly in the background in case another device changed it
     weekEvents = weekCache[key];
-    window.storage.get('week:'+key).then(w=>{
-      const fresh = (w && w.value) ? JSON.parse(w.value) : [];
-      weekCache[key] = fresh;
-      if(isoDate(weekStart)===key){ weekEvents = fresh; renderAll(); }
-    }).catch(()=>{});
-    return;
+  }else{
+    const cached = window.storage.getCached(storageKey);
+    if(cached && cached.value){
+      try{ weekEvents = JSON.parse(cached.value); }catch(e){ weekEvents = []; }
+      weekCache[key] = weekEvents;
+    }else{
+      weekEvents = [];
+    }
   }
-  try{
-    const w = await window.storage.get('week:'+key);
-    weekEvents = (w && w.value) ? JSON.parse(w.value) : [];
-  }catch(e){ weekEvents = []; }
-  weekCache[key] = weekEvents;
+
+  // Paint immediately; refresh remotely without blocking navigation.
+  renderAll();
+  window.storage.get(storageKey).then(w=>{
+    const fresh = (w && w.value) ? JSON.parse(w.value) : [];
+    weekCache[key] = fresh;
+    if(isoDate(weekStart)===key){
+      weekEvents = fresh;
+      renderAll();
+    }
+  }).catch(()=>{});
 }
 async function saveWeek(){
   const key = isoDate(weekStart);
@@ -1092,13 +1135,13 @@ document.getElementById('spondAdd').addEventListener('click', async ()=>{
 
 // ---------- week navigation ----------
 document.getElementById('prevWeek').addEventListener('click', async ()=>{
-  weekStart = addDays(weekStart,-7); await loadWeek(); renderAll();
+  weekStart = addDays(weekStart,-7); loadWeek();
 });
 document.getElementById('nextWeek').addEventListener('click', async ()=>{
-  weekStart = addDays(weekStart,7); await loadWeek(); renderAll();
+  weekStart = addDays(weekStart,7); loadWeek();
 });
 document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
-  weekStart = mondayOf(new Date()); await loadWeek(); renderAll();
+  weekStart = mondayOf(new Date()); loadWeek();
 });
 
 // ---------- Stjerner (gjøremål) ----------
@@ -1322,7 +1365,7 @@ function renderPhotos(){
     return;
   }
   photoIdx = photoIdx % photos.length;
-  frame.innerHTML = photos.map((url,i)=>`<img src="${url}" class="${i===photoIdx?'show':''}">`).join('') +
+  frame.innerHTML = photos.map((url,i)=>`<img src="${url}" loading="${i===photoIdx?'eager':'lazy'}" decoding="async" class="${i===photoIdx?'show':''}">`).join('') +
     `<div class="photodots">${photos.map((_,i)=>`<span class="${i===photoIdx?'active':''}"></span>`).join('')}</div>`;
 }
 function nextPhoto(){
@@ -1344,22 +1387,84 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
 
-// ---------- init ----------
-(async function init(){
-  await Promise.all([loadAll(), loadShopping(), loadPhotos(), loadWeeklyPoints()]);
+// ---------- fast init ----------
+function safeParseValue(r, fallback){
+  if(!r || r.value == null) return fallback;
+  try{ return JSON.parse(r.value); }catch(e){ return fallback; }
+}
+
+function normalizeSettings(){
+  if(!settings.theme) settings.theme = 'lys';
+  if(!settings.avatars) settings.avatars = {Milla:'',Jonathan:''};
+  if(!settings.chores) settings.chores = [];
+  if(!settings.points) settings.points = {Milla:0,Jonathan:0};
+  if(!settings.customColors) settings.customColors = {};
+  if(!settings.pin) settings.pin = '1234';
+  if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
+  if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
+}
+
+function applySnapshot(getter){
+  const weekKey = 'week:'+isoDate(weekStart);
+  starWeekKey = 'starweek:'+isoDate(mondayOf(new Date()));
+
+  const s = getter('settings');
+  if(s) settings = safeParseValue(s, settings);
+  normalizeSettings();
+
+  const t = getter('template');
+  template = t ? safeParseValue(t, DEFAULT_TEMPLATE()) : (template.length ? template : DEFAULT_TEMPLATE());
+
+  const w = getter(weekKey);
+  if(w) weekEvents = safeParseValue(w, []);
+  weekCache[isoDate(weekStart)] = weekEvents;
+
+  const sh = getter('shopping');
+  if(sh) shoppingList = safeParseValue(sh, []);
+
+  const ph = getter('photos');
+  if(ph) photos = safeParseValue(ph, []);
+
+  const sp = getter(starWeekKey);
+  if(sp) weeklyPoints = safeParseValue(sp, {Milla:0,Jonathan:0});
+}
+
+function paint(){
   applyTheme(settings.theme);
   renderStars();
   renderAll();
   renderShopping();
   renderPhotos();
   document.getElementById('photoInput').value = photos.join('\n');
+}
+
+(async function init(){
+  // First paint uses defaults/browser cache and does not wait for the network.
+  applySnapshot(key => window.storage.getCached(key));
+  paint();
   renderClock();
+
+  // Fetch everything needed for the first screen in ONE Supabase request.
+  const initialKeys = [
+    'settings',
+    'template',
+    'week:'+isoDate(weekStart),
+    'shopping',
+    'photos',
+    starWeekKey
+  ];
+
+  try{
+    const fresh = await window.storage.getMany(initialKeys);
+    applySnapshot(key => fresh[key] || null);
+    paint();
+  }catch(e){
+    console.error('initial refresh failed', e);
+  }
+
   setInterval(renderClock, 15000);
   setInterval(nextPhoto, 7000);
-  setInterval(async ()=>{ // keep "today" highlight fresh across midnight
-    const wasIdx = todayIndex();
-    renderClock();
-  }, 60000);
+  setInterval(()=>{ renderClock(); }, 60000);
 })();
 </script>
 </body>
