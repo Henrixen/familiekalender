@@ -959,6 +959,361 @@ html[data-layout="2"] .starpanel{
   html[data-layout="2"] .weekend-section{grid-column:1/-1!important;}
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   V4 — richer settings + viewport-safe scrolling
+   ═══════════════════════════════════════════════════════════════ */
+
+#settingsOverlay{
+  overflow:auto;
+  align-items:center;
+  justify-content:center;
+}
+#settingsOverlay .settings-modal{
+  width:min(1460px,calc(100vw - 28px));
+  height:min(900px,calc(100dvh - 28px));
+  max-height:calc(100dvh - 28px);
+  min-height:0;
+}
+.settings-main{
+  min-height:0;
+  overflow:hidden;
+}
+.settings-side{
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.settings-scroll{
+  min-height:0;
+  overflow-y:auto!important;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.settings-footer{
+  flex:none;
+  position:relative;
+  z-index:3;
+}
+
+/* richer Matpakker layout */
+.lunch-settings-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 250px;
+  gap:16px;
+  align-items:stretch;
+}
+.lunch-main-stack{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.lunch-family-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--surface-alt) 70%,#fff 30%));
+  box-shadow:0 7px 22px rgba(43,33,24,.045);
+}
+.lunch-family-row{
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  align-items:center;
+  gap:16px;
+}
+.lunch-family-divider{
+  height:58px;
+  background:var(--line);
+}
+.lunch-person{
+  min-width:0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+}
+.lunch-person-avatar{
+  color:var(--milla);
+  display:flex;
+}
+.lunch-person.jonathan .lunch-person-avatar{color:var(--jonathan);}
+.lunch-person-avatar img,
+.lunch-person-avatar .avcircle{
+  width:62px!important;
+  height:62px!important;
+  border-radius:50%!important;
+  object-fit:cover;
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 6px currentColor,
+    0 7px 18px rgba(43,33,24,.12)!important;
+}
+.lunch-person-name{
+  font-size:17px;
+  font-weight:850;
+  letter-spacing:-.02em;
+}
+.lunch-person.milla .lunch-person-name{color:var(--milla);}
+.lunch-person.jonathan .lunch-person-name{color:var(--jonathan);}
+.lunch-person-sub{
+  margin-top:3px;
+  color:var(--ink-soft);
+  font-size:10.5px;
+}
+.lunch-person-icon{
+  width:48px;height:48px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+}
+.lunch-person.milla .lunch-person-icon{background:#FFF0F5;color:var(--milla);}
+.lunch-person.jonathan .lunch-person-icon{background:#EEF6FF;color:var(--jonathan);}
+
+.lunch-days-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:0;
+  overflow:hidden;
+  background:var(--surface);
+  box-shadow:0 7px 22px rgba(43,33,24,.045);
+}
+.lunch-days-header{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-bottom:1px solid var(--line);
+}
+.lunch-day-head{
+  padding:13px 6px 11px;
+  text-align:center;
+  border-right:1px solid color-mix(in srgb,var(--line) 72%,transparent);
+}
+.lunch-day-head:last-child{border-right:0;}
+.lunch-day-head b{display:block;font-size:11.5px;}
+.lunch-day-head span{display:block;font-size:9.5px;color:var(--ink-soft);margin-top:3px;}
+.lunch-rows{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+}
+.lunch-day-cell{
+  min-width:0;
+  padding:13px 8px;
+  border-right:1px solid color-mix(in srgb,var(--line) 72%,transparent);
+}
+.lunch-day-cell:last-child{border-right:0;}
+.lunch-day-controls{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.lunch-control-row{
+  display:grid;
+  grid-template-columns:29px minmax(22px,1fr) 29px;
+  gap:5px;
+  align-items:center;
+}
+.lunch-control-row button{
+  width:29px;height:29px;
+  border-radius:9px;
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  color:var(--ink);
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+.lunch-control-row.milla button{
+  border-color:#FFD8E5;
+  background:#FFF6F9;
+  color:var(--milla);
+}
+.lunch-control-row.jonathan button{
+  border-color:#D8E9FF;
+  background:#F5F9FF;
+  color:var(--jonathan);
+}
+.lunch-control-row .count{
+  text-align:center;
+  font-size:13px;
+  font-weight:800;
+}
+.lunch-row-key{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  color:var(--ink-soft);
+  margin-bottom:9px;
+}
+.lunch-dot{
+  width:7px;height:7px;border-radius:50%;
+}
+.lunch-dot.milla{background:var(--milla);}
+.lunch-dot.jonathan{background:var(--jonathan);}
+
+.lunch-note-card{
+  border:1px solid #F2DFE5;
+  border-radius:17px;
+  padding:13px 15px;
+  background:linear-gradient(135deg,#FFF7FA,#FFF9F2);
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.lunch-note-icon{
+  width:38px;height:38px;border-radius:50%;
+  background:#FFE5ED;
+  display:flex;align-items:center;justify-content:center;
+  flex:none;
+}
+.lunch-note-card b{display:block;font-size:12px;}
+.lunch-note-card span{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
+
+.lunch-benefits{
+  border:1px solid #DCEBDC;
+  border-radius:20px;
+  padding:18px 16px;
+  background:linear-gradient(180deg,#F7FCF7,#F4FAF6);
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+}
+.lunch-illustration{
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  margin-bottom:7px;
+}
+.lunch-illustration .bag{
+  width:78px;height:58px;
+  border-radius:18px 18px 14px 14px;
+  background:linear-gradient(135deg,#FF779A,#F45F85);
+  border:4px solid #E9547B;
+  box-shadow:0 8px 18px rgba(244,95,133,.17);
+  position:relative;
+}
+.lunch-illustration .bag:before{
+  content:"";
+  position:absolute;
+  left:20px;right:20px;top:-15px;
+  height:18px;
+  border:5px solid #E9547B;
+  border-bottom:0;
+  border-radius:13px 13px 0 0;
+}
+.lunch-illustration .apple{
+  width:38px;height:38px;border-radius:50% 50% 46% 46%;
+  background:#8CC95C;
+  position:absolute;
+  right:26px;bottom:10px;
+  box-shadow:0 5px 12px rgba(65,130,60,.14);
+}
+.lunch-illustration .bottle{
+  width:27px;height:62px;border-radius:9px 9px 11px 11px;
+  background:#72C482;
+  position:absolute;
+  right:67px;top:10px;
+}
+.lunch-benefits h4{
+  margin:4px 0 14px;
+  font-size:13px;
+}
+.benefit-item{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  margin-bottom:14px;
+}
+.benefit-icon{
+  width:28px;height:28px;border-radius:9px;
+  background:#E7F7E8;
+  color:#36A94D;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+}
+.benefit-item b{display:block;font-size:10.5px;}
+.benefit-item span{display:block;font-size:9.7px;color:var(--ink-soft);line-height:1.45;margin-top:2px;}
+
+/* modal compression for shorter screens */
+@media(max-height:820px) and (min-width:761px){
+  #settingsOverlay{padding:8px;}
+  #settingsOverlay .settings-modal{
+    height:calc(100dvh - 16px);
+    max-height:calc(100dvh - 16px);
+    border-radius:22px;
+  }
+  .settings-side{padding:17px 14px 12px;}
+  .settings-brand{padding:0 8px 12px;}
+  .settings-brand h2{font-size:23px!important;}
+  .settings-brand p{font-size:10.5px;}
+  #settingsOverlay .tabs{gap:4px;}
+  #settingsOverlay .tabs button{padding:7px 9px;grid-template-columns:32px 1fr;column-gap:8px;}
+  .settings-nav-icon{width:32px;height:32px;border-radius:10px;font-size:14px;}
+  .settings-nav-copy{font-size:11.5px;}
+  .settings-nav-sub{font-size:9px;}
+  .settings-tip{padding:9px;font-size:9px;}
+  .settings-top{padding:16px 24px 10px;}
+  .settings-top h3{font-size:22px;}
+  .settings-top p{font-size:10.5px;margin-top:5px;}
+  .settings-kicker{font-size:9px;margin-bottom:4px;}
+  .settings-x{width:34px;height:34px;font-size:19px;}
+  .settings-scroll{padding:3px 24px 16px;}
+  .settings-footer{padding:9px 18px;}
+  .settings-footer .btn{padding:9px 14px;}
+  .lunch-family-card{padding:11px 13px;}
+  .lunch-person-avatar img,.lunch-person-avatar .avcircle{width:50px!important;height:50px!important;}
+  .lunch-person-name{font-size:14px;}
+  .lunch-person-icon{width:40px;height:40px;font-size:18px;}
+  .lunch-day-head{padding:9px 5px 8px;}
+  .lunch-day-cell{padding:9px 7px;}
+  .lunch-control-row{grid-template-columns:26px 1fr 26px;}
+  .lunch-control-row button{width:26px;height:26px;}
+  .lunch-benefits{padding:13px;}
+  .lunch-illustration{height:72px;transform:scale(.82);transform-origin:center;}
+  .benefit-item{margin-bottom:9px;}
+  .lunch-note-card{padding:9px 12px;}
+}
+
+@media(max-width:1180px){
+  #settingsOverlay .settings-modal{grid-template-columns:230px minmax(0,1fr);}
+  .lunch-settings-grid{grid-template-columns:1fr;}
+  .lunch-benefits{
+    display:grid;
+    grid-template-columns:110px repeat(3,1fr);
+    gap:10px;
+    align-items:center;
+  }
+  .lunch-illustration{height:75px;margin:0;}
+  .lunch-benefits h4{display:none;}
+  .benefit-item{margin:0;}
+}
+@media(max-width:760px){
+  #settingsOverlay{
+    align-items:flex-start;
+    padding:5px;
+  }
+  #settingsOverlay .settings-modal{
+    width:calc(100vw - 10px);
+    height:calc(100dvh - 10px);
+    max-height:calc(100dvh - 10px);
+  }
+  .lunch-family-row{grid-template-columns:1fr;gap:12px;}
+  .lunch-family-divider{height:1px;width:100%;}
+  .lunch-person-avatar img,.lunch-person-avatar .avcircle{width:48px!important;height:48px!important;}
+  .lunch-benefits{display:block;}
+  .lunch-benefits h4{display:block;}
+  .lunch-illustration{height:80px;}
+  .lunch-rows,.lunch-days-header{
+    min-width:520px;
+  }
+  .lunch-days-card{overflow-x:auto;}
+}
+
 </style>
 </head>
 <body>
@@ -1109,24 +1464,80 @@ html[data-layout="2"] .starpanel{
         <div>
           <div class="settings-kicker" id="settingsKicker">Matpakker</div>
           <h3 id="settingsHeading">Matpakker per dag</h3>
-          <p id="settingsDescription">Sett antall matpakker som trengs hver dag, per barn.</p>
+          <p id="settingsDescription">Sett antall matpakker som trengs hver skoledag, per barn.</p>
         </div>
         <button class="settings-x" id="settingsX" aria-label="Lukk innstillinger">×</button>
       </div>
 
       <div class="settings-scroll">
         <div id="tab-matpakker">
-          <div class="settings-section">
-            <table class="rulegrid" id="ruleTable"></table>
-          </div>
-          <div class="settings-section" style="background:linear-gradient(135deg,#FFF7FA,#FFF9F0);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#FFE4EC;">💗</div>
-              <div>
-                <div style="font-weight:800;font-size:13px;">Rask oversikt om morgenen</div>
-                <div class="hint" style="margin:3px 0 0;">Antallet vises direkte ved profilbildet på hver ukedag.</div>
+          <div class="lunch-settings-grid">
+            <div class="lunch-main-stack">
+              <div class="lunch-family-card">
+                <div class="lunch-family-row">
+                  <div class="lunch-person milla">
+                    <div class="lunch-person-avatar" id="lunchAvatarMilla"></div>
+                    <div>
+                      <div class="lunch-person-name">Milla</div>
+                      <div class="lunch-person-sub">Matpakker på skoledager</div>
+                    </div>
+                    <div class="lunch-person-icon">🧳</div>
+                  </div>
+
+                  <div class="lunch-family-divider"></div>
+
+                  <div class="lunch-person jonathan">
+                    <div class="lunch-person-avatar" id="lunchAvatarJonathan"></div>
+                    <div>
+                      <div class="lunch-person-name">Jonathan</div>
+                      <div class="lunch-person-sub">Matpakker på skoledager</div>
+                    </div>
+                    <div class="lunch-person-icon">🧳</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lunch-days-card">
+                <div class="lunch-days-header">
+                  <div class="lunch-day-head"><b>Mandag</b><span>man</span></div>
+                  <div class="lunch-day-head"><b>Tirsdag</b><span>tir</span></div>
+                  <div class="lunch-day-head"><b>Onsdag</b><span>ons</span></div>
+                  <div class="lunch-day-head"><b>Torsdag</b><span>tor</span></div>
+                  <div class="lunch-day-head"><b>Fredag</b><span>fre</span></div>
+                </div>
+                <div class="lunch-rows" id="lunchSettingsRows"></div>
+              </div>
+
+              <div class="lunch-note-card">
+                <div class="lunch-note-icon">💗</div>
+                <div>
+                  <b>Rask oversikt om morgenen</b>
+                  <span>Matpakke-antallet vises separat nederst i hver ukedag på familietavlen.</span>
+                </div>
               </div>
             </div>
+
+            <aside class="lunch-benefits">
+              <div class="lunch-illustration">
+                <div class="bag"></div>
+                <div class="bottle"></div>
+                <div class="apple"></div>
+              </div>
+              <h4>Hvorfor matpakker?</h4>
+
+              <div class="benefit-item">
+                <div class="benefit-icon">◷</div>
+                <div><b>Spar tid om morgenen</b><span>Se raskt hvem som trenger matpakke hver dag.</span></div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">✓</div>
+                <div><b>Bedre oversikt</b><span>Planlegg innkjøp og måltider enklere.</span></div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">♡</div>
+                <div><b>Mindre stress</b><span>En liten plan gjør hverdagen smidigere for alle.</span></div>
+              </div>
+            </aside>
           </div>
         </div>
 
@@ -1783,7 +2194,7 @@ document.getElementById('settingsFab').addEventListener('click', ()=>{
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 document.getElementById('settingsX').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 const SETTINGS_META = {
-  matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver dag, per barn.'],
+  matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver skoledag, per barn.'],
   ukeplan:['Fast ukeplan','Faste rutiner','Administrer skole, trening og andre aktiviteter som gjentas hver uke.'],
   spond:['Import','Importer fra Spond','Lim inn kalenderdata og velg hvilke aktiviteter som skal inn i ukeplanen.'],
   bilder:['Bilder','Familiebilder','Legg til bilder til slideshowet nederst på familietavlen.'],
@@ -1882,23 +2293,46 @@ document.getElementById('colorReset').addEventListener('click', async ()=>{
 });
 
 function renderRuleTable(){
-  const tbl = document.getElementById('ruleTable');
-  tbl.innerHTML = `<tr><th></th>${WD_SHORT.map(d=>`<th>${d}</th>`).join('')}</tr>` +
-    ['Milla','Jonathan'].map(child=>`
-      <tr><th style="text-align:left;color:${child==='Milla'?'#FF4FA0':'#2F80ED'};">${child}</th>
-      ${WD.map((_,i)=>`
-        <td><div class="stepper">
-          <button data-child="${child}" data-day="${i}" data-d="-1">–</button>
-          <span id="rv-${child}-${i}">${settings.matpakkeRule[child][i]}</span>
-          <button data-child="${child}" data-day="${i}" data-d="1">+</button>
-        </div></td>`).join('')}
-      </tr>`).join('');
-  tbl.querySelectorAll('button').forEach(b=>{
+  const rows = document.getElementById('lunchSettingsRows');
+  const avM = document.getElementById('lunchAvatarMilla');
+  const avJ = document.getElementById('lunchAvatarJonathan');
+
+  if(avM) avM.innerHTML = avatarHTML('Milla',62);
+  if(avJ) avJ.innerHTML = avatarHTML('Jonathan',62);
+  if(!rows) return;
+
+  rows.innerHTML = [0,1,2,3,4].map(i=>`
+    <div class="lunch-day-cell">
+      <div class="lunch-day-controls">
+        <div>
+          <div class="lunch-row-key"><span class="lunch-dot milla"></span>Milla</div>
+          <div class="lunch-control-row milla">
+            <button type="button" data-child="Milla" data-day="${i}" data-d="-1">−</button>
+            <span class="count" id="rv-Milla-${i}">${settings.matpakkeRule.Milla[i] || 0}</span>
+            <button type="button" data-child="Milla" data-day="${i}" data-d="1">＋</button>
+          </div>
+        </div>
+        <div>
+          <div class="lunch-row-key"><span class="lunch-dot jonathan"></span>Jonathan</div>
+          <div class="lunch-control-row jonathan">
+            <button type="button" data-child="Jonathan" data-day="${i}" data-d="-1">−</button>
+            <span class="count" id="rv-Jonathan-${i}">${settings.matpakkeRule.Jonathan[i] || 0}</span>
+            <button type="button" data-child="Jonathan" data-day="${i}" data-d="1">＋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  rows.querySelectorAll('button').forEach(b=>{
     b.addEventListener('click', async ()=>{
-      const c = b.dataset.child, d = parseInt(b.dataset.day), delta = parseInt(b.dataset.d);
-      const cur = settings.matpakkeRule[c][d];
-      settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur+delta));
-      document.getElementById(`rv-${c}-${d}`).textContent = settings.matpakkeRule[c][d];
+      const c = b.dataset.child;
+      const d = parseInt(b.dataset.day);
+      const delta = parseInt(b.dataset.d);
+      const cur = settings.matpakkeRule[c][d] || 0;
+      settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur + delta));
+      const val = document.getElementById(`rv-${c}-${d}`);
+      if(val) val.textContent = settings.matpakkeRule[c][d];
       await saveSettings();
       renderGrid();
     });
