@@ -830,6 +830,135 @@
   .weeknav .thisweek{padding:6px 8px;}
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   V3 — selectable responsive layout
+   layout values: auto | 3 | 5 | 2
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Default/auto keeps existing responsive behaviour */
+html[data-layout="5"] .grid{
+  grid-template-columns:repeat(10,minmax(0,1fr));
+}
+html[data-layout="5"] .day.weekday{grid-column:span 2;}
+html[data-layout="5"] .weekend-section{grid-column:1/-1;}
+
+html[data-layout="3"] .grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+html[data-layout="3"] .day.weekday{
+  grid-column:span 1;
+  min-height:430px;
+}
+html[data-layout="3"] .weekend-section{
+  grid-column:span 1;
+  min-height:430px;
+  display:flex;
+  flex-direction:column;
+}
+html[data-layout="3"] .weekend-divider{
+  width:100%;
+  height:1px;
+  flex:none;
+}
+html[data-layout="3"] .weekend-day{
+  flex:1;
+  min-height:0;
+  padding:12px 13px 10px;
+}
+html[data-layout="3"] .weekend-list{
+  min-height:45px;
+}
+html[data-layout="3"] .weekend-item{
+  min-height:34px;
+  padding:6px 8px;
+}
+html[data-layout="3"] .weekend-head{margin-bottom:7px;}
+html[data-layout="3"] .weekend-title .dname{font-size:14px;}
+html[data-layout="3"] .weekend-title .ddate{font-size:9.5px;}
+html[data-layout="3"] .weekend-add{
+  padding:5px 8px;
+  font-size:9.5px;
+}
+
+html[data-layout="2"] .grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+html[data-layout="2"] .day.weekday{grid-column:span 1;min-height:390px;}
+html[data-layout="2"] .weekend-section{grid-column:1/-1;}
+
+html[data-layout="3"] .starpanel,
+html[data-layout="5"] .starpanel,
+html[data-layout="2"] .starpanel{
+  margin-top:12px;
+}
+
+/* Settings layout selector */
+.layout-picker{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.layout-option{
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  border-radius:15px;
+  padding:12px 10px;
+  cursor:pointer;
+  text-align:left;
+  transition:.16s ease;
+  min-height:92px;
+}
+.layout-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 7px 18px rgba(43,33,24,.06);
+}
+.layout-option.active{
+  border-color:var(--jonathan);
+  background:color-mix(in srgb,var(--jonathan-soft) 54%,var(--surface) 46%);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--jonathan) 10%,transparent);
+}
+.layout-option .layout-mini{
+  height:34px;
+  display:grid;
+  gap:3px;
+  margin-bottom:8px;
+}
+.layout-option[data-layout-v="auto"] .layout-mini{grid-template-columns:repeat(5,1fr);}
+.layout-option[data-layout-v="5"] .layout-mini{grid-template-columns:repeat(5,1fr);}
+.layout-option[data-layout-v="3"] .layout-mini{grid-template-columns:repeat(3,1fr);}
+.layout-option[data-layout-v="2"] .layout-mini{grid-template-columns:repeat(2,1fr);}
+.layout-option .layout-mini span{
+  border-radius:4px;
+  background:color-mix(in srgb,var(--ink-soft) 24%,var(--surface) 76%);
+}
+.layout-option.active .layout-mini span{
+  background:color-mix(in srgb,var(--jonathan) 55%,var(--surface) 45%);
+}
+.layout-option b{display:block;font-size:11.5px;margin-bottom:3px;}
+.layout-option small{display:block;font-size:9.5px;line-height:1.35;color:var(--ink-soft);}
+
+@media(max-width:900px){
+  .layout-picker{grid-template-columns:repeat(2,1fr);}
+}
+
+/* Forced layout should win over the generic responsive breakpoints,
+   except on very narrow/mobile screens where one column is necessary. */
+@media(min-width:761px){
+  html[data-layout="3"] .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  html[data-layout="3"] .day.weekday{grid-column:span 1!important;min-height:430px!important;}
+  html[data-layout="3"] .weekend-section{grid-column:span 1!important;}
+
+  html[data-layout="5"] .grid{grid-template-columns:repeat(10,minmax(0,1fr))!important;}
+  html[data-layout="5"] .day.weekday{grid-column:span 2!important;}
+  html[data-layout="5"] .weekend-section{grid-column:1/-1!important;}
+
+  html[data-layout="2"] .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  html[data-layout="2"] .day.weekday{grid-column:span 1!important;}
+  html[data-layout="2"] .weekend-section{grid-column:1/-1!important;}
+}
+
 </style>
 </head>
 <body>
@@ -1061,6 +1190,34 @@
               <button data-v="myk">🎨 Myk pastell</button>
               <button data-v="mork">🌙 Mørk</button>
             </div>
+
+            <div style="height:1px;background:var(--line);margin:18px 0;"></div>
+            <p class="hint" style="margin-bottom:10px;"><b style="color:var(--ink);">Layout på kalenderen</b><br>Auto tilpasser seg skjermbredden. Du kan også låse tavlen til et bestemt antall kolonner.</p>
+
+            <div class="layout-picker" id="layoutPick">
+              <button class="layout-option" data-layout-v="auto" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span><span></span><span></span></span>
+                <b>Auto</b>
+                <small>Tilpasser seg skjermen automatisk</small>
+              </button>
+              <button class="layout-option" data-layout-v="3" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span></span>
+                <b>3 kolonner</b>
+                <small>3 dager / 2 dager + helg</small>
+              </button>
+              <button class="layout-option" data-layout-v="5" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span><span></span><span></span></span>
+                <b>5 kolonner</b>
+                <small>Alle ukedager på én rad</small>
+              </button>
+              <button class="layout-option" data-layout-v="2" type="button">
+                <span class="layout-mini"><span></span><span></span></span>
+                <b>2 kolonner</b>
+                <small>For smalere skjermer</small>
+              </button>
+            </div>
+
+            <div style="height:1px;background:var(--line);margin:18px 0;"></div>
             <p class="hint">Du kan også overstyre aktivitetsfargene:</p>
             <div class="row2">
               <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:44px;padding:4px;"></div>
@@ -1282,6 +1439,7 @@ async function loadAll(){
   if(!settings.pin) settings.pin = '1234';
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
+  if(!settings.layoutColumns) settings.layoutColumns = '3';
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
     try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
   } else {
@@ -1617,7 +1775,7 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
@@ -1651,6 +1809,17 @@ document.querySelectorAll('.tabs button').forEach(b=>{
 });
 
 // ---------- tema ----------
+function applyLayout(){
+  const value = settings.layoutColumns || 'auto';
+  if(value === 'auto') document.documentElement.removeAttribute('data-layout');
+  else document.documentElement.setAttribute('data-layout', value);
+  updateLayoutButtons();
+}
+function updateLayoutButtons(){
+  document.querySelectorAll('#layoutPick .layout-option').forEach(b=>{
+    b.classList.toggle('active', b.dataset.layoutV === (settings.layoutColumns || 'auto'));
+  });
+}
 function applyTheme(name){
   document.documentElement.setAttribute('data-theme', name);
   applyCustomColors();
@@ -1677,6 +1846,13 @@ document.getElementById('themePick').addEventListener('click', async (e)=>{
   settings.theme = b.dataset.v;
   applyTheme(settings.theme);
   updateThemeButtons();
+  await saveSettings();
+});
+
+document.getElementById('layoutPick').addEventListener('click', async (e)=>{
+  const b = e.target.closest('.layout-option'); if(!b) return;
+  settings.layoutColumns = b.dataset.layoutV || 'auto';
+  applyLayout();
   await saveSettings();
 });
 function fillColorInputs(){
@@ -2263,6 +2439,7 @@ function applySnapshot(getter){
 
 function paint(){
   applyTheme(settings.theme);
+  applyLayout();
   renderStars();
   renderAll();
   renderShopping();
