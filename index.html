@@ -1911,8 +1911,9 @@ html[data-layout="2"] .starpanel{
 
         <div id="tab-stjerner" style="display:none;">
           <div class="settings-section">
-            <p class="hint">Barna kan trykke på et gjøremål og en voksen godkjenner med kode. Poengene nullstilles hver mandag.</p>
-            <div class="field"><label>Voksen-kode</label><input type="text" id="starPin" placeholder="f.eks. 1234"></div>
+            <p class="hint">Barna kan trykke på et gjøremål for å legge det til. Poengene nullstilles hver mandag.</p>
+            <label class="chk"><input type="checkbox" id="starRequirePin" checked> Krev voksen-kode for å godkjenne et trykk</label>
+            <div class="field"><label>Voksen-kode (kun tall)</label><input type="text" id="starPin" inputmode="numeric" pattern="[0-9]*" placeholder="f.eks. 1234"></div>
             <div class="row2">
               <div class="field"><label>Milla — ukemål</label><input type="text" id="goalMilla" value="100"></div>
               <div class="field"><label>Jonathan — ukemål</label><input type="text" id="goalJonathan" value="100"></div>
@@ -1937,7 +1938,10 @@ html[data-layout="2"] .starpanel{
               <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
               <div class="field" style="max-width:100px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
             </div>
-            <button class="btn ghost" id="choreAdd" style="width:100%;">＋ Legg til gjøremål</button>
+            <div class="modalbtns" style="margin-top:0;">
+              <button class="btn ghost" id="choreCancelEdit" style="display:none;">Avbryt</button>
+              <button class="btn ghost" id="choreAdd" style="width:100%;">＋ Legg til gjøremål</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1949,6 +1953,20 @@ html[data-layout="2"] .starpanel{
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- PIN-modal for godkjenning av stjerner (tall-tastatur, ikke fullt tastatur) -->
+<div class="overlay" id="pinOverlay">
+  <div class="modal" style="max-width:320px;text-align:center;">
+    <h2 id="pinTitle" style="font-size:18px;">Kode</h2>
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" id="pinInput"
+      style="width:100%;font-size:28px;letter-spacing:6px;text-align:center;padding:14px;border-radius:12px;border:1px solid var(--line);margin:12px 0;">
+    <div id="pinError" style="color:#a3392b;font-size:12px;min-height:16px;margin-bottom:8px;"></div>
+    <div class="modalbtns">
+      <button class="btn ghost" id="pinCancel">Avbryt</button>
+      <button class="btn primary" id="pinConfirm">Bekreft</button>
+    </div>
   </div>
 </div>
 
@@ -2086,6 +2104,7 @@ async function loadAll(){
     settings.customColors.skole = '#69B889';
   }
   if(!settings.pin) settings.pin = '1234';
+  if(settings.requirePin===undefined) settings.requirePin = true;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
@@ -3007,6 +3026,34 @@ async function loadWeeklyPoints(){
 async function saveWeeklyPoints(){
   try{ await window.storage.set(starWeekKey, JSON.stringify(weeklyPoints)); }catch(e){ console.error('save weekly points failed', e); }
 }
+// ---------- PIN-modal (numerisk tastatur, ikke fullt tastatur) ----------
+const pinOverlay = document.getElementById('pinOverlay');
+const pinInput = document.getElementById('pinInput');
+let pinResolve = null;
+
+function askForPin(titleText){
+  return new Promise(resolve=>{
+    pinResolve = resolve;
+    document.getElementById('pinTitle').textContent = titleText;
+    document.getElementById('pinError').textContent = '';
+    pinInput.value = '';
+    pinOverlay.classList.add('open');
+    setTimeout(()=> pinInput.focus(), 50);
+  });
+}
+function closePinModal(result){
+  pinOverlay.classList.remove('open');
+  if(pinResolve){ pinResolve(result); pinResolve = null; }
+}
+document.getElementById('pinCancel').addEventListener('click', ()=> closePinModal(null));
+document.getElementById('pinConfirm').addEventListener('click', ()=> closePinModal(pinInput.value));
+pinInput.addEventListener('keydown', e=>{ if(e.key==='Enter') closePinModal(pinInput.value); });
+pinInput.addEventListener('input', ()=>{
+  // tving rent tall, uansett hva tastaturet tillater
+  pinInput.value = pinInput.value.replace(/[^0-9]/g,'');
+});
+pinOverlay.addEventListener('click', e=>{ if(e.target===pinOverlay) closePinModal(null); });
+
 function renderStars(){
   const box = document.getElementById('starCols');
   box.innerHTML = ['Milla','Jonathan'].map(who=>{
@@ -3036,11 +3083,13 @@ function renderStars(){
   box.querySelectorAll('.chore').forEach(el=>{
     el.addEventListener('click', async ()=>{
       const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title;
-      const code = prompt(`En voksen taster koden for å godkjenne "${title}" (${who}):`);
-      if(code===null) return;
-      if(code !== (settings.pin || '1234')){
-        alert('Feil kode.');
-        return;
+      if(settings.requirePin){
+        const code = await askForPin(`Kode for å godkjenne "${title}" (${who})`);
+        if(code===null) return;
+        if(code !== (settings.pin || '1234')){
+          alert('Feil kode.');
+          return;
+        }
       }
       weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
       await saveWeeklyPoints();
@@ -3057,21 +3106,48 @@ document.getElementById('starQuickAdd').addEventListener('click', ()=>{
   renderChoreList();
   settingsOverlay.classList.add('open');
 });
+let editingChoreId = null;
 function renderChoreList(){
   const list = document.getElementById('choreList');
   list.innerHTML = settings.chores.length ? settings.chores.map(c=>`
     <div class="tplitem" data-id="${c.id}">
-      <span>${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
+      <span class="chore-edit-target" style="cursor:pointer;">${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
       <span class="del" style="cursor:pointer;">✕</span>
     </div>`).join('') : '<div class="hint">Ingen gjøremål ennå.</div>';
-  list.querySelectorAll('.tplitem .del').forEach(el=>{
-    el.addEventListener('click', async ()=>{
+  list.querySelectorAll('.chore-edit-target').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = el.closest('.tplitem').dataset.id;
+      const c = settings.chores.find(x=>x.id===id);
+      if(!c) return;
+      editingChoreId = id;
+      choreWhoSel = c.who;
+      document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v===c.who));
+      document.getElementById('choreTitle').value = c.title;
+      document.getElementById('chorePoints').value = c.points;
+      document.getElementById('choreAdd').textContent = '💾 Lagre endring';
+      document.getElementById('choreCancelEdit').style.display = 'inline-block';
+      document.getElementById('choreTitle').focus();
+    });
+  });
+  list.querySelectorAll('.del').forEach(el=>{
+    el.addEventListener('click', async (e)=>{
+      e.stopPropagation();
       const id = el.closest('.tplitem').dataset.id;
       settings.chores = settings.chores.filter(c=>c.id!==id);
+      if(editingChoreId===id) resetChoreForm();
       await saveSettings();
       renderChoreList(); renderStars();
     });
   });
+}
+function resetChoreForm(){
+  editingChoreId = null;
+  choreWhoSel = 'Milla';
+  document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v==='Milla'));
+  document.getElementById('choreTitle').value = '';
+  document.getElementById('chorePoints').value = '5';
+  document.getElementById('choreAdd').textContent = '＋ Legg til gjøremål';
+  document.getElementById('choreCancelEdit').style.display = 'none';
 }
 let choreWhoSel = 'Milla';
 document.getElementById('choreWho').addEventListener('click', e=>{
@@ -3083,20 +3159,30 @@ document.getElementById('choreAdd').addEventListener('click', async ()=>{
   const title = document.getElementById('choreTitle').value.trim();
   const points = parseInt(document.getElementById('chorePoints').value) || 1;
   if(!title) return;
-  settings.chores.push({id:uid(), who:choreWhoSel, title, points});
-  document.getElementById('choreTitle').value='';
+  if(editingChoreId){
+    const c = settings.chores.find(x=>x.id===editingChoreId);
+    if(c){ c.title = title; c.points = points; c.who = choreWhoSel; }
+  } else {
+    settings.chores.push({id:uid(), who:choreWhoSel, title, points});
+  }
+  resetChoreForm();
   await saveSettings();
   renderChoreList(); renderStars();
 });
+document.getElementById('choreCancelEdit').addEventListener('click', ()=>{
+  resetChoreForm();
+});
 function fillStarSettingsInputs(){
   document.getElementById('starPin').value = settings.pin || '1234';
+  document.getElementById('starRequirePin').checked = settings.requirePin !== false;
   document.getElementById('goalMilla').value = (settings.weeklyGoal && settings.weeklyGoal.Milla) || 100;
   document.getElementById('goalJonathan').value = (settings.weeklyGoal && settings.weeklyGoal.Jonathan) || 100;
   document.getElementById('rewardMilla').value = (settings.rewardText && settings.rewardText.Milla) || '';
   document.getElementById('rewardJonathan').value = (settings.rewardText && settings.rewardText.Jonathan) || '';
 }
 document.getElementById('starSettingsSave').addEventListener('click', async ()=>{
-  settings.pin = document.getElementById('starPin').value.trim() || '1234';
+  settings.pin = (document.getElementById('starPin').value.trim() || '1234').replace(/[^0-9]/g,'') || '1234';
+  settings.requirePin = document.getElementById('starRequirePin').checked;
   settings.weeklyGoal = {
     Milla: parseInt(document.getElementById('goalMilla').value) || 100,
     Jonathan: parseInt(document.getElementById('goalJonathan').value) || 100
@@ -3334,6 +3420,7 @@ function normalizeSettings(){
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(!settings.customColors) settings.customColors = {};
   if(!settings.pin) settings.pin = '1234';
+  if(settings.requirePin===undefined) settings.requirePin = true;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
