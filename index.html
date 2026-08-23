@@ -1314,6 +1314,142 @@ html[data-layout="2"] .starpanel{
   .lunch-days-card{overflow-x:auto;}
 }
 
+
+/* Calendar import */
+.calendar-import-wrap{padding:0!important;overflow:hidden;}
+.calendar-import-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid var(--line);
+  background:var(--surface-alt);
+}
+.calendar-import-tabs button{
+  border:0;
+  border-right:1px solid var(--line);
+  background:transparent;
+  padding:14px 16px;
+  display:grid;
+  grid-template-columns:40px 1fr;
+  gap:10px;
+  align-items:center;
+  text-align:left;
+  cursor:pointer;
+  color:var(--ink);
+}
+.calendar-import-tabs button:last-child{border-right:0;}
+.calendar-import-tabs button.active{
+  background:var(--surface);
+  box-shadow:inset 0 -2px 0 var(--jonathan);
+}
+.calendar-import-tabs b{display:block;font-size:12px;}
+.calendar-import-tabs small{display:block;font-size:9.5px;color:var(--ink-soft);margin-top:3px;line-height:1.35;}
+.calendar-import-icon,
+.calendar-import-badge{
+  width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;
+}
+.calendar-import-icon.spond,.calendar-import-badge.spond{background:#FFE9EF;color:#F33467;}
+.calendar-import-icon.public,.calendar-import-badge.public{background:#EAF7EC;color:#37A94A;}
+.calendar-import-icon.other,.calendar-import-badge.other{background:#EAF2FF;color:#2F80ED;}
+
+.calendar-import-panel{display:none;padding:20px;}
+.calendar-import-panel.active{display:block;}
+.calendar-import-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+.calendar-import-hero h4{
+  margin:0;
+  font-size:17px;
+  letter-spacing:-.02em;
+}
+.calendar-import-hero p{
+  margin:6px 0 0;
+  color:var(--ink-soft);
+  font-size:11px;
+  line-height:1.5;
+}
+.calendar-import-badge{width:54px;height:54px;border-radius:16px;font-size:20px;flex:none;}
+
+.calendar-import-note{
+  border-radius:12px;
+  padding:10px 12px;
+  margin:-4px 0 12px;
+  background:var(--surface-alt);
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  font-size:10.5px;
+}
+.public-calendar-grid,
+.calendar-source-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.calendar-source-grid{grid-template-columns:1fr 1fr;}
+.public-calendar-card,
+.calendar-source-card{
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  border-radius:15px;
+  padding:13px;
+}
+.public-calendar-card{
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:36px 1fr;
+  gap:9px;
+  align-items:center;
+  text-align:left;
+  color:var(--ink);
+}
+.public-calendar-card:hover{
+  border-color:color-mix(in srgb,var(--jonathan) 35%,var(--line));
+  background:color-mix(in srgb,var(--jonathan-soft) 18%,var(--surface) 82%);
+}
+.pub-icon{
+  width:36px;height:36px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--line);
+}
+.public-calendar-card b,
+.calendar-source-card b{display:block;font-size:11px;}
+.public-calendar-card small,
+.calendar-source-card small{display:block;font-size:9px;color:var(--ink-soft);margin-top:2px;line-height:1.35;}
+.calendar-source-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:10px;
+}
+.source-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--line);
+  font-weight:800;
+}
+.calendar-source-card input{
+  width:100%;
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--surface);
+  font-family:inherit;
+  font-size:11px;
+}
+@media(max-width:900px){
+  .calendar-import-tabs{grid-template-columns:1fr;}
+  .calendar-import-tabs button{border-right:0;border-bottom:1px solid var(--line);}
+  .calendar-import-tabs button:last-child{border-bottom:0;}
+  .public-calendar-grid,.calendar-source-grid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -1428,8 +1564,8 @@ html[data-layout="2"] .starpanel{
         </button>
         <button data-tab="spond">
           <span class="settings-nav-icon">S</span>
-          <span class="settings-nav-copy">Importer fra Spond</span>
-          <span class="settings-nav-sub">Importer aktiviteter</span>
+          <span class="settings-nav-copy">Importer kalender</span>
+          <span class="settings-nav-sub">Spond, offentlige og andre</span>
         </button>
         <button data-tab="bilder">
           <span class="settings-nav-icon">▣</span>
@@ -1550,15 +1686,113 @@ html[data-layout="2"] .starpanel{
         </div>
 
         <div id="tab-spond" style="display:none;">
-          <div class="settings-section">
-            <p class="hint">Lim inn kalenderdata fra Spond eller en enkel liste. Kalenderfil (ICS) gir mest presis import. Aktivitetene legges til uken som vises nå (<span id="spondWeekLbl"></span>).</p>
-            <div class="field">
-              <label>Kalenderdata eller fritekst</label>
-              <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
+          <div class="settings-section calendar-import-wrap">
+            <div class="calendar-import-tabs" id="calendarImportTabs">
+              <button type="button" class="active" data-import-tab="spond">
+                <span class="calendar-import-icon spond">S</span>
+                <span><b>Spond</b><small>Importer aktiviteter fra Spond</small></span>
+              </button>
+              <button type="button" data-import-tab="public">
+                <span class="calendar-import-icon public">◎</span>
+                <span><b>Offentlige kalendere</b><small>Ferie, helligdager og andre åpne kalendere</small></span>
+              </button>
+              <button type="button" data-import-tab="other">
+                <span class="calendar-import-icon other">↗</span>
+                <span><b>Andre kalendere</b><small>iCal, Google Calendar og ICS</small></span>
+              </button>
             </div>
-            <button class="btn ghost" id="spondParse" style="width:100%;">Tolk innhold</button>
-            <div class="preview" id="spondPreview"></div>
-            <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte aktiviteter</button>
+
+            <div class="calendar-import-panel active" id="import-panel-spond">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">SPOND</div>
+                  <h4>Importer aktiviteter fra Spond</h4>
+                  <p>Lim inn kalenderdata fra Spond. ICS-format gir mest presis import.</p>
+                </div>
+                <div class="calendar-import-badge spond">S</div>
+              </div>
+
+              <div class="field">
+                <label>Kalenderdata fra Spond</label>
+                <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
+              </div>
+              <div class="calendar-import-note">
+                Aktivitetene legges til uken som vises nå (<span id="spondWeekLbl"></span>).
+              </div>
+              <button class="btn ghost" id="spondParse" style="width:100%;">Tolk innhold</button>
+              <div class="preview" id="spondPreview"></div>
+              <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte aktiviteter</button>
+            </div>
+
+            <div class="calendar-import-panel" id="import-panel-public">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">OFFENTLIGE KALENDERE</div>
+                  <h4>Legg til offentlige kalendere</h4>
+                  <p>Bruk kalenderabonnement for ting som helligdager, skoleferier eller andre åpne kalendere.</p>
+                </div>
+                <div class="calendar-import-badge public">◎</div>
+              </div>
+
+              <div class="public-calendar-grid">
+                <button type="button" class="public-calendar-card" data-public-calendar="norske-helligdager">
+                  <span class="pub-icon">🇳🇴</span>
+                  <span><b>Norske helligdager</b><small>Offentlige fridager og merkedager</small></span>
+                </button>
+                <button type="button" class="public-calendar-card" data-public-calendar="skoleferier">
+                  <span class="pub-icon">🏫</span>
+                  <span><b>Skoleferier</b><small>Kan legges inn via kalenderlenke</small></span>
+                </button>
+                <button type="button" class="public-calendar-card" data-public-calendar="custom-public">
+                  <span class="pub-icon">＋</span>
+                  <span><b>Annen offentlig kalender</b><small>Lim inn webcal- eller ICS-lenke</small></span>
+                </button>
+              </div>
+
+              <div class="field" style="margin-top:16px;">
+                <label>Kalenderlenke</label>
+                <input type="text" id="publicCalendarUrl" placeholder="webcal://... eller https://...calendar.ics">
+              </div>
+              <button class="btn primary" id="publicCalendarSave" style="width:100%;">Legg til kalender</button>
+              <div class="hint" id="publicCalendarStatus" style="margin-top:10px;"></div>
+            </div>
+
+            <div class="calendar-import-panel" id="import-panel-other">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">ANDRE KALENDERE</div>
+                  <h4>iCal, Google Calendar og andre</h4>
+                  <p>Legg til en kalender via abonnementslenke eller lim inn rå ICS-data.</p>
+                </div>
+                <div class="calendar-import-badge other">↗</div>
+              </div>
+
+              <div class="calendar-source-grid">
+                <div class="calendar-source-card">
+                  <div class="calendar-source-head">
+                    <span class="source-icon"></span>
+                    <div><b>Apple / iCal</b><small>webcal- eller ICS-lenke</small></div>
+                  </div>
+                  <input type="text" id="icalCalendarUrl" placeholder="webcal://...">
+                </div>
+
+                <div class="calendar-source-card">
+                  <div class="calendar-source-head">
+                    <span class="source-icon">G</span>
+                    <div><b>Google Calendar</b><small>Offentlig eller privat ICS-lenke</small></div>
+                  </div>
+                  <input type="text" id="googleCalendarUrl" placeholder="https://calendar.google.com/...">
+                </div>
+              </div>
+
+              <div class="field" style="margin-top:16px;">
+                <label>Rå ICS-data</label>
+                <textarea id="otherCalendarIcs" rows="7" placeholder="BEGIN:VCALENDAR&#10;...&#10;END:VCALENDAR"></textarea>
+              </div>
+
+              <button class="btn primary" id="otherCalendarSave" style="width:100%;">Legg til kalender</button>
+              <div class="hint" id="otherCalendarStatus" style="margin-top:10px;"></div>
+            </div>
           </div>
         </div>
 
@@ -1851,6 +2085,8 @@ async function loadAll(){
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
+  if(!settings.publicCalendars) settings.publicCalendars = [];
+  if(!settings.otherCalendars) settings.otherCalendars = [];
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
     try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
   } else {
@@ -2196,12 +2432,73 @@ document.getElementById('settingsX').addEventListener('click', ()=> settingsOver
 const SETTINGS_META = {
   matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver skoledag, per barn.'],
   ukeplan:['Fast ukeplan','Faste rutiner','Administrer skole, trening og andre aktiviteter som gjentas hver uke.'],
-  spond:['Import','Importer fra Spond','Lim inn kalenderdata og velg hvilke aktiviteter som skal inn i ukeplanen.'],
+  spond:['Kalenderimport','Importer kalender','Importer fra Spond, offentlige kalendere eller andre iCal/Google-kalendere.'],
   bilder:['Bilder','Familiebilder','Legg til bilder til slideshowet nederst på familietavlen.'],
   tema:['Utseende','Tema og farger','Tilpass tavlen til skjermen og familiens stil.'],
   profil:['Profil','Profilbilder','Velg bildene som vises for Milla og Jonathan i kalenderen.'],
   stjerner:['Belønning','Stjerner og gjøremål','Sett mål, belønninger og faste oppgaver for uken.']
 };
+
+const calendarImportTabs = document.getElementById('calendarImportTabs');
+if(calendarImportTabs){
+  calendarImportTabs.addEventListener('click', e=>{
+    const btn = e.target.closest('button[data-import-tab]');
+    if(!btn) return;
+    calendarImportTabs.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.calendar-import-panel').forEach(p=>p.classList.remove('active'));
+    const panel = document.getElementById('import-panel-'+btn.dataset.importTab);
+    if(panel) panel.classList.add('active');
+  });
+}
+
+document.querySelectorAll('.public-calendar-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const input = document.getElementById('publicCalendarUrl');
+    if(card.dataset.publicCalendar === 'norske-helligdager'){
+      input.placeholder = 'Lim inn ICS/webcal-lenke for norske helligdager';
+    }else if(card.dataset.publicCalendar === 'skoleferier'){
+      input.placeholder = 'Lim inn kalenderlenke for skoleferier';
+    }else{
+      input.placeholder = 'webcal://... eller https://...calendar.ics';
+    }
+    input.focus();
+  });
+});
+
+document.getElementById('publicCalendarSave')?.addEventListener('click', async ()=>{
+  const url = document.getElementById('publicCalendarUrl').value.trim();
+  const status = document.getElementById('publicCalendarStatus');
+  if(!url){
+    status.textContent = 'Lim inn en kalenderlenke først.';
+    return;
+  }
+  settings.publicCalendars = settings.publicCalendars || [];
+  if(!settings.publicCalendars.includes(url)) settings.publicCalendars.push(url);
+  await saveSettings();
+  status.textContent = 'Kalenderlenken er lagret.';
+});
+
+document.getElementById('otherCalendarSave')?.addEventListener('click', async ()=>{
+  const ical = document.getElementById('icalCalendarUrl').value.trim();
+  const google = document.getElementById('googleCalendarUrl').value.trim();
+  const ics = document.getElementById('otherCalendarIcs').value.trim();
+  const status = document.getElementById('otherCalendarStatus');
+
+  if(!ical && !google && !ics){
+    status.textContent = 'Legg inn en kalenderlenke eller ICS-data først.';
+    return;
+  }
+
+  settings.otherCalendars = settings.otherCalendars || [];
+  if(ical) settings.otherCalendars.push({type:'ical', value:ical});
+  if(google) settings.otherCalendars.push({type:'google', value:google});
+  if(ics) settings.otherCalendars.push({type:'ics', value:ics});
+  await saveSettings();
+
+  status.textContent = 'Kalenderkilden er lagret.';
+});
+
 document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
