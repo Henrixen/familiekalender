@@ -21,7 +21,7 @@
     --jonathan-soft:#DCEAFB;
     --today:#FFAE2E;
     --today-soft:#FFF1D6;
-    --skole:#A69B8D;
+    --skole:#69B889;
     --radius:20px;
     --shadow:0 3px 0 rgba(43,33,24,.05), 0 10px 24px rgba(43,33,24,.09);
   }
@@ -38,7 +38,7 @@
     --jonathan-soft:#1E2E45;
     --today:#FFC15C;
     --today-soft:#3A2E14;
-    --skole:#B3A896;
+    --skole:#78C69A;
     --shadow:0 3px 0 rgba(0,0,0,.25), 0 10px 24px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -272,6 +272,564 @@
   .preview{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin:12px 0;}
   .prevrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;}
   .prevrow input{margin:0;}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODERN FAMILY CALENDAR — visual upgrade
+   ═══════════════════════════════════════════════════════════════ */
+.wrap{max-width:1780px;padding:18px 24px 90px;}
+
+/* Five roomy weekdays on top, two flatter weekend cards below */
+.grid{
+  grid-template-columns:repeat(10,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+}
+.day:not(.weekend){grid-column:span 2;min-height:455px;}
+.day.weekend{
+  grid-column:span 5;
+  min-height:210px;
+  border-radius:18px;
+  background:color-mix(in srgb,var(--surface-alt) 92%,var(--today-soft) 8%);
+}
+.day.weekend .dhead{padding:10px 14px 8px;}
+.day.weekend .colheads{padding:7px 8px 4px;}
+.day.weekend .split{min-height:70px;}
+.day.weekend .col{padding:6px 10px;max-height:105px;}
+.day.weekend .colfoot{padding:0 10px 6px;}
+.day.weekend .husk{padding:6px 10px 8px;}
+.day.weekend .item{padding:6px 9px;}
+.day.weekend .colheadname img,
+.day.weekend .colheadname .avcircle{transform:scale(.88);}
+.day.weekend .mpbadge{transform:scale(.88);transform-origin:bottom right;}
+
+/* A little more polished main cards */
+.day{
+  border:1px solid color-mix(in srgb,var(--line) 72%,transparent);
+  box-shadow:0 1px 1px rgba(43,33,24,.025),0 10px 28px rgba(43,33,24,.07);
+}
+.day.today{box-shadow:0 0 0 2px var(--today),0 12px 32px rgba(43,33,24,.09);}
+.day .dhead{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 96%,#fff 4%),var(--surface));}
+.sharedadd,.miniadd,.huskadd{
+  transition:transform .15s ease,background .15s ease,border-color .15s ease;
+}
+.sharedadd:hover,.miniadd:hover,.huskadd:hover{transform:translateY(-1px);}
+
+/* ---------- Modern settings ---------- */
+#settingsOverlay{
+  padding:22px;
+  background:rgba(30,28,25,.42);
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+}
+#settingsOverlay .settings-modal{
+  width:min(1380px,96vw);
+  max-width:none;
+  height:min(850px,92vh);
+  max-height:92vh;
+  padding:0;
+  overflow:hidden;
+  border-radius:30px;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 28px 90px rgba(31,25,19,.25);
+  display:grid;
+  grid-template-columns:290px minmax(0,1fr);
+  position:relative;
+}
+.settings-side{
+  padding:28px 20px 20px;
+  border-right:1px solid var(--line);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface-alt) 88%,#fff 12%),var(--surface));
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.settings-brand{padding:0 10px 20px;}
+.settings-brand h2{font-size:29px!important;letter-spacing:-.03em;margin:0 0 7px!important;}
+.settings-brand p{margin:0;color:var(--ink-soft);font-size:13px;line-height:1.5;}
+#settingsOverlay .tabs{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  margin:0;
+}
+#settingsOverlay .tabs button{
+  width:100%;
+  flex:none;
+  padding:11px 12px;
+  border:1px solid transparent;
+  border-radius:14px;
+  background:transparent;
+  color:var(--ink);
+  display:grid;
+  grid-template-columns:38px 1fr;
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  text-align:left;
+  align-items:center;
+  cursor:pointer;
+  transition:.16s ease;
+  font-family:inherit;
+}
+#settingsOverlay .tabs button:hover{
+  background:color-mix(in srgb,var(--surface) 76%,var(--surface-alt) 24%);
+  transform:translateX(2px);
+}
+#settingsOverlay .tabs button.active{
+  background:var(--surface);
+  color:var(--ink);
+  border-color:var(--line);
+  box-shadow:0 7px 20px rgba(43,33,24,.07);
+}
+.settings-nav-icon{
+  grid-row:1 / span 2;
+  width:38px;height:38px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;
+}
+.settings-nav-copy{font-size:13px;font-weight:800;line-height:1.2;}
+.settings-nav-sub{font-size:10.5px;color:var(--ink-soft);margin-top:3px;font-weight:500;}
+.tabs button[data-tab="matpakker"] .settings-nav-icon{background:#FFE8F0;color:#F44F87;}
+.tabs button[data-tab="ukeplan"] .settings-nav-icon{background:#E7F2FF;color:#2F80ED;}
+.tabs button[data-tab="spond"] .settings-nav-icon{background:#FFE8ED;color:#F33467;}
+.tabs button[data-tab="bilder"] .settings-nav-icon{background:#EFE9FF;color:#764DF2;}
+.tabs button[data-tab="tema"] .settings-nav-icon{background:#E9F7E8;color:#39A549;}
+.tabs button[data-tab="profil"] .settings-nav-icon{background:#FFF0E3;color:#F08C32;}
+.tabs button[data-tab="stjerner"] .settings-nav-icon{background:#FFF5D9;color:#E8A51D;}
+.settings-tip{
+  margin-top:auto;
+  border-radius:15px;
+  padding:13px;
+  background:linear-gradient(135deg,#FFF8E8,#FFF2E0);
+  border:1px solid #F5E5C8;
+  font-size:11px;
+  color:#756554;
+  line-height:1.45;
+}
+.settings-tip b{display:block;color:var(--ink);margin-bottom:3px;}
+
+.settings-main{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+.settings-top{
+  padding:26px 34px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+}
+.settings-kicker{
+  color:var(--milla);
+  font-size:11px;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-weight:800;
+  margin-bottom:7px;
+}
+.settings-top h3{
+  margin:0;
+  font-size:27px;
+  letter-spacing:-.035em;
+  line-height:1.05;
+}
+.settings-top p{margin:8px 0 0;color:var(--ink-soft);font-size:13px;}
+.settings-x{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:23px;line-height:1;
+  cursor:pointer;box-shadow:0 5px 16px rgba(43,33,24,.08);flex:none;
+}
+.settings-scroll{
+  flex:1;
+  overflow:auto;
+  padding:4px 34px 28px;
+  scrollbar-width:thin;
+}
+.settings-section{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 8px 25px rgba(43,33,24,.045);
+}
+.settings-section + .settings-section{margin-top:14px;}
+.settings-section .hint{font-size:12.5px;margin:0 0 15px;}
+
+/* Matpakke table */
+#settingsOverlay .rulegrid{
+  background:var(--surface);
+  border-radius:16px;
+  overflow:hidden;
+  margin:0;
+}
+#settingsOverlay .rulegrid th{
+  padding:11px 5px;
+  font-size:11px;
+  text-transform:capitalize;
+}
+#settingsOverlay .rulegrid td{padding:12px 5px;border-top:1px solid var(--line);}
+#settingsOverlay .rulegrid tr:first-child th{border-bottom:1px solid var(--line);}
+#settingsOverlay .stepper{gap:5px;}
+#settingsOverlay .stepper button{
+  width:29px;height:29px;border-radius:9px;
+  background:var(--surface-alt);
+  border:1px solid var(--line);
+  font-weight:800;
+}
+#settingsOverlay .stepper button:last-child{
+  color:var(--milla);
+  background:#FFF5F8;
+  border-color:#FFD9E6;
+}
+
+/* Generic modern controls */
+#settingsOverlay .field{margin-bottom:16px;}
+#settingsOverlay .field label{font-size:11.5px;font-weight:750;margin-bottom:7px;}
+#settingsOverlay .field input[type=text],
+#settingsOverlay .field input[type=time],
+#settingsOverlay .field select,
+#settingsOverlay .field textarea{
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  padding:11px 12px;
+  outline:none;
+  transition:border .15s ease,box-shadow .15s ease,background .15s ease;
+}
+#settingsOverlay .field input:focus,
+#settingsOverlay .field textarea:focus,
+#settingsOverlay textarea:focus{
+  border-color:color-mix(in srgb,var(--jonathan) 55%,var(--line));
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--jonathan) 10%,transparent);
+  background:var(--surface);
+}
+#settingsOverlay .btn{border-radius:12px;}
+#settingsOverlay .tplitem,#settingsOverlay .prevrow,#settingsOverlay .chore{
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+}
+
+/* Modern photo manager */
+.photo-manager{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:16px;}
+.photo-drop{
+  position:relative;
+  min-height:230px;
+  border:1.5px dashed color-mix(in srgb,var(--jonathan) 38%,var(--line));
+  border-radius:20px;
+  background:linear-gradient(135deg,#F7FBFF,#FBF8FF);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:28px;cursor:pointer;transition:.18s ease;
+}
+.photo-drop:hover,.photo-drop.dragover{
+  transform:translateY(-1px);
+  border-color:var(--jonathan);
+  box-shadow:0 10px 28px rgba(47,128,237,.10);
+}
+.photo-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.photo-drop-icon{
+  width:58px;height:58px;border-radius:18px;margin:0 auto 13px;
+  display:flex;align-items:center;justify-content:center;font-size:27px;
+  background:#E8F2FF;color:var(--jonathan);
+}
+.photo-drop h4{margin:0;font-size:16px;}
+.photo-drop p{margin:7px auto 0;max-width:300px;color:var(--ink-soft);font-size:11.5px;line-height:1.5;}
+.photo-gallery-box{
+  border:1px solid var(--line);border-radius:20px;padding:14px;background:var(--surface-alt);
+}
+.photo-gallery-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.photo-gallery-head b{font-size:13px;}
+.photo-gallery-head span{font-size:10.5px;color:var(--ink-soft);}
+.photo-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:205px;overflow:auto;}
+.photo-thumb{
+  aspect-ratio:1.2;border-radius:11px;overflow:hidden;position:relative;background:var(--line);
+  border:1px solid var(--line);
+}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-thumb button{
+  position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;border:0;
+  background:rgba(24,24,24,.72);color:#fff;cursor:pointer;font-size:13px;
+}
+.photo-gallery-empty{
+  min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;
+  color:var(--ink-soft);font-size:11.5px;padding:20px;
+}
+.photo-advanced{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;}
+.photo-advanced summary{cursor:pointer;font-size:11.5px;color:var(--ink-soft);font-weight:700;}
+.photo-advanced textarea{width:100%;margin-top:10px;min-height:90px;}
+
+/* Profile upload cards */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.profile-card{
+  border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--surface-alt);
+}
+.profile-card-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.profile-card input[type=file]{width:100%;font-size:11px;margin-bottom:8px;}
+.profile-card input[type=file]::file-selector-button{
+  border:0;border-radius:10px;padding:9px 12px;margin-right:8px;
+  background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer;border:1px solid var(--line);
+}
+
+/* Footer */
+.settings-footer{
+  border-top:1px solid var(--line);
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:color-mix(in srgb,var(--surface) 96%,var(--surface-alt) 4%);
+}
+.settings-footer .footer-right{display:flex;gap:9px;margin-left:auto;}
+.settings-footer .btn{flex:none;min-width:105px;padding:11px 16px;}
+.settings-footer .btn.primary{min-width:145px;}
+
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .day:not(.weekend),.day.weekend{grid-column:span 1;min-height:360px;}
+  #settingsOverlay .settings-modal{grid-template-columns:220px minmax(0,1fr);}
+  .settings-side{padding:20px 12px;}
+  .settings-nav-sub{display:none;}
+  .photo-manager,.profile-grid{grid-template-columns:1fr;}
+}
+@media(max-width:760px){
+  .wrap{padding:12px 12px 80px;}
+  .grid{grid-template-columns:1fr;}
+  .day:not(.weekend),.day.weekend{grid-column:auto;min-height:330px;}
+  #settingsOverlay{padding:8px;}
+  #settingsOverlay .settings-modal{display:flex;flex-direction:column;height:96vh;border-radius:22px;}
+  .settings-side{border-right:0;border-bottom:1px solid var(--line);padding:15px;}
+  .settings-brand{padding:0 4px 10px;}
+  .settings-brand p,.settings-tip{display:none;}
+  #settingsOverlay .tabs{flex-direction:row;overflow:auto;padding-bottom:4px;}
+  #settingsOverlay .tabs button{min-width:58px;width:auto;display:flex;padding:8px;border-radius:12px;}
+  .settings-nav-copy,.settings-nav-sub{display:none;}
+  .settings-nav-icon{width:38px;height:38px;}
+  .settings-top{padding:18px 18px 10px;}
+  .settings-scroll{padding:4px 18px 20px;}
+  .settings-footer{padding:12px 14px;}
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   V2 — roomy weekdays + unified weekend + clean avatars
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Small, tidy Today button */
+.weeknav .thisweek{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  min-width:auto;
+  padding:6px 10px;
+  height:32px;
+  border-radius:11px;
+  font-size:10.5px;
+  line-height:1;
+  font-weight:750;
+  letter-spacing:.01em;
+  color:var(--jonathan);
+  background:color-mix(in srgb,var(--jonathan-soft) 82%,var(--surface) 18%);
+  box-shadow:none;
+}
+.weeknav .thisweek .today-ico{
+  font-size:13px;
+  line-height:1;
+  transform:translateY(-.3px);
+}
+
+/* Five weekday cards only occupy the first row */
+.grid{
+  grid-template-columns:repeat(10,minmax(0,1fr));
+}
+.day.weekday{
+  grid-column:span 2;
+  min-height:455px;
+}
+
+/* Avatar is now its own clean element — no lunchbox overlay */
+.colheadname .avbadge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+.colheadname img.avcircle,
+.colheadname .avcircle{
+  width:42px!important;
+  height:42px!important;
+  border-radius:50%!important;
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 5px currentColor,
+    0 5px 13px rgba(43,33,24,.10)!important;
+}
+.colheadname.milla{color:var(--milla);}
+.colheadname.jonathan{color:var(--jonathan);}
+
+/* Lunchbox count separated from the avatar */
+.lunchstrip{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  padding:7px 8px 8px;
+  border-top:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface-alt) 68%,var(--surface) 32%);
+}
+.lunchmini{
+  min-height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  border-radius:9px;
+  font-size:10.5px;
+  font-weight:750;
+  color:var(--ink-soft);
+}
+.lunchmini.milla{color:var(--milla);background:color-mix(in srgb,var(--milla-soft) 68%,transparent);}
+.lunchmini.jonathan{color:var(--jonathan);background:color-mix(in srgb,var(--jonathan-soft) 68%,transparent);}
+.lunchmini .lunch-icon{font-size:13px;}
+.lunchmini.zero{opacity:.45;}
+
+/* School gets a softer, cleaner green treatment */
+.item.skole{
+  background:linear-gradient(135deg,#67B98A,#75C797);
+  color:#fff;
+}
+.item.skole .t{color:rgba(255,255,255,.88);}
+
+/* Unified weekend section */
+.weekend-section{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  min-height:180px;
+  overflow:hidden;
+  border-radius:20px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:0 7px 24px rgba(43,33,24,.055);
+}
+.weekend-divider{background:var(--line);}
+.weekend-day{
+  min-width:0;
+  padding:13px 15px 12px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface-alt) 72%,#fff 28%),var(--surface));
+}
+.weekend-day.today{
+  box-shadow:inset 0 0 0 2px var(--today);
+}
+.weekend-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:9px;
+}
+.weekend-title{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+.weekend-title .dname{
+  font-size:15px;
+  font-weight:800;
+}
+.weekend-title .ddate{
+  font-size:10.5px;
+  color:var(--ink-soft);
+}
+.weekend-add{
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:6px 10px;
+  background:var(--surface);
+  color:var(--ink-soft);
+  font-size:10.5px;
+  font-weight:750;
+  cursor:pointer;
+}
+.weekend-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-height:75px;
+}
+.weekend-empty{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--ink-soft);
+  font-size:11px;
+}
+.weekend-item{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  min-height:39px;
+  padding:7px 9px;
+  border-radius:11px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#FFF2DA,#FCE9CF);
+  border:1px solid #F2DFC3;
+  color:#594632;
+}
+.weekend-item .weekend-emo{font-size:15px;}
+.weekend-item .weekend-copy{min-width:0;}
+.weekend-item .weekend-time{
+  font-size:9.5px;
+  color:#927B61;
+  font-weight:650;
+}
+.weekend-item .weekend-name{
+  font-size:11.5px;
+  font-weight:800;
+  margin-top:1px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.weekend-who{
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:9.5px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.weekend-who.milla{background:var(--milla-soft);color:var(--milla);}
+.weekend-who.jonathan{background:var(--jonathan-soft);color:var(--jonathan);}
+.weekend-who.begge{background:var(--today-soft);color:#A96C12;}
+.weekend-husk{
+  margin-top:7px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+}
+.weekend-husk .huskchip{font-size:10px;padding:4px 7px;}
+.weekend-husk .huskadd{font-size:10px;padding:4px 8px;}
+
+/* The old weekend card styling is no longer used */
+.day.weekend{display:none!important;}
+
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .day.weekday{grid-column:span 1;min-height:380px;}
+  .weekend-section{grid-column:1/-1;}
+}
+@media(max-width:760px){
+  .grid{grid-template-columns:1fr;}
+  .day.weekday{grid-column:auto;}
+  .weekend-section{
+    grid-column:auto;
+    grid-template-columns:1fr;
+  }
+  .weekend-divider{height:1px;width:100%;}
+  .weeknav .thisweek{padding:6px 8px;}
+}
+
 </style>
 </head>
 <body>
@@ -288,7 +846,7 @@
       <button id="prevWeek">‹</button>
       <div class="range" id="weekRange">–</div>
       <button id="nextWeek">›</button>
-      <button class="thisweek" id="thisWeekBtn">I dag</button>
+      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">⌖</span><span>I dag</span></button>
     </div>
     <div class="clock" id="clock">--:--</div>
   </header>
@@ -366,122 +924,221 @@
 
 <!-- Settings modal -->
 <div class="overlay" id="settingsOverlay">
-  <div class="modal" style="max-width:680px;">
-    <h2>Innstillinger</h2>
-    <div class="tabs">
-      <button class="active" data-tab="matpakker">Matpakker</button>
-      <button data-tab="ukeplan">Fast ukeplan</button>
-      <button data-tab="spond">Importer fra Spond</button>
-      <button data-tab="bilder">Bilder</button>
-      <button data-tab="tema">Tema</button>
-      <button data-tab="profil">Profil</button>
-      <button data-tab="stjerner">Stjerner</button>
-    </div>
-
-    <div id="tab-matpakker">
-      <p class="hint">Antall matpakker som trengs hver dag, per barn.</p>
-      <table class="rulegrid" id="ruleTable"></table>
-    </div>
-
-    <div id="tab-ukeplan" style="display:none;">
-      <p class="hint">Dette er den faste ukeplanen (skole m.m.) som gjentas hver uke.</p>
-      <div class="tplist" id="tplList"></div>
-      <button class="btn ghost" id="tplAdd" style="width:100%;">+ Legg til fast avtale</button>
-    </div>
-
-    <div id="tab-spond" style="display:none;">
-      <p class="hint">Ingen automatisk kobling ennå, men du kan lime inn innhold her. To måter:<br>
-      <b>1) Kalenderfil (anbefalt):</b> lim inn rå ICS-tekst (den som starter med "BEGIN:VCALENDAR") — f.eks. fra Spond sin kalender-lenke (Innstillinger → Kalendersynkronisering i Spond-appen) eller eksportert fra Apple Kalender. Tolkes automatisk og nøyaktig.<br>
-      <b>2) Fritekst:</b> lim inn en enkel liste, så gjetter vi dag/klokkeslett.<br>
-      Legges til i uken som vises nå (<span id="spondWeekLbl"></span>).</p>
-      <textarea id="spondInput" rows="6" placeholder="F.eks.:
-BEGIN:VCALENDAR
-BEGIN:VEVENT
-...
-eller enkelt:
-Mandag 17:00 Fotballtrening - Jonathan
-Onsdag 16:30-17:30 Håndball Milla"></textarea>
-      <button class="btn ghost" id="spondParse" style="width:100%;margin-top:10px;">Tolk tekst</button>
-      <div class="preview" id="spondPreview"></div>
-      <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte</button>
-    </div>
-
-    <div id="tab-bilder" style="display:none;">
-      <p class="hint">Ekte, direkte kobling til et delt Apple-album er ikke mulig fra en ren nettside — Apple har ingen offentlig API for det, og nettleseren stoppes av sikkerhetsregler (CORS) fra å hente det selv. Løsningen under er manuell: lim inn direkte bildelenker, én per linje — bildene roterer nederst til høyre på tavlen.<br>
-      Tips: åpne det delte albumet i nettleseren, høyreklikk et bilde → "Kopier bildeadresse".<br><br>
-      <b>Vil du ha ekte automatisk sync?</b> Det er mulig, men krever litt mer — en liten server-funksjon på Vercel som henter albumet på våre vegne. Si ifra, så bygger jeg det (trenger album-lenken din for å teste).</p>
-      <textarea id="photoInput" rows="5" placeholder="https://.../bilde1.jpg
-https://.../bilde2.jpg"></textarea>
-      <button class="btn primary" id="photoSave" style="width:100%;margin-top:10px;">Lagre bilder</button>
-    </div>
-
-    <div id="tab-tema" style="display:none;">
-      <p class="hint">Velg fargetema for tavlen.</p>
-      <div class="typepick" id="themePick" style="margin-bottom:16px;">
-        <button data-v="lys">☀️ Lys</button>
-        <button data-v="myk">🎨 Myk pastell</button>
-        <button data-v="mork">🌙 Mørk</button>
+  <div class="modal settings-modal">
+    <aside class="settings-side">
+      <div class="settings-brand">
+        <h2>Innstillinger</h2>
+        <p>Tilpass ukeplanen for familien.</p>
       </div>
-      <p class="hint">Egne farger på aktivitetene (overstyrer temaet over):</p>
-      <div class="row2">
-        <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:38px;padding:2px;"></div>
-        <div class="field"><label>Jonathan</label><input type="color" id="colJonathan" style="height:38px;padding:2px;"></div>
-      </div>
-      <div class="row2">
-        <div class="field"><label>Skole / felles aktivitet</label><input type="color" id="colSkole" style="height:38px;padding:2px;"></div>
-        <div class="field"><label>Merkefarge (i dag, "Begge")</label><input type="color" id="colToday" style="height:38px;padding:2px;"></div>
-      </div>
-      <button class="btn ghost" id="colorReset" style="width:100%;">Tilbakestill til temafarger</button>
-    </div>
 
-    <div id="tab-profil" style="display:none;">
-      <p class="hint">Last opp et bilde direkte fra PC/Mac/telefon, eller lim inn en bildelenke. Tomt felt = ikonet vises som før (fargesirkel med forbokstav).</p>
-      <div class="field">
-        <label>⚽ Milla</label>
-        <input type="file" id="fileMilla" accept="image/*" style="margin-bottom:6px;">
-        <input type="text" id="avMilla" placeholder="…eller lim inn en https-lenke">
-        <span class="hint" id="avMillaStatus" style="display:block;margin-top:4px;"></span>
+      <div class="tabs">
+        <button class="active" data-tab="matpakker">
+          <span class="settings-nav-icon">🧳</span>
+          <span class="settings-nav-copy">Matpakker</span>
+          <span class="settings-nav-sub">Antall per dag</span>
+        </button>
+        <button data-tab="ukeplan">
+          <span class="settings-nav-icon">🗓</span>
+          <span class="settings-nav-copy">Fast ukeplan</span>
+          <span class="settings-nav-sub">Rutiner og faste aktiviteter</span>
+        </button>
+        <button data-tab="spond">
+          <span class="settings-nav-icon">S</span>
+          <span class="settings-nav-copy">Importer fra Spond</span>
+          <span class="settings-nav-sub">Importer aktiviteter</span>
+        </button>
+        <button data-tab="bilder">
+          <span class="settings-nav-icon">▣</span>
+          <span class="settings-nav-copy">Bilder</span>
+          <span class="settings-nav-sub">Familiebilder og slideshow</span>
+        </button>
+        <button data-tab="tema">
+          <span class="settings-nav-icon">🎨</span>
+          <span class="settings-nav-copy">Tema</span>
+          <span class="settings-nav-sub">Farger og utseende</span>
+        </button>
+        <button data-tab="profil">
+          <span class="settings-nav-icon">☺</span>
+          <span class="settings-nav-copy">Profil</span>
+          <span class="settings-nav-sub">Bilder av barna</span>
+        </button>
+        <button data-tab="stjerner">
+          <span class="settings-nav-icon">☆</span>
+          <span class="settings-nav-copy">Stjerner</span>
+          <span class="settings-nav-sub">Belønning og gjøremål</span>
+        </button>
       </div>
-      <div class="field">
-        <label>🏒 Jonathan</label>
-        <input type="file" id="fileJonathan" accept="image/*" style="margin-bottom:6px;">
-        <input type="text" id="avJonathan" placeholder="…eller lim inn en https-lenke">
-        <span class="hint" id="avJonathanStatus" style="display:block;margin-top:4px;"></span>
-      </div>
-      <button class="btn primary" id="avatarSave" style="width:100%;">Lagre bilder</button>
-    </div>
 
-    <div id="tab-stjerner" style="display:none;">
-      <p class="hint">Trykk på et gjøremål på tavlen for å legge det til — en voksen taster inn koden for å godkjenne. Poengene bygger seg opp gjennom uken og nullstilles automatisk hver mandag.</p>
-      <div class="field"><label>Voksen-kode (for å godkjenne når barna trykker)</label><input type="text" id="starPin" placeholder="f.eks. 1234"></div>
-      <div class="row2">
-        <div class="field"><label>⚽ Milla — ukemål (poeng)</label><input type="text" id="goalMilla" value="100"></div>
-        <div class="field"><label>🏒 Jonathan — ukemål (poeng)</label><input type="text" id="goalJonathan" value="100"></div>
+      <div class="settings-tip">
+        <b>💡 Tips</b>
+        De fleste endringer lagres med én gang. Trykk Ferdig når du er klar.
       </div>
-      <div class="row2">
-        <div class="field"><label>Belønning Milla</label><input type="text" id="rewardMilla" placeholder="F.eks. sykkel, is, Vipps"></div>
-        <div class="field"><label>Belønning Jonathan</label><input type="text" id="rewardJonathan" placeholder="F.eks. fotball, is, Vipps"></div>
-      </div>
-      <button class="btn primary" id="starSettingsSave" style="width:100%;margin-bottom:16px;">Lagre</button>
+    </aside>
 
-      <p class="hint">Faste gjøremål:</p>
-      <div class="tplist" id="choreList"></div>
-      <div class="field"><label>Hvem</label>
-        <div class="whopick" id="choreWho">
-          <button data-v="Milla" class="milla active">⚽ Milla</button>
-          <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
+    <main class="settings-main">
+      <div class="settings-top">
+        <div>
+          <div class="settings-kicker" id="settingsKicker">Matpakker</div>
+          <h3 id="settingsHeading">Matpakker per dag</h3>
+          <p id="settingsDescription">Sett antall matpakker som trengs hver dag, per barn.</p>
+        </div>
+        <button class="settings-x" id="settingsX" aria-label="Lukk innstillinger">×</button>
+      </div>
+
+      <div class="settings-scroll">
+        <div id="tab-matpakker">
+          <div class="settings-section">
+            <table class="rulegrid" id="ruleTable"></table>
+          </div>
+          <div class="settings-section" style="background:linear-gradient(135deg,#FFF7FA,#FFF9F0);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#FFE4EC;">💗</div>
+              <div>
+                <div style="font-weight:800;font-size:13px;">Rask oversikt om morgenen</div>
+                <div class="hint" style="margin:3px 0 0;">Antallet vises direkte ved profilbildet på hver ukedag.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-ukeplan" style="display:none;">
+          <div class="settings-section">
+            <p class="hint">Faste aktiviteter gjentas automatisk hver uke. Bruk dette for skole, trening og andre rutiner.</p>
+            <div class="tplist" id="tplList"></div>
+            <button class="btn ghost" id="tplAdd" style="width:100%;margin-top:10px;">＋ Legg til fast avtale</button>
+          </div>
+        </div>
+
+        <div id="tab-spond" style="display:none;">
+          <div class="settings-section">
+            <p class="hint">Lim inn kalenderdata fra Spond eller en enkel liste. Kalenderfil (ICS) gir mest presis import. Aktivitetene legges til uken som vises nå (<span id="spondWeekLbl"></span>).</p>
+            <div class="field">
+              <label>Kalenderdata eller fritekst</label>
+              <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
+            </div>
+            <button class="btn ghost" id="spondParse" style="width:100%;">Tolk innhold</button>
+            <div class="preview" id="spondPreview"></div>
+            <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte aktiviteter</button>
+          </div>
+        </div>
+
+        <div id="tab-bilder" style="display:none;">
+          <div class="settings-section">
+            <div class="photo-manager">
+              <label class="photo-drop" id="photoDrop">
+                <input type="file" id="photoFiles" accept="image/*" multiple>
+                <div>
+                  <div class="photo-drop-icon">＋</div>
+                  <h4>Legg til familiebilder</h4>
+                  <p>Trykk her eller dra bilder inn. Bildene skaleres ned i nettleseren før de lagres, slik at tavlen holder seg rask.</p>
+                </div>
+              </label>
+
+              <div class="photo-gallery-box">
+                <div class="photo-gallery-head">
+                  <b>Slideshow</b>
+                  <span id="photoCount">0 bilder</span>
+                </div>
+                <div class="photo-preview-grid" id="photoPreviewGrid">
+                  <div class="photo-gallery-empty">Ingen bilder lagt til ennå.</div>
+                </div>
+              </div>
+            </div>
+
+            <details class="photo-advanced">
+              <summary>Avansert: legg til bilder via URL</summary>
+              <textarea id="photoInput" rows="4" placeholder="https://.../bilde1.jpg&#10;https://.../bilde2.jpg"></textarea>
+              <button class="btn ghost" id="photoSave" style="width:100%;margin-top:9px;">Oppdater fra URL-er</button>
+            </details>
+          </div>
+        </div>
+
+        <div id="tab-tema" style="display:none;">
+          <div class="settings-section">
+            <p class="hint">Velg uttrykket som passer best til skjermen din.</p>
+            <div class="typepick" id="themePick" style="margin-bottom:18px;">
+              <button data-v="lys">☀️ Lys</button>
+              <button data-v="myk">🎨 Myk pastell</button>
+              <button data-v="mork">🌙 Mørk</button>
+            </div>
+            <p class="hint">Du kan også overstyre aktivitetsfargene:</p>
+            <div class="row2">
+              <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:44px;padding:4px;"></div>
+              <div class="field"><label>Jonathan</label><input type="color" id="colJonathan" style="height:44px;padding:4px;"></div>
+            </div>
+            <div class="row2">
+              <div class="field"><label>Skole / felles</label><input type="color" id="colSkole" style="height:44px;padding:4px;"></div>
+              <div class="field"><label>Merkefarge / Begge</label><input type="color" id="colToday" style="height:44px;padding:4px;"></div>
+            </div>
+            <button class="btn ghost" id="colorReset" style="width:100%;">Tilbakestill temafarger</button>
+          </div>
+        </div>
+
+        <div id="tab-profil" style="display:none;">
+          <div class="settings-section">
+            <p class="hint">Velg et profilbilde fra enheten, eller bruk en bildelenke.</p>
+            <div class="profile-grid">
+              <div class="profile-card">
+                <div class="profile-card-title"><span style="color:var(--milla);">●</span> Milla</div>
+                <input type="file" id="fileMilla" accept="image/*">
+                <div class="field" style="margin:0;">
+                  <input type="text" id="avMilla" placeholder="…eller https-lenke">
+                </div>
+                <span class="hint" id="avMillaStatus" style="display:block;margin:7px 0 0;"></span>
+              </div>
+              <div class="profile-card">
+                <div class="profile-card-title"><span style="color:var(--jonathan);">●</span> Jonathan</div>
+                <input type="file" id="fileJonathan" accept="image/*">
+                <div class="field" style="margin:0;">
+                  <input type="text" id="avJonathan" placeholder="…eller https-lenke">
+                </div>
+                <span class="hint" id="avJonathanStatus" style="display:block;margin:7px 0 0;"></span>
+              </div>
+            </div>
+            <button class="btn primary" id="avatarSave" style="width:100%;margin-top:14px;">Lagre profilbilder</button>
+          </div>
+        </div>
+
+        <div id="tab-stjerner" style="display:none;">
+          <div class="settings-section">
+            <p class="hint">Barna kan trykke på et gjøremål og en voksen godkjenner med kode. Poengene nullstilles hver mandag.</p>
+            <div class="field"><label>Voksen-kode</label><input type="text" id="starPin" placeholder="f.eks. 1234"></div>
+            <div class="row2">
+              <div class="field"><label>Milla — ukemål</label><input type="text" id="goalMilla" value="100"></div>
+              <div class="field"><label>Jonathan — ukemål</label><input type="text" id="goalJonathan" value="100"></div>
+            </div>
+            <div class="row2">
+              <div class="field"><label>Belønning Milla</label><input type="text" id="rewardMilla" placeholder="F.eks. sykkel, is, Vipps"></div>
+              <div class="field"><label>Belønning Jonathan</label><input type="text" id="rewardJonathan" placeholder="F.eks. fotball, is, Vipps"></div>
+            </div>
+            <button class="btn primary" id="starSettingsSave" style="width:100%;margin-bottom:18px;">Lagre stjerneinnstillinger</button>
+          </div>
+
+          <div class="settings-section">
+            <p class="hint">Faste gjøremål</p>
+            <div class="tplist" id="choreList"></div>
+            <div class="field"><label>Hvem</label>
+              <div class="whopick" id="choreWho">
+                <button data-v="Milla" class="milla active">⚽ Milla</button>
+                <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
+              <div class="field" style="max-width:100px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
+            </div>
+            <button class="btn ghost" id="choreAdd" style="width:100%;">＋ Legg til gjøremål</button>
+          </div>
         </div>
       </div>
-      <div class="row2">
-        <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
-        <div class="field" style="max-width:90px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
-      </div>
-      <button class="btn ghost" id="choreAdd" style="width:100%;">+ Legg til gjøremål</button>
-    </div>
 
-    <div class="modalbtns">
-      <button class="btn primary" id="settingsClose" style="flex:1;">Lukk</button>
-    </div>
+      <div class="settings-footer">
+        <div style="font-size:11px;color:var(--ink-soft);">Endringer synkroniseres til familietavlen.</div>
+        <div class="footer-right">
+          <button class="btn primary" id="settingsClose">Ferdig</button>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
 
@@ -618,6 +1275,10 @@ async function loadAll(){
   if(!settings.chores) settings.chores = [];
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(!settings.customColors) settings.customColors = {};
+  if(settings.customColors && settings.customColors.skole &&
+     ['#a69b8d','#b3a896'].includes(String(settings.customColors.skole).toLowerCase())){
+    settings.customColors.skole = '#69B889';
+  }
   if(!settings.pin) settings.pin = '1234';
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
@@ -691,12 +1352,53 @@ function itemsForDay(dayIdx){
   return [...t, ...w].sort((a,b)=> (a.start||'').localeCompare(b.start||''));
 }
 
+function renderWeekendItem(it){
+  const timeStr = it.end ? `${it.start}–${it.end}` : (it.start || '');
+  const who = it.who || 'Begge';
+  const whoClass = who.toLowerCase();
+  return `<div class="weekend-item" data-src="${it._src}" data-id="${it.id}">
+    <span class="weekend-emo">${emojiFor(it)}</span>
+    <div class="weekend-copy">
+      ${timeStr ? `<div class="weekend-time">${timeStr}</div>` : ''}
+      <div class="weekend-name">${it.title}</div>
+    </div>
+    <span class="weekend-who ${whoClass}">${who}</span>
+  </div>`;
+}
+
+function renderWeekendDay(dayIdx, idx){
+  const name = WD[dayIdx];
+  const date = addDays(weekStart,dayIdx);
+  const items = itemsForDay(dayIdx);
+  const schedule = items.filter(it=>it.type!=='husk');
+  const husk = items.filter(it=>it.type==='husk');
+
+  return `<section class="weekend-day ${dayIdx===idx?'today':''}">
+    <div class="weekend-head">
+      <div class="weekend-title">
+        <span class="dname">${name}</span>
+        <span class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</span>
+      </div>
+      <button class="weekend-add" data-day="${dayIdx}">＋ Aktivitet</button>
+    </div>
+
+    <div class="weekend-list">
+      ${schedule.length ? schedule.map(renderWeekendItem).join('') : '<div class="weekend-empty">Ingen aktiviteter</div>'}
+    </div>
+
+    <div class="weekend-husk">
+      ${husk.map(it=>renderHusk(it)).join('')}
+      <button class="huskadd" data-day="${dayIdx}">🎒 Husk +</button>
+    </div>
+  </section>`;
+}
+
 function renderGrid(){
   const grid = document.getElementById('grid');
   const idx = todayIndex();
-  grid.innerHTML = WD.map((name,i)=>{
+
+  const weekdays = WD.slice(0,5).map((name,i)=>{
     const date = addDays(weekStart,i);
-    const weekend = i>=5;
     const items = itemsForDay(i);
     const schedule = items.filter(it=>it.type!=='husk');
     const husk = items.filter(it=>it.type==='husk');
@@ -704,8 +1406,9 @@ function renderGrid(){
     const millaItems = schedule.filter(it=> it.who==='Milla');
     const jonathanItems = schedule.filter(it=> it.who==='Jonathan');
     const m = matpakkeFor('Milla', i), j = matpakkeFor('Jonathan', i);
+
     return `
-    <div class="day ${weekend?'weekend':''} ${i===idx?'today':''}">
+    <div class="day weekday ${i===idx?'today':''}">
       <div class="dhead">
         <div class="dtop">
           <div>
@@ -715,15 +1418,18 @@ function renderGrid(){
           <button class="sharedadd" data-day="${i}" title="Legg til felles">+</button>
         </div>
       </div>
+
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
+
       <div class="colheads">
         <div class="colheadname milla">
-          <span class="avbadge">${avatarHTML('Milla',36)}${m>0?`<span class="mpbadge">🥪${m}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Milla',42)}</span>
         </div>
         <div class="colheadname jonathan">
-          <span class="avbadge">${avatarHTML('Jonathan',36)}${j>0?`<span class="mpbadge">🥪${j}</span>`:''}</span>
+          <span class="avbadge">${avatarHTML('Jonathan',42)}</span>
         </div>
       </div>
+
       <div class="split">
         <div class="col milla">
           ${millaItems.length? millaItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
@@ -732,10 +1438,21 @@ function renderGrid(){
           ${jonathanItems.length? jonathanItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
         </div>
       </div>
+
       <div class="colfoot">
         <button class="miniadd" data-day="${i}" data-who="Milla">+</button>
         <button class="miniadd" data-day="${i}" data-who="Jonathan">+</button>
       </div>
+
+      <div class="lunchstrip">
+        <div class="lunchmini milla ${m===0?'zero':''}">
+          <span class="lunch-icon">🥪</span><span>Milla ${m}</span>
+        </div>
+        <div class="lunchmini jonathan ${j===0?'zero':''}">
+          <span class="lunch-icon">🥪</span><span>Jonathan ${j}</span>
+        </div>
+      </div>
+
       <div class="husk">
         ${husk.map(it=>renderHusk(it)).join('')}
         <button class="huskadd" data-day="${i}">🎒 Husk +</button>
@@ -743,16 +1460,28 @@ function renderGrid(){
     </div>`;
   }).join('');
 
+  const weekend = `
+    <div class="weekend-section">
+      ${renderWeekendDay(5,idx)}
+      <div class="weekend-divider"></div>
+      ${renderWeekendDay(6,idx)}
+    </div>`;
+
+  grid.innerHTML = weekdays + weekend;
+
   grid.querySelectorAll('.sharedadd').forEach(b=>{
     b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'aktivitet'));
   });
   grid.querySelectorAll('.miniadd').forEach(b=>{
     b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, b.dataset.who, 'aktivitet'));
   });
+  grid.querySelectorAll('.weekend-add').forEach(b=>{
+    b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'aktivitet'));
+  });
   grid.querySelectorAll('.huskadd').forEach(b=>{
     b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'husk'));
   });
-  grid.querySelectorAll('.item, .huskchip').forEach(el=>{
+  grid.querySelectorAll('.item, .huskchip, .weekend-item').forEach(el=>{
     el.addEventListener('click', ()=>{
       const src = el.dataset.src, id = el.dataset.id;
       const list = src==='template'? template : weekEvents;
@@ -888,12 +1617,22 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
 });
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
+document.getElementById('settingsX').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
+const SETTINGS_META = {
+  matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver dag, per barn.'],
+  ukeplan:['Fast ukeplan','Faste rutiner','Administrer skole, trening og andre aktiviteter som gjentas hver uke.'],
+  spond:['Import','Importer fra Spond','Lim inn kalenderdata og velg hvilke aktiviteter som skal inn i ukeplanen.'],
+  bilder:['Bilder','Familiebilder','Legg til bilder til slideshowet nederst på familietavlen.'],
+  tema:['Utseende','Tema og farger','Tilpass tavlen til skjermen og familiens stil.'],
+  profil:['Profil','Profilbilder','Velg bildene som vises for Milla og Jonathan i kalenderen.'],
+  stjerner:['Belønning','Stjerner og gjøremål','Sett mål, belønninger og faste oppgaver for uken.']
+};
 document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
@@ -901,6 +1640,13 @@ document.querySelectorAll('.tabs button').forEach(b=>{
     ['matpakker','ukeplan','spond','bilder','tema','profil','stjerner'].forEach(t=>{
       document.getElementById('tab-'+t).style.display = (t===b.dataset.tab)?'block':'none';
     });
+    const meta = SETTINGS_META[b.dataset.tab];
+    if(meta){
+      document.getElementById('settingsKicker').textContent = meta[0];
+      document.getElementById('settingsHeading').textContent = meta[1];
+      document.getElementById('settingsDescription').textContent = meta[2];
+    }
+    if(b.dataset.tab==='bilder') renderPhotoManager();
   });
 });
 
@@ -938,7 +1684,7 @@ function fillColorInputs(){
   const cs = getComputedStyle(document.documentElement);
   document.getElementById('colMilla').value = c.milla || cs.getPropertyValue('--milla').trim() || '#ff4fa0';
   document.getElementById('colJonathan').value = c.jonathan || cs.getPropertyValue('--jonathan').trim() || '#2f80ed';
-  document.getElementById('colSkole').value = c.skole || cs.getPropertyValue('--skole').trim() || '#a69b8d';
+  document.getElementById('colSkole').value = c.skole || cs.getPropertyValue('--skole').trim() || '#69b889';
   document.getElementById('colToday').value = c.today || cs.getPropertyValue('--today').trim() || '#ffae2e';
 }
 ['colMilla','colJonathan','colSkole','colToday'].forEach(id=>{
@@ -1373,13 +2119,99 @@ function nextPhoto(){
   photoIdx = (photoIdx+1) % photos.length;
   renderPhotos();
 }
+function renderPhotoManager(){
+  const grid = document.getElementById('photoPreviewGrid');
+  const count = document.getElementById('photoCount');
+  if(!grid || !count) return;
+  count.textContent = photos.length === 1 ? '1 bilde' : `${photos.length} bilder`;
+  if(!photos.length){
+    grid.innerHTML = '<div class="photo-gallery-empty" style="grid-column:1/-1;">Ingen bilder lagt til ennå.</div>';
+  }else{
+    grid.innerHTML = photos.map((url,i)=>`
+      <div class="photo-thumb">
+        <img src="${url}" loading="lazy" decoding="async">
+        <button type="button" data-photo-remove="${i}" title="Fjern bilde">×</button>
+      </div>`).join('');
+    grid.querySelectorAll('[data-photo-remove]').forEach(btn=>{
+      btn.addEventListener('click', async e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        photos.splice(parseInt(btn.dataset.photoRemove),1);
+        photoIdx = 0;
+        await savePhotos();
+        renderPhotos();
+        renderPhotoManager();
+        document.getElementById('photoInput').value = photos.filter(x=>/^https?:\/\//i.test(x)).join('\\n');
+      });
+    });
+  }
+}
+
+function compressPhotoFile(file){
+  return new Promise((resolve,reject)=>{
+    if(!file || !file.type.startsWith('image/')) return reject(new Error('Ikke et bilde'));
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = ()=>{
+        const maxW = 1400, maxH = 1000;
+        const scale = Math.min(1,maxW/img.width,maxH/img.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1,Math.round(img.width*scale));
+        canvas.height = Math.max(1,Math.round(img.height*scale));
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',.78));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function addPhotoFiles(fileList){
+  const files = Array.from(fileList || []).filter(f=>f.type && f.type.startsWith('image/')).slice(0,12);
+  if(!files.length) return;
+  const drop = document.getElementById('photoDrop');
+  if(drop) drop.classList.add('dragover');
+  try{
+    const newImages = [];
+    for(const f of files){
+      try{ newImages.push(await compressPhotoFile(f)); }catch(e){ console.warn('Kunne ikke lese bilde',f.name,e); }
+    }
+    photos.push(...newImages);
+    photoIdx = 0;
+    await savePhotos();
+    renderPhotos();
+    renderPhotoManager();
+  }finally{
+    if(drop) drop.classList.remove('dragover');
+    const inp = document.getElementById('photoFiles');
+    if(inp) inp.value = '';
+  }
+}
+
+const photoFilesEl = document.getElementById('photoFiles');
+const photoDropEl = document.getElementById('photoDrop');
+photoFilesEl.addEventListener('change', ()=> addPhotoFiles(photoFilesEl.files));
+['dragenter','dragover'].forEach(ev=>photoDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); photoDropEl.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev=>photoDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); photoDropEl.classList.remove('dragover');
+}));
+photoDropEl.addEventListener('drop',e=> addPhotoFiles(e.dataTransfer.files));
+
 document.getElementById('photoSave').addEventListener('click', async ()=>{
-  const lines = document.getElementById('photoInput').value.split('\n').map(l=>l.trim()).filter(l=>/^https?:\/\//i.test(l));
-  photos = lines;
+  const urls = document.getElementById('photoInput').value.split('\\n').map(l=>l.trim()).filter(l=>/^https?:\/\//i.test(l));
+  // Keep uploaded data-images and replace only the URL-based entries.
+  photos = [...photos.filter(x=>!/^https?:\/\//i.test(x)), ...urls];
   photoIdx = 0;
   await savePhotos();
   renderPhotos();
-  settingsOverlay.classList.remove('open');
+  renderPhotoManager();
 });
 
 // close overlays on backdrop click
@@ -1435,7 +2267,8 @@ function paint(){
   renderAll();
   renderShopping();
   renderPhotos();
-  document.getElementById('photoInput').value = photos.join('\n');
+  document.getElementById('photoInput').value = photos.filter(x=>/^https?:\/\//i.test(x)).join('\n');
+  renderPhotoManager();
 }
 
 (async function init(){
