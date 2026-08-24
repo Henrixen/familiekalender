@@ -1687,6 +1687,82 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
   .profile-side .lunchbox-icon{width:15px;height:11px;}
 }
 
+
+/* ===== Child-centered day header + playful lunchboxes ===== */
+.compact-day-head{
+  min-height:126px;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:0;
+  padding:12px 34px 9px;
+  overflow:visible;
+}
+.compact-day-head .weather-corner{display:none!important;}
+.day-title-center{
+  position:absolute;
+  left:50%;
+  top:17px;
+  transform:translateX(-50%);
+  z-index:3;
+  align-self:auto;
+  text-align:center;
+  min-width:126px;
+  padding:0 8px;
+  pointer-events:none;
+  background:rgba(255,255,255,.82);
+  border-radius:11px;
+  backdrop-filter:blur(2px);
+}
+.day-title-line{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+.day-title-line .day-weather{font-size:10px;color:var(--ink-soft);gap:2px;}
+.day-title-line .weather-icon{font-size:16px;}
+.day-title-center .dname{font-size:17px;font-weight:850;line-height:1.15;}
+.day-title-center .ddate{font-size:10.5px;margin-top:3px;}
+.profile-side{
+  width:100%;
+  height:102px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center!important;
+  gap:0;
+}
+.profile-side .avbadge{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;}
+.profile-side img.avcircle,.profile-side .avcircle{
+  width:86px!important;
+  height:86px!important;
+  box-shadow:0 0 0 4px #fff,0 0 0 7px currentColor,0 7px 18px rgba(43,33,24,.12)!important;
+}
+.milla-side{color:var(--milla);padding-right:30px;}
+.jonathan-side{color:var(--jonathan);padding-left:30px;}
+.profile-side .lunch-icons{
+  position:absolute;
+  top:50%;
+  transform:translateY(-42%);
+  display:flex;
+  align-items:center;
+  gap:2px;
+  min-height:32px;
+  z-index:1;
+}
+.milla-side .lunch-icons{left:calc(50% - 78px);transform:translate(-100%,-42%);justify-content:flex-end;}
+.jonathan-side .lunch-icons{right:calc(50% - 78px);transform:translate(100%,-42%);justify-content:flex-start;}
+.kid-lunchbox{width:30px;height:29px;display:block;filter:drop-shadow(0 3px 3px rgba(43,33,24,.10));}
+.profile-side .lunchbox-icon{display:none!important;}
+.day-plus{top:11px;right:11px;}
+
+@media(max-width:760px){
+  .compact-day-head{min-height:112px;padding:12px 22px 8px;}
+  .profile-side{height:90px;}
+  .profile-side img.avcircle,.profile-side .avcircle{width:72px!important;height:72px!important;}
+  .milla-side{padding-right:22px}.jonathan-side{padding-left:22px}
+  .milla-side .lunch-icons{left:calc(50% - 63px);}
+  .jonathan-side .lunch-icons{right:calc(50% - 63px);}
+  .kid-lunchbox{width:25px;height:24px;}
+  .day-title-center{top:12px;min-width:112px;}
+  .day-title-center .dname{font-size:15px;}
+}
+
 </style>
 </head>
 <body>
@@ -2307,8 +2383,8 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
 <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
 <script>
 // ---------- Supabase-backed storage shim ----------
-const SUPABASE_URL = 'https://DITT-PROSJEKT.supabase.co';
-const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
+const SUPABASE_URL = 'https://rgmbpawcegdkarjhjnxd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnbWJwYXdjZWdka2FyamhqbnhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTY4NzUsImV4cCI6MjA5MDEzMjg3NX0.YVfbZD3BAQ14j2MB6r3Vi9ZAgILEL577MEVb728gQaE';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2644,10 +2720,26 @@ function renderWeekendDay(dayIdx, idx){
   </section>`;
 }
 
+function kidLunchboxSVG(child){
+  const pink = child==='Milla';
+  const main = pink ? '#F45B91' : '#3D8BF2';
+  const dark = pink ? '#D93C78' : '#2470D5';
+  const light = pink ? '#FFD9E7' : '#DCEBFF';
+  return `<svg class="kid-lunchbox" viewBox="0 0 44 42" aria-hidden="true" focusable="false">
+    <path d="M14 11V8.5C14 4.9 16.9 2 20.5 2h3C27.1 2 30 4.9 30 8.5V11" fill="none" stroke="${dark}" stroke-width="3.2" stroke-linecap="round"/>
+    <rect x="5" y="10" width="34" height="27" rx="8" fill="${main}"/>
+    <rect x="8" y="13" width="28" height="6" rx="3" fill="${light}" opacity=".72"/>
+    <path d="M5 23.5h34" stroke="${dark}" stroke-width="2" opacity=".48"/>
+    <rect x="19" y="20.5" width="6" height="6" rx="2" fill="#fff" opacity=".95"/>
+    <path d="M22 31.2c-4.2-2.2-6.3-4.2-6.3-6.5 0-1.8 1.4-3.2 3.2-3.2 1.2 0 2.3.6 3.1 1.6.8-1 1.9-1.6 3.1-1.6 1.8 0 3.2 1.4 3.2 3.2 0 2.3-2.1 4.3-6.3 6.5z" fill="#fff" transform="scale(.54) translate(18 23)" opacity=".96"/>
+    <circle cx="10" cy="27" r="1.4" fill="#fff" opacity=".8"/>
+    <circle cx="34" cy="27" r="1.4" fill="#fff" opacity=".8"/>
+  </svg>`;
+}
 function renderLunchIcons(child, count){
   const cls = child.toLowerCase();
   if(!count) return `<span class="lunch-icons empty-lunch" aria-label="0 matpakker"></span>`;
-  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>'<span class="lunchbox-icon" aria-hidden="true"></span>').join('')}</span>`;
+  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>kidLunchboxSVG(child)).join('')}</span>`;
 }
 
 function renderReminderLane(items, who){
@@ -2675,19 +2767,18 @@ function renderGrid(){
     return `
     <div class="day weekday ${i===idx?'today':''}">
       <div class="compact-day-head">
-        <div class="weather-corner">${renderWeather(i)}</div>
         <button class="sharedadd day-plus" data-day="${i}" title="Legg til aktivitet">+</button>
         <div class="profile-side milla-side">
           ${renderLunchIcons('Milla',m)}
-          <span class="avbadge">${avatarHTML('Milla',60)}</span>
-        </div>
-        <div class="day-title-center">
-          <div class="dname">${name}</div>
-          <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
+          <span class="avbadge">${avatarHTML('Milla',86)}</span>
         </div>
         <div class="profile-side jonathan-side">
-          <span class="avbadge">${avatarHTML('Jonathan',60)}</span>
+          <span class="avbadge">${avatarHTML('Jonathan',86)}</span>
           ${renderLunchIcons('Jonathan',j)}
+        </div>
+        <div class="day-title-center">
+          <div class="day-title-line"><span class="dname">${name}</span>${renderWeather(i)}</div>
+          <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
         </div>
       </div>
 
