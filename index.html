@@ -52,7 +52,6 @@
   }
   .wrap{max-width:1600px;margin:0 auto;padding:18px 24px 90px;}
 
-  /* header */
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .brand{display:flex;align-items:center;gap:10px;}
   .brand .mark{
@@ -75,12 +74,11 @@
   }
   .clock{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:19px;font-weight:600;color:var(--ink-soft);}
 
-  /* hero matpakke banner */
   .hero{
     display:flex;align-items:center;gap:22px;background:var(--surface);
     border-radius:var(--radius);padding:14px 22px;margin-bottom:14px;box-shadow:var(--shadow);
   }
-  .hero .label{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  .hero .label{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;color:var(--ink-soft);white-space:nowrap;}
   .hero .items{display:flex;gap:30px;flex-wrap:wrap;}
   .hero .child{display:flex;align-items:center;gap:9px;}
   .hero .child .glyph{font-size:16px;line-height:1;}
@@ -92,7 +90,6 @@
   .hero .count{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-soft);margin-left:1px;}
   .hero.noschool{color:var(--ink-soft);font-style:italic;}
 
-  /* grid */
   .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
   .day{
     background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);
@@ -101,7 +98,7 @@
   .day.weekend{background:var(--surface-alt);box-shadow:none;border:1px solid var(--line);}
   .day.today{box-shadow:0 0 0 2px var(--today), var(--shadow);}
   .day .dhead{padding:12px 13px 9px;border-bottom:1px solid var(--line);}
-  .day .dname{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;font-weight:600;}
+  .day .dname{font-family:'Inter',sans-serif;font-weight:800;font-size:17px;}
   .day.today .dname{color:var(--today);}
   .day .ddate{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:11px;color:var(--ink-soft);}
   .lunch{display:flex;gap:9px;padding:8px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
@@ -226,7 +223,6 @@
     font-size:22px;box-shadow:0 3px 0 rgba(43,33,24,.12), 0 8px 20px rgba(43,33,24,.22);cursor:pointer;
   }
 
-  /* modal */
   .overlay{position:fixed;inset:0;background:rgba(20,24,17,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.open{display:flex;}
   .modal{
@@ -267,18 +263,16 @@
   .stepper button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface-alt);font-size:15px;cursor:pointer;}
   .stepper span{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;width:16px;text-align:center;font-size:14px;}
   .tplist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:12px;}
-  .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;}
+  .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;margin-bottom:6px;}
+  .tpl-group{margin-bottom:16px;}
+  .tpl-group-head{font-weight:800;font-size:12.5px;margin-bottom:8px;color:var(--ink-soft);}
   .hint{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
   .preview{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin:12px 0;}
   .prevrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;}
   .prevrow input{margin:0;}
 
-/* ═══════════════════════════════════════════════════════════════
-   MODERN FAMILY CALENDAR — visual upgrade
-   ═══════════════════════════════════════════════════════════════ */
 .wrap{max-width:1780px;padding:18px 24px 90px;}
 
-/* Five roomy weekdays on top, two flatter weekend cards below */
 .grid{
   grid-template-columns:repeat(10,minmax(0,1fr));
   gap:12px;
@@ -302,7 +296,6 @@
 .day.weekend .colheadname .avcircle{transform:scale(.88);}
 .day.weekend .mpbadge{transform:scale(.88);transform-origin:bottom right;}
 
-/* A little more polished main cards */
 .day{
   border:1px solid color-mix(in srgb,var(--line) 72%,transparent);
   box-shadow:0 1px 1px rgba(43,33,24,.025),0 10px 28px rgba(43,33,24,.07);
@@ -314,7 +307,6 @@
 }
 .sharedadd:hover,.miniadd:hover,.huskadd:hover{transform:translateY(-1px);}
 
-/* ---------- Modern settings ---------- */
 #settingsOverlay{
   padding:22px;
   background:rgba(30,28,25,.42);
@@ -457,7 +449,6 @@
 .settings-section + .settings-section{margin-top:14px;}
 .settings-section .hint{font-size:12.5px;margin:0 0 15px;}
 
-/* Matpakke table */
 #settingsOverlay .rulegrid{
   background:var(--surface);
   border-radius:16px;
@@ -484,7 +475,6 @@
   border-color:#FFD9E6;
 }
 
-/* Generic modern controls */
 #settingsOverlay .field{margin-bottom:16px;}
 #settingsOverlay .field label{font-size:11.5px;font-weight:750;margin-bottom:7px;}
 #settingsOverlay .field input[type=text],
@@ -511,7 +501,6 @@
   background:var(--surface-alt);
 }
 
-/* Modern photo manager */
 .photo-manager{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:16px;}
 .photo-drop{
   position:relative;
@@ -559,7 +548,6 @@
 .photo-advanced summary{cursor:pointer;font-size:11.5px;color:var(--ink-soft);font-weight:700;}
 .photo-advanced textarea{width:100%;margin-top:10px;min-height:90px;}
 
-/* Profile upload cards */
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .profile-card{
   border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--surface-alt);
@@ -571,7 +559,6 @@
   background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer;border:1px solid var(--line);
 }
 
-/* Footer */
 .settings-footer{
   border-top:1px solid var(--line);
   padding:14px 24px;
@@ -608,12 +595,6 @@
   .settings-footer{padding:12px 14px;}
 }
 
-
-/* ═══════════════════════════════════════════════════════════════
-   V2 — roomy weekdays + unified weekend + clean avatars
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Small, tidy Today button */
 .weeknav .thisweek{
   display:inline-flex;
   align-items:center;
@@ -637,7 +618,6 @@
   transform:translateY(-.3px);
 }
 
-/* Five weekday cards only occupy the first row */
 .grid{
   grid-template-columns:repeat(10,minmax(0,1fr));
 }
@@ -646,7 +626,6 @@
   min-height:455px;
 }
 
-/* Avatar is now its own clean element — no lunchbox overlay */
 .colheadname .avbadge{
   display:flex;
   align-items:center;
@@ -666,7 +645,6 @@
 .colheadname.milla{color:var(--milla);}
 .colheadname.jonathan{color:var(--jonathan);}
 
-/* Lunchbox count separated from the avatar */
 .lunchstrip{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -691,14 +669,12 @@
 .lunchmini .lunch-icon{font-size:13px;}
 .lunchmini.zero{opacity:.45;}
 
-/* School gets a softer, cleaner green treatment */
 .item.skole{
   background:linear-gradient(135deg,#67B98A,#75C797);
   color:#fff;
 }
 .item.skole .t{color:rgba(255,255,255,.88);}
 
-/* Unified weekend section */
 .weekend-section{
   grid-column:1 / -1;
   display:grid;
@@ -811,7 +787,6 @@
 .weekend-husk .huskchip{font-size:10px;padding:4px 7px;}
 .weekend-husk .huskadd{font-size:10px;padding:4px 8px;}
 
-/* The old weekend card styling is no longer used */
 .day.weekend{display:none!important;}
 
 @media(max-width:1100px){
@@ -829,6 +804,627 @@
   .weekend-divider{height:1px;width:100%;}
   .weeknav .thisweek{padding:6px 8px;}
 }
+
+html[data-layout="5"] .grid{
+  grid-template-columns:repeat(10,minmax(0,1fr));
+}
+html[data-layout="5"] .day.weekday{grid-column:span 2;}
+html[data-layout="5"] .weekend-section{grid-column:1/-1;}
+
+html[data-layout="3"] .grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+html[data-layout="3"] .day.weekday{
+  grid-column:span 1;
+  min-height:430px;
+}
+html[data-layout="3"] .weekend-section{
+  grid-column:span 1;
+  min-height:430px;
+  display:flex;
+  flex-direction:column;
+}
+html[data-layout="3"] .weekend-divider{
+  width:100%;
+  height:1px;
+  flex:none;
+}
+html[data-layout="3"] .weekend-day{
+  flex:1;
+  min-height:0;
+  padding:12px 13px 10px;
+}
+html[data-layout="3"] .weekend-list{
+  min-height:45px;
+}
+html[data-layout="3"] .weekend-item{
+  min-height:34px;
+  padding:6px 8px;
+}
+html[data-layout="3"] .weekend-head{margin-bottom:7px;}
+html[data-layout="3"] .weekend-title .dname{font-size:14px;}
+html[data-layout="3"] .weekend-title .ddate{font-size:9.5px;}
+html[data-layout="3"] .weekend-add{
+  padding:5px 8px;
+  font-size:9.5px;
+}
+
+html[data-layout="2"] .grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+html[data-layout="2"] .day.weekday{grid-column:span 1;min-height:390px;}
+html[data-layout="2"] .weekend-section{grid-column:1/-1;}
+
+html[data-layout="3"] .starpanel,
+html[data-layout="5"] .starpanel,
+html[data-layout="2"] .starpanel{
+  margin-top:12px;
+}
+
+.layout-picker{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.layout-option{
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  border-radius:15px;
+  padding:12px 10px;
+  cursor:pointer;
+  text-align:left;
+  transition:.16s ease;
+  min-height:92px;
+}
+.layout-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 7px 18px rgba(43,33,24,.06);
+}
+.layout-option.active{
+  border-color:var(--jonathan);
+  background:color-mix(in srgb,var(--jonathan-soft) 54%,var(--surface) 46%);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--jonathan) 10%,transparent);
+}
+.layout-option .layout-mini{
+  height:34px;
+  display:grid;
+  gap:3px;
+  margin-bottom:8px;
+}
+.layout-option[data-layout-v="auto"] .layout-mini{grid-template-columns:repeat(5,1fr);}
+.layout-option[data-layout-v="5"] .layout-mini{grid-template-columns:repeat(5,1fr);}
+.layout-option[data-layout-v="3"] .layout-mini{grid-template-columns:repeat(3,1fr);}
+.layout-option[data-layout-v="2"] .layout-mini{grid-template-columns:repeat(2,1fr);}
+.layout-option .layout-mini span{
+  border-radius:4px;
+  background:color-mix(in srgb,var(--ink-soft) 24%,var(--surface) 76%);
+}
+.layout-option.active .layout-mini span{
+  background:color-mix(in srgb,var(--jonathan) 55%,var(--surface) 45%);
+}
+.layout-option b{display:block;font-size:11.5px;margin-bottom:3px;}
+.layout-option small{display:block;font-size:9.5px;line-height:1.35;color:var(--ink-soft);}
+
+@media(max-width:900px){
+  .layout-picker{grid-template-columns:repeat(2,1fr);}
+}
+
+@media(min-width:761px){
+  html[data-layout="3"] .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  html[data-layout="3"] .day.weekday{grid-column:span 1!important;min-height:430px!important;}
+  html[data-layout="3"] .weekend-section{grid-column:span 1!important;}
+
+  html[data-layout="5"] .grid{grid-template-columns:repeat(10,minmax(0,1fr))!important;}
+  html[data-layout="5"] .day.weekday{grid-column:span 2!important;}
+  html[data-layout="5"] .weekend-section{grid-column:1/-1!important;}
+
+  html[data-layout="2"] .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  html[data-layout="2"] .day.weekday{grid-column:span 1!important;}
+  html[data-layout="2"] .weekend-section{grid-column:1/-1!important;}
+}
+
+#settingsOverlay{
+  overflow:auto;
+  align-items:center;
+  justify-content:center;
+}
+#settingsOverlay .settings-modal{
+  width:min(1460px,calc(100vw - 28px));
+  height:min(900px,calc(100dvh - 28px));
+  max-height:calc(100dvh - 28px);
+  min-height:0;
+}
+.settings-main{
+  min-height:0;
+  overflow:hidden;
+}
+.settings-side{
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.settings-scroll{
+  min-height:0;
+  overflow-y:auto!important;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.settings-footer{
+  flex:none;
+  position:relative;
+  z-index:3;
+}
+
+.lunch-settings-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 250px;
+  gap:16px;
+  align-items:stretch;
+}
+.lunch-main-stack{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.lunch-family-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--surface-alt) 70%,#fff 30%));
+  box-shadow:0 7px 22px rgba(43,33,24,.045);
+}
+.lunch-family-row{
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  align-items:center;
+  gap:16px;
+}
+.lunch-family-divider{
+  height:58px;
+  background:var(--line);
+}
+.lunch-person{
+  min-width:0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+}
+.lunch-person-avatar{
+  color:var(--milla);
+  display:flex;
+}
+.lunch-person.jonathan .lunch-person-avatar{color:var(--jonathan);}
+.lunch-person-avatar img,
+.lunch-person-avatar .avcircle{
+  width:62px!important;
+  height:62px!important;
+  border-radius:50%!important;
+  object-fit:cover;
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 6px currentColor,
+    0 7px 18px rgba(43,33,24,.12)!important;
+}
+.lunch-person-name{
+  font-size:17px;
+  font-weight:850;
+  letter-spacing:-.02em;
+}
+.lunch-person.milla .lunch-person-name{color:var(--milla);}
+.lunch-person.jonathan .lunch-person-name{color:var(--jonathan);}
+.lunch-person-sub{
+  margin-top:3px;
+  color:var(--ink-soft);
+  font-size:10.5px;
+}
+.lunch-person-icon{
+  width:48px;height:48px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+}
+.lunch-person.milla .lunch-person-icon{background:#FFF0F5;color:var(--milla);}
+.lunch-person.jonathan .lunch-person-icon{background:#EEF6FF;color:var(--jonathan);}
+
+.lunch-days-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:0;
+  overflow:hidden;
+  background:var(--surface);
+  box-shadow:0 7px 22px rgba(43,33,24,.045);
+}
+.lunch-days-header{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-bottom:1px solid var(--line);
+}
+.lunch-day-head{
+  padding:13px 6px 11px;
+  text-align:center;
+  border-right:1px solid color-mix(in srgb,var(--line) 72%,transparent);
+}
+.lunch-day-head:last-child{border-right:0;}
+.lunch-day-head b{display:block;font-size:11.5px;}
+.lunch-day-head span{display:block;font-size:9.5px;color:var(--ink-soft);margin-top:3px;}
+.lunch-rows{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+}
+.lunch-day-cell{
+  min-width:0;
+  padding:13px 8px;
+  border-right:1px solid color-mix(in srgb,var(--line) 72%,transparent);
+}
+.lunch-day-cell:last-child{border-right:0;}
+.lunch-day-controls{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.lunch-control-row{
+  display:grid;
+  grid-template-columns:29px minmax(22px,1fr) 29px;
+  gap:5px;
+  align-items:center;
+}
+.lunch-control-row button{
+  width:29px;height:29px;
+  border-radius:9px;
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  color:var(--ink);
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+.lunch-control-row.milla button{
+  border-color:#FFD8E5;
+  background:#FFF6F9;
+  color:var(--milla);
+}
+.lunch-control-row.jonathan button{
+  border-color:#D8E9FF;
+  background:#F5F9FF;
+  color:var(--jonathan);
+}
+.lunch-control-row .count{
+  text-align:center;
+  font-size:13px;
+  font-weight:800;
+}
+.lunch-row-key{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  color:var(--ink-soft);
+  margin-bottom:9px;
+}
+.lunch-dot{
+  width:7px;height:7px;border-radius:50%;
+}
+.lunch-dot.milla{background:var(--milla);}
+.lunch-dot.jonathan{background:var(--jonathan);}
+
+.lunch-note-card{
+  border:1px solid #F2DFE5;
+  border-radius:17px;
+  padding:13px 15px;
+  background:linear-gradient(135deg,#FFF7FA,#FFF9F2);
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.lunch-note-icon{
+  width:38px;height:38px;border-radius:50%;
+  background:#FFE5ED;
+  display:flex;align-items:center;justify-content:center;
+  flex:none;
+}
+.lunch-note-card b{display:block;font-size:12px;}
+.lunch-note-card span{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
+
+.lunch-benefits{
+  border:1px solid #DCEBDC;
+  border-radius:20px;
+  padding:18px 16px;
+  background:linear-gradient(180deg,#F7FCF7,#F4FAF6);
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+}
+.lunch-illustration{
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  margin-bottom:7px;
+}
+.lunch-illustration .bag{
+  width:78px;height:58px;
+  border-radius:18px 18px 14px 14px;
+  background:linear-gradient(135deg,#FF779A,#F45F85);
+  border:4px solid #E9547B;
+  box-shadow:0 8px 18px rgba(244,95,133,.17);
+  position:relative;
+}
+.lunch-illustration .bag:before{
+  content:"";
+  position:absolute;
+  left:20px;right:20px;top:-15px;
+  height:18px;
+  border:5px solid #E9547B;
+  border-bottom:0;
+  border-radius:13px 13px 0 0;
+}
+.lunch-illustration .apple{
+  width:38px;height:38px;border-radius:50% 50% 46% 46%;
+  background:#8CC95C;
+  position:absolute;
+  right:26px;bottom:10px;
+  box-shadow:0 5px 12px rgba(65,130,60,.14);
+}
+.lunch-illustration .bottle{
+  width:27px;height:62px;border-radius:9px 9px 11px 11px;
+  background:#72C482;
+  position:absolute;
+  right:67px;top:10px;
+}
+.lunch-benefits h4{
+  margin:4px 0 14px;
+  font-size:13px;
+}
+.benefit-item{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  margin-bottom:14px;
+}
+.benefit-icon{
+  width:28px;height:28px;border-radius:9px;
+  background:#E7F7E8;
+  color:#36A94D;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+}
+.benefit-item b{display:block;font-size:10.5px;}
+.benefit-item span{display:block;font-size:9.7px;color:var(--ink-soft);line-height:1.45;margin-top:2px;}
+
+@media(max-height:820px) and (min-width:761px){
+  #settingsOverlay{padding:8px;}
+  #settingsOverlay .settings-modal{
+    height:calc(100dvh - 16px);
+    max-height:calc(100dvh - 16px);
+    border-radius:22px;
+  }
+  .settings-side{padding:17px 14px 12px;}
+  .settings-brand{padding:0 8px 12px;}
+  .settings-brand h2{font-size:23px!important;}
+  .settings-brand p{font-size:10.5px;}
+  #settingsOverlay .tabs{gap:4px;}
+  #settingsOverlay .tabs button{padding:7px 9px;grid-template-columns:32px 1fr;column-gap:8px;}
+  .settings-nav-icon{width:32px;height:32px;border-radius:10px;font-size:14px;}
+  .settings-nav-copy{font-size:11.5px;}
+  .settings-nav-sub{font-size:9px;}
+  .settings-tip{padding:9px;font-size:9px;}
+  .settings-top{padding:16px 24px 10px;}
+  .settings-top h3{font-size:22px;}
+  .settings-top p{font-size:10.5px;margin-top:5px;}
+  .settings-kicker{font-size:9px;margin-bottom:4px;}
+  .settings-x{width:34px;height:34px;font-size:19px;}
+  .settings-scroll{padding:3px 24px 16px;}
+  .settings-footer{padding:9px 18px;}
+  .settings-footer .btn{padding:9px 14px;}
+  .lunch-family-card{padding:11px 13px;}
+  .lunch-person-avatar img,.lunch-person-avatar .avcircle{width:50px!important;height:50px!important;}
+  .lunch-person-name{font-size:14px;}
+  .lunch-person-icon{width:40px;height:40px;font-size:18px;}
+  .lunch-day-head{padding:9px 5px 8px;}
+  .lunch-day-cell{padding:9px 7px;}
+  .lunch-control-row{grid-template-columns:26px 1fr 26px;}
+  .lunch-control-row button{width:26px;height:26px;}
+  .lunch-benefits{padding:13px;}
+  .lunch-illustration{height:72px;transform:scale(.82);transform-origin:center;}
+  .benefit-item{margin-bottom:9px;}
+  .lunch-note-card{padding:9px 12px;}
+}
+
+@media(max-width:1180px){
+  #settingsOverlay .settings-modal{grid-template-columns:230px minmax(0,1fr);}
+  .lunch-settings-grid{grid-template-columns:1fr;}
+  .lunch-benefits{
+    display:grid;
+    grid-template-columns:110px repeat(3,1fr);
+    gap:10px;
+    align-items:center;
+  }
+  .lunch-illustration{height:75px;margin:0;}
+  .lunch-benefits h4{display:none;}
+  .benefit-item{margin:0;}
+}
+@media(max-width:760px){
+  #settingsOverlay{
+    align-items:flex-start;
+    padding:5px;
+  }
+  #settingsOverlay .settings-modal{
+    width:calc(100vw - 10px);
+    height:calc(100dvh - 10px);
+    max-height:calc(100dvh - 10px);
+  }
+  .lunch-family-row{grid-template-columns:1fr;gap:12px;}
+  .lunch-family-divider{height:1px;width:100%;}
+  .lunch-person-avatar img,.lunch-person-avatar .avcircle{width:48px!important;height:48px!important;}
+  .lunch-benefits{display:block;}
+  .lunch-benefits h4{display:block;}
+  .lunch-illustration{height:80px;}
+  .lunch-rows,.lunch-days-header{
+    min-width:520px;
+  }
+  .lunch-days-card{overflow-x:auto;}
+}
+
+.calendar-import-wrap{padding:0!important;overflow:hidden;}
+.calendar-import-tabs{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--line);
+  background:var(--surface-alt);
+}
+.calendar-import-tabs button{
+  border:0;
+  border-right:1px solid var(--line);
+  background:transparent;
+  padding:14px 16px;
+  display:grid;
+  grid-template-columns:40px 1fr;
+  gap:10px;
+  align-items:center;
+  text-align:left;
+  cursor:pointer;
+  color:var(--ink);
+}
+.calendar-import-tabs button:last-child{border-right:0;}
+.calendar-import-tabs button.active{
+  background:var(--surface);
+  box-shadow:inset 0 -2px 0 var(--jonathan);
+}
+.calendar-import-tabs b{display:block;font-size:12px;}
+.calendar-import-tabs small{display:block;font-size:9.5px;color:var(--ink-soft);margin-top:3px;line-height:1.35;}
+.calendar-import-icon,
+.calendar-import-badge{
+  width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;
+}
+.calendar-import-icon.spond,.calendar-import-badge.spond{background:#FFE9EF;color:#F33467;}
+.calendar-import-icon.public,.calendar-import-badge.public{background:#EAF7EC;color:#37A94A;}
+.calendar-import-icon.other,.calendar-import-badge.other{background:#EAF2FF;color:#2F80ED;}
+.calendar-import-icon.image,.calendar-import-badge.image{background:#F3EAFF;color:#8B4DF2;}
+
+.calendar-import-panel{display:none;padding:20px;}
+.calendar-import-panel.active{display:block;}
+.calendar-import-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+.calendar-import-hero h4{
+  margin:0;
+  font-size:17px;
+  letter-spacing:-.02em;
+}
+.calendar-import-hero p{
+  margin:6px 0 0;
+  color:var(--ink-soft);
+  font-size:11px;
+  line-height:1.5;
+}
+.calendar-import-badge{width:54px;height:54px;border-radius:16px;font-size:20px;flex:none;}
+
+.calendar-import-note{
+  border-radius:12px;
+  padding:10px 12px;
+  margin:-4px 0 12px;
+  background:var(--surface-alt);
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  font-size:10.5px;
+}
+.public-calendar-grid,
+.calendar-source-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.calendar-source-grid{grid-template-columns:1fr 1fr;}
+.public-calendar-card,
+.calendar-source-card{
+  border:1px solid var(--line);
+  background:var(--surface-alt);
+  border-radius:15px;
+  padding:13px;
+}
+.public-calendar-card{
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:36px 1fr;
+  gap:9px;
+  align-items:center;
+  text-align:left;
+  color:var(--ink);
+}
+.public-calendar-card:hover{
+  border-color:color-mix(in srgb,var(--jonathan) 35%,var(--line));
+  background:color-mix(in srgb,var(--jonathan-soft) 18%,var(--surface) 82%);
+}
+.pub-icon{
+  width:36px;height:36px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--line);
+}
+.public-calendar-card b,
+.calendar-source-card b{display:block;font-size:11px;}
+.public-calendar-card small,
+.calendar-source-card small{display:block;font-size:9px;color:var(--ink-soft);margin-top:2px;line-height:1.35;}
+.calendar-source-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:10px;
+}
+.source-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--line);
+  font-weight:800;
+}
+.calendar-source-card input{
+  width:100%;
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--surface);
+  font-family:inherit;
+  font-size:11px;
+}
+@media(max-width:900px){
+  .calendar-import-tabs{grid-template-columns:1fr;}
+  .calendar-import-tabs button{border-right:0;border-bottom:1px solid var(--line);}
+  .calendar-import-tabs button:last-child{border-bottom:0;}
+  .public-calendar-grid,.calendar-source-grid{grid-template-columns:1fr;}
+}
+
+
+/* ---------- sync status ---------- */
+.sync-status{
+  display:inline-flex;align-items:center;gap:7px;
+  min-width:118px;justify-content:center;
+  padding:7px 10px;border-radius:999px;
+  font-size:10.5px;font-weight:750;
+  background:var(--surface);border:1px solid var(--line);
+  color:var(--ink-soft);box-shadow:0 4px 14px rgba(43,33,24,.05);
+}
+.sync-status .dot{width:7px;height:7px;border-radius:50%;background:var(--ink-soft);}
+.sync-status.saving{color:#9a6a18;background:#fff8e9;border-color:#f1dfb9;}
+.sync-status.saving .dot{background:#e8a51d;}
+.sync-status.ok{color:#2d7c46;background:#f1fbf3;border-color:#d7eddc;}
+.sync-status.ok .dot{background:#49a866;}
+.sync-status.error{color:#a3392b;background:#fff2f0;border-color:#f2d1cc;}
+.sync-status.error .dot{background:#d65749;}
+@media(max-width:760px){.sync-status{display:none;}}
 
 </style>
 </head>
@@ -848,7 +1444,7 @@
       <button id="nextWeek">›</button>
       <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">⌖</span><span>I dag</span></button>
     </div>
-    <div class="clock" id="clock">--:--</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div><div class="clock" id="clock">--:--</div></div>
   </header>
 
   <div class="grid" id="grid"></div>
@@ -944,8 +1540,8 @@
         </button>
         <button data-tab="spond">
           <span class="settings-nav-icon">S</span>
-          <span class="settings-nav-copy">Importer fra Spond</span>
-          <span class="settings-nav-sub">Importer aktiviteter</span>
+          <span class="settings-nav-copy">Importer</span>
+          <span class="settings-nav-sub">Spond, offentlige og andre</span>
         </button>
         <button data-tab="bilder">
           <span class="settings-nav-icon">▣</span>
@@ -980,24 +1576,80 @@
         <div>
           <div class="settings-kicker" id="settingsKicker">Matpakker</div>
           <h3 id="settingsHeading">Matpakker per dag</h3>
-          <p id="settingsDescription">Sett antall matpakker som trengs hver dag, per barn.</p>
+          <p id="settingsDescription">Sett antall matpakker som trengs hver skoledag, per barn.</p>
         </div>
         <button class="settings-x" id="settingsX" aria-label="Lukk innstillinger">×</button>
       </div>
 
       <div class="settings-scroll">
         <div id="tab-matpakker">
-          <div class="settings-section">
-            <table class="rulegrid" id="ruleTable"></table>
-          </div>
-          <div class="settings-section" style="background:linear-gradient(135deg,#FFF7FA,#FFF9F0);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#FFE4EC;">💗</div>
-              <div>
-                <div style="font-weight:800;font-size:13px;">Rask oversikt om morgenen</div>
-                <div class="hint" style="margin:3px 0 0;">Antallet vises direkte ved profilbildet på hver ukedag.</div>
+          <div class="lunch-settings-grid">
+            <div class="lunch-main-stack">
+              <div class="lunch-family-card">
+                <div class="lunch-family-row">
+                  <div class="lunch-person milla">
+                    <div class="lunch-person-avatar" id="lunchAvatarMilla"></div>
+                    <div>
+                      <div class="lunch-person-name">Milla</div>
+                      <div class="lunch-person-sub">Matpakker på skoledager</div>
+                    </div>
+                    <div class="lunch-person-icon">🧳</div>
+                  </div>
+
+                  <div class="lunch-family-divider"></div>
+
+                  <div class="lunch-person jonathan">
+                    <div class="lunch-person-avatar" id="lunchAvatarJonathan"></div>
+                    <div>
+                      <div class="lunch-person-name">Jonathan</div>
+                      <div class="lunch-person-sub">Matpakker på skoledager</div>
+                    </div>
+                    <div class="lunch-person-icon">🧳</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lunch-days-card">
+                <div class="lunch-days-header">
+                  <div class="lunch-day-head"><b>Mandag</b><span>man</span></div>
+                  <div class="lunch-day-head"><b>Tirsdag</b><span>tir</span></div>
+                  <div class="lunch-day-head"><b>Onsdag</b><span>ons</span></div>
+                  <div class="lunch-day-head"><b>Torsdag</b><span>tor</span></div>
+                  <div class="lunch-day-head"><b>Fredag</b><span>fre</span></div>
+                </div>
+                <div class="lunch-rows" id="lunchSettingsRows"></div>
+              </div>
+
+              <div class="lunch-note-card">
+                <div class="lunch-note-icon">💗</div>
+                <div>
+                  <b>Rask oversikt om morgenen</b>
+                  <span>Matpakke-antallet vises separat nederst i hver ukedag på familietavlen.</span>
+                </div>
               </div>
             </div>
+
+            <aside class="lunch-benefits">
+              <div class="lunch-illustration">
+                <div class="bag"></div>
+                <div class="bottle"></div>
+                <div class="apple"></div>
+              </div>
+              <h4>Hvorfor matpakker?</h4>
+
+              <div class="benefit-item">
+                <div class="benefit-icon">◷</div>
+                <div><b>Spar tid om morgenen</b><span>Se raskt hvem som trenger matpakke hver dag.</span></div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">✓</div>
+                <div><b>Bedre oversikt</b><span>Planlegg innkjøp og måltider enklere.</span></div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">♡</div>
+                <div><b>Mindre stress</b><span>En liten plan gjør hverdagen smidigere for alle.</span></div>
+              </div>
+            </aside>
           </div>
         </div>
 
@@ -1010,15 +1662,183 @@
         </div>
 
         <div id="tab-spond" style="display:none;">
-          <div class="settings-section">
-            <p class="hint">Lim inn kalenderdata fra Spond eller en enkel liste. Kalenderfil (ICS) gir mest presis import. Aktivitetene legges til uken som vises nå (<span id="spondWeekLbl"></span>).</p>
-            <div class="field">
-              <label>Kalenderdata eller fritekst</label>
-              <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
+          <div class="settings-section calendar-import-wrap">
+            <div class="calendar-import-tabs" id="calendarImportTabs">
+              <button type="button" class="active" data-import-tab="spond">
+                <span class="calendar-import-icon spond">S</span>
+                <span><b>Spond</b><small>Importer aktiviteter fra Spond</small></span>
+              </button>
+              <button type="button" data-import-tab="public">
+                <span class="calendar-import-icon public">◎</span>
+                <span><b>Offentlige kalendere</b><small>Ferie, helligdager og andre åpne kalendere</small></span>
+              </button>
+              <button type="button" data-import-tab="other">
+                <span class="calendar-import-icon other">↗</span>
+                <span><b>Andre kalendere</b><small>iCal, Google Calendar og ICS</small></span>
+              </button>
+              <button type="button" data-import-tab="image">
+                <span class="calendar-import-icon image">🖼</span>
+                <span><b>Bilde / PDF / Word</b><small>Last opp et bilde av timeplanen</small></span>
+              </button>
             </div>
-            <button class="btn ghost" id="spondParse" style="width:100%;">Tolk innhold</button>
-            <div class="preview" id="spondPreview"></div>
-            <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte aktiviteter</button>
+
+            <div class="calendar-import-panel active" id="import-panel-spond">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">SPOND</div>
+                  <h4>Importer aktiviteter fra Spond</h4>
+                  <p>Lim inn kalenderlenken (webcal/https) for automatisk henting, eller lim inn kalenderdata direkte.</p>
+                </div>
+                <div class="calendar-import-badge spond">S</div>
+              </div>
+
+              <div class="field">
+                <label>Kalenderlenke (webcal / https)</label>
+                <input type="text" id="spondUrl" placeholder="webcal://p165-caldav.icloud.com/publish/...">
+              </div>
+              <button class="btn primary" id="spondFetch" style="width:100%;margin-bottom:16px;">Hent fra lenke</button>
+
+              <div class="field">
+                <label>Eller last opp / dra inn en .ics-fil</label>
+                <label class="photo-drop" id="icsDrop" style="min-height:80px;padding:16px;">
+                  <input type="file" id="icsFile" accept=".ics,text/calendar">
+                  <div>
+                    <b style="font-size:13px;">Slipp .ics-fil her, eller trykk for å velge</b>
+                  </div>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>Eller lim inn kalenderdata direkte</label>
+                <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
+              </div>
+              <div class="calendar-import-note">
+                Aktivitetene legges til uken som vises nå (<span id="spondWeekLbl"></span>).
+              </div>
+              <button class="btn ghost" id="spondParse" style="width:100%;">Tolk innhold</button>
+              <div class="preview" id="spondPreview"></div>
+              <button class="btn primary" id="spondAdd" style="width:100%;display:none;">Legg til valgte aktiviteter</button>
+            </div>
+
+            <div class="calendar-import-panel" id="import-panel-public">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">OFFENTLIGE KALENDERE</div>
+                  <h4>Legg til offentlige kalendere</h4>
+                  <p>Bruk kalenderabonnement for ting som helligdager, skoleferier eller andre åpne kalendere. Hentes og tolkes automatisk, samme som Spond.</p>
+                </div>
+                <div class="calendar-import-badge public">◎</div>
+              </div>
+
+              <div class="public-calendar-grid">
+                <button type="button" class="public-calendar-card" data-public-calendar="norske-helligdager">
+                  <span class="pub-icon">🇳🇴</span>
+                  <span><b>Norske helligdager</b><small>Offentlige fridager og merkedager</small></span>
+                </button>
+                <button type="button" class="public-calendar-card" data-public-calendar="skoleferier">
+                  <span class="pub-icon">🏫</span>
+                  <span><b>Skoleferier</b><small>Kan legges inn via kalenderlenke</small></span>
+                </button>
+                <button type="button" class="public-calendar-card" data-public-calendar="custom-public">
+                  <span class="pub-icon">＋</span>
+                  <span><b>Annen offentlig kalender</b><small>Lim inn webcal- eller ICS-lenke</small></span>
+                </button>
+              </div>
+
+              <div class="field" style="margin-top:16px;">
+                <label>Kalenderlenke</label>
+                <input type="text" id="publicCalendarUrl" placeholder="webcal://... eller https://...calendar.ics">
+              </div>
+              <button class="btn primary" id="publicCalendarSave" style="width:100%;">Hent og legg til kalender</button>
+              <div class="hint" id="publicCalendarStatus" style="margin-top:10px;"></div>
+            </div>
+
+            <div class="calendar-import-panel" id="import-panel-other">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">ANDRE KALENDERE</div>
+                  <h4>iCal, Google Calendar og andre</h4>
+                  <p>Legg til en kalender via abonnementslenke (hentes automatisk), eller lim inn rå ICS-data direkte.</p>
+                </div>
+                <div class="calendar-import-badge other">↗</div>
+              </div>
+
+              <div class="calendar-source-grid">
+                <div class="calendar-source-card">
+                  <div class="calendar-source-head">
+                    <span class="source-icon"></span>
+                    <div><b>Apple / iCal</b><small>webcal- eller ICS-lenke</small></div>
+                  </div>
+                  <input type="text" id="icalCalendarUrl" placeholder="webcal://...">
+                </div>
+
+                <div class="calendar-source-card">
+                  <div class="calendar-source-head">
+                    <span class="source-icon">G</span>
+                    <div><b>Google Calendar</b><small>Offentlig eller privat ICS-lenke</small></div>
+                  </div>
+                  <input type="text" id="googleCalendarUrl" placeholder="https://calendar.google.com/...">
+                </div>
+              </div>
+
+              <div class="field" style="margin-top:16px;">
+                <label>Rå ICS-data (valgfritt, hvis du ikke bruker lenkene over)</label>
+                <textarea id="otherCalendarIcs" rows="7" placeholder="BEGIN:VCALENDAR&#10;...&#10;END:VCALENDAR"></textarea>
+              </div>
+
+              <button class="btn primary" id="otherCalendarSave" style="width:100%;">Hent og legg til kalender</button>
+              <div class="hint" id="otherCalendarStatus" style="margin-top:10px;"></div>
+            </div>
+
+            <div class="calendar-import-panel" id="import-panel-image">
+              <div class="calendar-import-hero">
+                <div>
+                  <div class="settings-kicker">BILDE / PDF / WORD</div>
+                  <h4>Last opp et bilde av timeplanen</h4>
+                  <p>Ta et bilde eller last opp en PDF/Word-fil av en timeplan, så leser Claude av timene automatisk. Fungerer best med et tydelig, rett bilde.</p>
+                </div>
+                <div class="calendar-import-badge image">🖼</div>
+              </div>
+
+              <div class="field">
+                <label>Fil (bilde, PDF eller Word)</label>
+                <label class="photo-drop" id="timetableDrop" style="min-height:110px;">
+                  <input type="file" id="timetableFile" accept="image/*,.pdf,.docx">
+                  <div>
+                    <div class="photo-drop-icon">🖼</div>
+                    <h4 style="font-size:13.5px;">Slipp fil her, lim inn (Ctrl/Cmd+V), eller trykk for å velge</h4>
+                    <p id="timetableFileName" style="margin-top:5px;"></p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>Hvem gjelder timeplanen?</label>
+                <div class="whopick" id="timetableWho">
+                  <button data-v="Milla" class="milla active">⚽ Milla</button>
+                  <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
+                  <button data-v="Begge" class="begge">✨ Begge</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Type</label>
+                <div class="typepick" id="timetableType" style="margin-bottom:0;">
+                  <button data-v="fast" class="active">🔁 Fast ukeplan (gjentas hver uke)</button>
+                  <button data-v="uke">📆 Bestemt uke</button>
+                </div>
+              </div>
+
+              <div class="field" id="timetableWeekPickWrap" style="display:none;">
+                <label>Velg en dato i den aktuelle uken</label>
+                <input type="date" id="timetableWeekPick">
+              </div>
+
+              <button class="btn primary" id="timetableParse" style="width:100%;margin-top:6px;">Tolk timeplan</button>
+              <div class="hint" id="timetableStatus" style="margin-top:10px;"></div>
+              <div class="preview" id="timetablePreview"></div>
+              <button class="btn primary" id="timetableAdd" style="width:100%;display:none;">Legg til valgte timer</button>
+            </div>
           </div>
         </div>
 
@@ -1051,6 +1871,21 @@
               <button class="btn ghost" id="photoSave" style="width:100%;margin-top:9px;">Oppdater fra URL-er</button>
             </details>
           </div>
+
+          <div class="settings-section">
+            <p class="hint">
+              <b style="color:var(--ink);">Delt Apple-album (eksperimentelt)</b><br>
+              Lim inn lenken fra et delt iCloud-album med "Offentlig nettsted" påslått i Bilder-appen.
+              Bruker et internt, uoffisielt Apple-grensesnitt — kan slutte å fungere hvis Apple endrer noe,
+              men fungerer godt i dag.
+            </p>
+            <div class="field">
+              <label>iCloud delt album-lenke</label>
+              <input type="text" id="icloudAlbumUrl" placeholder="https://www.icloud.com/sharedalbum/#B1-...">
+            </div>
+            <button class="btn primary" id="icloudAlbumFetch" style="width:100%;">Hent bilder fra album</button>
+            <div class="hint" id="icloudAlbumStatus" style="margin-top:10px;"></div>
+          </div>
         </div>
 
         <div id="tab-tema" style="display:none;">
@@ -1061,6 +1896,34 @@
               <button data-v="myk">🎨 Myk pastell</button>
               <button data-v="mork">🌙 Mørk</button>
             </div>
+
+            <div style="height:1px;background:var(--line);margin:18px 0;"></div>
+            <p class="hint" style="margin-bottom:10px;"><b style="color:var(--ink);">Layout på kalenderen</b><br>Auto tilpasser seg skjermbredden. Du kan også låse tavlen til et bestemt antall kolonner.</p>
+
+            <div class="layout-picker" id="layoutPick">
+              <button class="layout-option" data-layout-v="auto" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span><span></span><span></span></span>
+                <b>Auto</b>
+                <small>Tilpasser seg skjermen automatisk</small>
+              </button>
+              <button class="layout-option" data-layout-v="3" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span></span>
+                <b>3 kolonner</b>
+                <small>3 dager / 2 dager + helg</small>
+              </button>
+              <button class="layout-option" data-layout-v="5" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span><span></span><span></span></span>
+                <b>5 kolonner</b>
+                <small>Alle ukedager på én rad</small>
+              </button>
+              <button class="layout-option" data-layout-v="2" type="button">
+                <span class="layout-mini"><span></span><span></span></span>
+                <b>2 kolonner</b>
+                <small>For smalere skjermer</small>
+              </button>
+            </div>
+
+            <div style="height:1px;background:var(--line);margin:18px 0;"></div>
             <p class="hint">Du kan også overstyre aktivitetsfargene:</p>
             <div class="row2">
               <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:44px;padding:4px;"></div>
@@ -1101,8 +1964,9 @@
 
         <div id="tab-stjerner" style="display:none;">
           <div class="settings-section">
-            <p class="hint">Barna kan trykke på et gjøremål og en voksen godkjenner med kode. Poengene nullstilles hver mandag.</p>
-            <div class="field"><label>Voksen-kode</label><input type="text" id="starPin" placeholder="f.eks. 1234"></div>
+            <p class="hint">Barna kan trykke på et gjøremål for å legge det til. Poengene nullstilles hver mandag.</p>
+            <label class="chk"><input type="checkbox" id="starRequirePin" checked> Krev voksen-kode for å godkjenne et trykk</label>
+            <div class="field"><label>Voksen-kode (kun tall)</label><input type="text" id="starPin" inputmode="numeric" pattern="[0-9]*" placeholder="f.eks. 1234"></div>
             <div class="row2">
               <div class="field"><label>Milla — ukemål</label><input type="text" id="goalMilla" value="100"></div>
               <div class="field"><label>Jonathan — ukemål</label><input type="text" id="goalJonathan" value="100"></div>
@@ -1127,7 +1991,10 @@
               <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
               <div class="field" style="max-width:100px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
             </div>
-            <button class="btn ghost" id="choreAdd" style="width:100%;">＋ Legg til gjøremål</button>
+            <div class="modalbtns" style="margin-top:0;">
+              <button class="btn ghost" id="choreCancelEdit" style="display:none;">Avbryt</button>
+              <button class="btn ghost" id="choreAdd" style="width:100%;">＋ Legg til gjøremål</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1142,12 +2009,24 @@
   </div>
 </div>
 
+<!-- PIN-modal for godkjenning av stjerner (tall-tastatur, ikke fullt tastatur) -->
+<div class="overlay" id="pinOverlay">
+  <div class="modal" style="max-width:320px;text-align:center;">
+    <h2 id="pinTitle" style="font-size:18px;">Kode</h2>
+    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="pinInput"
+      style="width:100%;font-size:28px;letter-spacing:6px;text-align:center;padding:14px;border-radius:12px;border:1px solid var(--line);margin:12px 0;">
+    <div id="pinError" style="color:#a3392b;font-size:12px;min-height:16px;margin-bottom:8px;"></div>
+    <div class="modalbtns">
+      <button class="btn ghost" id="pinCancel">Avbryt</button>
+      <button class="btn primary" id="pinConfirm">Bekreft</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
 <script>
 // ---------- Supabase-backed storage shim ----------
-// Erstatter Claude-artifact sin innebygde window.storage med en ekte database,
-// slik at appen fungerer når den ligger på egen URL (f.eks. Vercel).
-// Fyll inn egne verdier fra Supabase-prosjektet ditt (Project Settings → API):
 const SUPABASE_URL = 'https://DITT-PROSJEKT.supabase.co';
 const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
 
@@ -1175,32 +2054,52 @@ window.storage = {
   async get(key){
     const { data, error } = await sb.from('family_store').select('value').eq('key', key).maybeSingle();
     if (error) throw error;
-    if (!data) return null;
+    if (!data){
+      localCacheDelete(key);
+      return null;
+    }
     localCacheSet(key, data.value);
-    return { key, value: data.value, shared: false };
+    return { key, value: data.value, shared: true };
   },
   async getMany(keys){
     const { data, error } = await sb.from('family_store').select('key,value').in('key', keys);
     if (error) throw error;
     const result = {};
+    const found = new Set();
     (data || []).forEach(row=>{
+      found.add(row.key);
       localCacheSet(row.key, row.value);
-      result[row.key] = { key:row.key, value:row.value, shared:false };
+      result[row.key] = { key:row.key, value:row.value, shared:true };
     });
+    // Supabase er master: fjern gammel lokal cache for nøkler som ikke finnes sentralt.
+    (keys || []).forEach(key=>{ if(!found.has(key)) localCacheDelete(key); });
     return result;
   },
   async set(key, value){
-    // Optimistic local cache: next page load can paint immediately.
+    setSyncStatus('saving', 'Lagrer…');
+    const { error } = await sb.from('family_store').upsert(
+      { key, value, updated_at: new Date().toISOString() },
+      { onConflict: 'key' }
+    );
+    if (error){
+      setSyncStatus('error', 'Ikke synkronisert');
+      throw error;
+    }
+    // Lokal cache oppdateres først når Supabase har bekreftet lagringen.
     localCacheSet(key, value);
-    const { error } = await sb.from('family_store').upsert({ key, value, updated_at: new Date().toISOString() });
-    if (error) throw error;
-    return { key, value, shared: false };
+    setSyncStatus('ok', 'Synkronisert');
+    return { key, value, shared: true };
   },
   async delete(key){
-    localCacheDelete(key);
+    setSyncStatus('saving', 'Lagrer…');
     const { error } = await sb.from('family_store').delete().eq('key', key);
-    if (error) throw error;
-    return { key, deleted: true, shared: false };
+    if (error){
+      setSyncStatus('error', 'Ikke synkronisert');
+      throw error;
+    }
+    localCacheDelete(key);
+    setSyncStatus('ok', 'Synkronisert');
+    return { key, deleted: true, shared: true };
   },
   async list(prefix){
     let q = sb.from('family_store').select('key');
@@ -1216,6 +2115,28 @@ const WD = ['Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag','Søndag'];
 const WD_SHORT = ['man','tir','ons','tor','fre','lør','søn'];
 const MONTHS = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+let syncStatusTimer = null;
+function setSyncStatus(state, text){
+  const el = document.getElementById('syncStatus');
+  const txt = document.getElementById('syncStatusText');
+  if(!el || !txt) return;
+  el.classList.remove('saving','ok','error');
+  if(state) el.classList.add(state);
+  txt.textContent = text || '';
+  if(syncStatusTimer) clearTimeout(syncStatusTimer);
+  if(state==='ok'){
+    syncStatusTimer = setTimeout(()=>{
+      if(txt.textContent==='Synkronisert') txt.textContent='Oppdatert';
+    }, 2500);
+  }
+}
+
+function reportSaveError(label, error){
+  console.error(label, error);
+  setSyncStatus('error', 'Ikke synkronisert');
+  alert('Endringen ble ikke lagret i Supabase.\n\n' + (error && error.message ? error.message : String(error || 'Ukjent feil')));
+}
 
 function pad(n){return n.toString().padStart(2,'0');}
 function isoDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
@@ -1249,7 +2170,7 @@ let weekStart = mondayOf(new Date());
 let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys', avatars:{Milla:'',Jonathan:''}, chores:[], points:{Milla:0,Jonathan:0} };
 let template = [];
 let weekEvents = [];
-let editing = null; // {type:'template'|'week', id} or null for new
+let editing = null;
 
 const DEFAULT_TEMPLATE = () => ([
   {id:uid(), day:0, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
@@ -1259,8 +2180,7 @@ const DEFAULT_TEMPLATE = () => ([
   {id:uid(), day:4, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
 ]);
 
-// ---------- storage ----------
-const weekCache = {}; // isoDate(weekStart) -> weekEvents array, so revisited weeks load instantly
+const weekCache = {};
 async function loadAll(){
   const [sRes, tRes, wRes] = await Promise.allSettled([
     window.storage.get('settings'),
@@ -1280,8 +2200,14 @@ async function loadAll(){
     settings.customColors.skole = '#69B889';
   }
   if(!settings.pin) settings.pin = '1234';
+  if(settings.requirePin===undefined) settings.requirePin = true;
+  if(!settings.icloudAlbumUrl) settings.icloudAlbumUrl = '';
+  if(!settings.icloudLastFetch) settings.icloudLastFetch = 0;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
+  if(!settings.layoutColumns) settings.layoutColumns = '3';
+  if(!settings.publicCalendars) settings.publicCalendars = [];
+  if(!settings.otherCalendars) settings.otherCalendars = [];
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
     try{ template = JSON.parse(tRes.value.value); }catch(e){ template = DEFAULT_TEMPLATE(); }
   } else {
@@ -1295,16 +2221,15 @@ async function loadAll(){
   weekCache[isoDate(weekStart)] = weekEvents;
 }
 async function saveSettings(){
-  try{ await window.storage.set('settings', JSON.stringify(settings)); }catch(e){ console.error('save settings failed', e); }
+  try{ await window.storage.set('settings', JSON.stringify(settings)); return true; }catch(e){ reportSaveError('save settings failed', e); return false; }
 }
 async function saveTemplate(){
-  try{ await window.storage.set('template', JSON.stringify(template)); }catch(e){ console.error('save template failed', e); }
+  try{ await window.storage.set('template', JSON.stringify(template)); return true; }catch(e){ reportSaveError('save template failed', e); return false; }
 }
 async function loadWeek(){
   const key = isoDate(weekStart);
   const storageKey = 'week:'+key;
 
-  // Memory cache first, then persistent browser cache.
   if(weekCache[key]){
     weekEvents = weekCache[key];
   }else{
@@ -1317,8 +2242,8 @@ async function loadWeek(){
     }
   }
 
-  // Paint immediately; refresh remotely without blocking navigation.
   renderAll();
+  setSyncStatus('saving','Henter…');
   window.storage.get(storageKey).then(w=>{
     const fresh = (w && w.value) ? JSON.parse(w.value) : [];
     weekCache[key] = fresh;
@@ -1326,13 +2251,21 @@ async function loadWeek(){
       weekEvents = fresh;
       renderAll();
     }
-  }).catch(()=>{});
+    setSyncStatus('ok','Synkronisert');
+  }).catch(e=>{
+    console.error('load week failed', e);
+    setSyncStatus('error','Frakoblet');
+  });
 }
 async function saveWeek(){
   const key = isoDate(weekStart);
-  weekCache[key] = weekEvents;
-  try{ await window.storage.set('week:'+key, JSON.stringify(weekEvents)); }catch(e){ console.error('save week failed', e); }
+  try{
+    await window.storage.set('week:'+key, JSON.stringify(weekEvents));
+    weekCache[key] = (typeof structuredClone==='function') ? structuredClone(weekEvents) : JSON.parse(JSON.stringify(weekEvents));
+    return true;
+  }catch(e){ reportSaveError('save week failed', e); return false; }
 }
+
 
 // ---------- rendering ----------
 function todayIndex(){
@@ -1594,7 +2527,6 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
   const repeat = !isHusk && document.getElementById('fRepeat').checked;
   const who = currentWho;
 
-  // remove from old location if editing and target list changed
   if(editing){
     if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
     else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
@@ -1617,22 +2549,168 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
+  document.getElementById('icloudAlbumUrl').value = settings.icloudAlbumUrl || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
 });
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 document.getElementById('settingsX').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 const SETTINGS_META = {
-  matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver dag, per barn.'],
+  matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver skoledag, per barn.'],
   ukeplan:['Fast ukeplan','Faste rutiner','Administrer skole, trening og andre aktiviteter som gjentas hver uke.'],
-  spond:['Import','Importer fra Spond','Lim inn kalenderdata og velg hvilke aktiviteter som skal inn i ukeplanen.'],
+  spond:['Importer','Importer','Importer fra Spond, offentlige kalendere eller andre iCal/Google-kalendere.'],
   bilder:['Bilder','Familiebilder','Legg til bilder til slideshowet nederst på familietavlen.'],
   tema:['Utseende','Tema og farger','Tilpass tavlen til skjermen og familiens stil.'],
   profil:['Profil','Profilbilder','Velg bildene som vises for Milla og Jonathan i kalenderen.'],
   stjerner:['Belønning','Stjerner og gjøremål','Sett mål, belønninger og faste oppgaver for uken.']
 };
+
+const calendarImportTabs = document.getElementById('calendarImportTabs');
+if(calendarImportTabs){
+  calendarImportTabs.addEventListener('click', e=>{
+    const btn = e.target.closest('button[data-import-tab]');
+    if(!btn) return;
+    calendarImportTabs.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.calendar-import-panel').forEach(p=>p.classList.remove('active'));
+    const panel = document.getElementById('import-panel-'+btn.dataset.importTab);
+    if(panel) panel.classList.add('active');
+  });
+}
+
+document.querySelectorAll('.public-calendar-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const input = document.getElementById('publicCalendarUrl');
+    if(card.dataset.publicCalendar === 'norske-helligdager'){
+      input.placeholder = 'Lim inn ICS/webcal-lenke for norske helligdager';
+    }else if(card.dataset.publicCalendar === 'skoleferier'){
+      input.placeholder = 'Lim inn kalenderlenke for skoleferier';
+    }else{
+      input.placeholder = 'webcal://... eller https://...calendar.ics';
+    }
+    input.focus();
+  });
+});
+
+// ---------- ICS-henting via server-proxy (bypasser CORS) ----------
+async function fetchICSViaProxy(rawUrl){
+  const url = (rawUrl||'').trim();
+  if(!url) throw new Error('Lim inn en kalenderlenke først.');
+  const res = await fetch('/api/ics-proxy?url=' + encodeURIComponent(url));
+  const text = await res.text();
+  if(!res.ok) throw new Error(text || ('Feil '+res.status));
+  return text;
+}
+function showSpondFetchResult(text){
+  document.getElementById('spondInput').value = text;
+  parsedSpond = parseICS(text);
+  renderSpondPreview();
+  // Bytt til Spond-underfanen så resultatet er synlig, uansett hvilken kilde det kom fra.
+  const spondSubTab = document.querySelector('#calendarImportTabs button[data-import-tab="spond"]');
+  if(spondSubTab) spondSubTab.click();
+}
+
+document.getElementById('spondFetch').addEventListener('click', async ()=>{
+  const btn = document.getElementById('spondFetch');
+  btn.textContent = 'Henter…'; btn.disabled = true;
+  try{
+    const text = await fetchICSViaProxy(document.getElementById('spondUrl').value);
+    showSpondFetchResult(text);
+  }catch(e){
+    alert('Klarte ikke hente kalenderen: ' + e.message + '\n\nEr api/ics-proxy.js lagt inn i GitHub-repoet ditt?');
+    console.error('ics fetch failed', e);
+  }finally{
+    btn.textContent = 'Hent fra lenke'; btn.disabled = false;
+  }
+});
+
+// ---------- ICS-fil via drag/drop eller filvalg ----------
+function readFileAsText(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=> resolve(reader.result);
+    reader.readAsText(file);
+  });
+}
+async function handleIcsFile(file){
+  if(!file) return;
+  try{
+    const text = await readFileAsText(file);
+    showSpondFetchResult(text);
+  }catch(e){
+    alert('Klarte ikke lese .ics-filen: ' + e.message);
+  }
+}
+const icsDropEl = document.getElementById('icsDrop');
+const icsFileEl = document.getElementById('icsFile');
+icsFileEl.addEventListener('change', ()=> handleIcsFile(icsFileEl.files[0]));
+['dragenter','dragover'].forEach(ev=>icsDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); icsDropEl.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev=>icsDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); icsDropEl.classList.remove('dragover');
+}));
+icsDropEl.addEventListener('drop', e=> handleIcsFile(e.dataTransfer.files[0]));
+
+document.getElementById('publicCalendarSave')?.addEventListener('click', async ()=>{
+  const url = document.getElementById('publicCalendarUrl').value.trim();
+  const status = document.getElementById('publicCalendarStatus');
+  if(!url){
+    status.textContent = 'Lim inn en kalenderlenke først.';
+    return;
+  }
+  status.textContent = 'Henter…';
+  try{
+    const text = await fetchICSViaProxy(url);
+    settings.publicCalendars = settings.publicCalendars || [];
+    if(!settings.publicCalendars.includes(url)) settings.publicCalendars.push(url);
+    await saveSettings();
+    showSpondFetchResult(text);
+    status.textContent = 'Hentet — velg hvilke aktiviteter som skal legges til under Spond-fanen.';
+  }catch(e){
+    status.textContent = 'Klarte ikke hente kalenderen: ' + e.message;
+    console.error('public calendar fetch failed', e);
+  }
+});
+
+document.getElementById('otherCalendarSave')?.addEventListener('click', async ()=>{
+  const ical = document.getElementById('icalCalendarUrl').value.trim();
+  const google = document.getElementById('googleCalendarUrl').value.trim();
+  const ics = document.getElementById('otherCalendarIcs').value.trim();
+  const status = document.getElementById('otherCalendarStatus');
+  const url = ical || google;
+
+  if(!url && !ics){
+    status.textContent = 'Legg inn en kalenderlenke eller ICS-data først.';
+    return;
+  }
+
+  settings.otherCalendars = settings.otherCalendars || [];
+  if(ical) settings.otherCalendars.push({type:'ical', value:ical});
+  if(google) settings.otherCalendars.push({type:'google', value:google});
+  await saveSettings();
+
+  try{
+    let text = ics;
+    if(!text && url){
+      status.textContent = 'Henter…';
+      text = await fetchICSViaProxy(url);
+    }
+    if(text){
+      showSpondFetchResult(text);
+      status.textContent = 'Hentet — velg hvilke aktiviteter som skal legges til under Spond-fanen.';
+    }else{
+      status.textContent = 'Kalenderkilden er lagret.';
+    }
+  }catch(e){
+    status.textContent = 'Klarte ikke hente kalenderen: ' + e.message;
+    console.error('other calendar fetch failed', e);
+  }
+});
+
 document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
@@ -1651,6 +2729,17 @@ document.querySelectorAll('.tabs button').forEach(b=>{
 });
 
 // ---------- tema ----------
+function applyLayout(){
+  const value = settings.layoutColumns || 'auto';
+  if(value === 'auto') document.documentElement.removeAttribute('data-layout');
+  else document.documentElement.setAttribute('data-layout', value);
+  updateLayoutButtons();
+}
+function updateLayoutButtons(){
+  document.querySelectorAll('#layoutPick .layout-option').forEach(b=>{
+    b.classList.toggle('active', b.dataset.layoutV === (settings.layoutColumns || 'auto'));
+  });
+}
 function applyTheme(name){
   document.documentElement.setAttribute('data-theme', name);
   applyCustomColors();
@@ -1662,7 +2751,6 @@ function applyCustomColors(){
   root.setProperty('--jonathan', c.jonathan || '');
   root.setProperty('--skole', c.skole || '');
   root.setProperty('--today', c.today || '');
-  // if left empty, removeProperty falls back to the theme's own value
   ['milla','jonathan','skole','today'].forEach(k=>{
     if(!c[k]) root.removeProperty('--'+k);
   });
@@ -1677,6 +2765,13 @@ document.getElementById('themePick').addEventListener('click', async (e)=>{
   settings.theme = b.dataset.v;
   applyTheme(settings.theme);
   updateThemeButtons();
+  await saveSettings();
+});
+
+document.getElementById('layoutPick').addEventListener('click', async (e)=>{
+  const b = e.target.closest('.layout-option'); if(!b) return;
+  settings.layoutColumns = b.dataset.layoutV || 'auto';
+  applyLayout();
   await saveSettings();
 });
 function fillColorInputs(){
@@ -1706,23 +2801,46 @@ document.getElementById('colorReset').addEventListener('click', async ()=>{
 });
 
 function renderRuleTable(){
-  const tbl = document.getElementById('ruleTable');
-  tbl.innerHTML = `<tr><th></th>${WD_SHORT.map(d=>`<th>${d}</th>`).join('')}</tr>` +
-    ['Milla','Jonathan'].map(child=>`
-      <tr><th style="text-align:left;color:${child==='Milla'?'#FF4FA0':'#2F80ED'};">${child}</th>
-      ${WD.map((_,i)=>`
-        <td><div class="stepper">
-          <button data-child="${child}" data-day="${i}" data-d="-1">–</button>
-          <span id="rv-${child}-${i}">${settings.matpakkeRule[child][i]}</span>
-          <button data-child="${child}" data-day="${i}" data-d="1">+</button>
-        </div></td>`).join('')}
-      </tr>`).join('');
-  tbl.querySelectorAll('button').forEach(b=>{
+  const rows = document.getElementById('lunchSettingsRows');
+  const avM = document.getElementById('lunchAvatarMilla');
+  const avJ = document.getElementById('lunchAvatarJonathan');
+
+  if(avM) avM.innerHTML = avatarHTML('Milla',62);
+  if(avJ) avJ.innerHTML = avatarHTML('Jonathan',62);
+  if(!rows) return;
+
+  rows.innerHTML = [0,1,2,3,4].map(i=>`
+    <div class="lunch-day-cell">
+      <div class="lunch-day-controls">
+        <div>
+          <div class="lunch-row-key"><span class="lunch-dot milla"></span>Milla</div>
+          <div class="lunch-control-row milla">
+            <button type="button" data-child="Milla" data-day="${i}" data-d="-1">−</button>
+            <span class="count" id="rv-Milla-${i}">${settings.matpakkeRule.Milla[i] || 0}</span>
+            <button type="button" data-child="Milla" data-day="${i}" data-d="1">＋</button>
+          </div>
+        </div>
+        <div>
+          <div class="lunch-row-key"><span class="lunch-dot jonathan"></span>Jonathan</div>
+          <div class="lunch-control-row jonathan">
+            <button type="button" data-child="Jonathan" data-day="${i}" data-d="-1">−</button>
+            <span class="count" id="rv-Jonathan-${i}">${settings.matpakkeRule.Jonathan[i] || 0}</span>
+            <button type="button" data-child="Jonathan" data-day="${i}" data-d="1">＋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  rows.querySelectorAll('button').forEach(b=>{
     b.addEventListener('click', async ()=>{
-      const c = b.dataset.child, d = parseInt(b.dataset.day), delta = parseInt(b.dataset.d);
-      const cur = settings.matpakkeRule[c][d];
-      settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur+delta));
-      document.getElementById(`rv-${c}-${d}`).textContent = settings.matpakkeRule[c][d];
+      const c = b.dataset.child;
+      const d = parseInt(b.dataset.day);
+      const delta = parseInt(b.dataset.d);
+      const cur = settings.matpakkeRule[c][d] || 0;
+      settings.matpakkeRule[c][d] = Math.max(0, Math.min(5, cur + delta));
+      const val = document.getElementById(`rv-${c}-${d}`);
+      if(val) val.textContent = settings.matpakkeRule[c][d];
       await saveSettings();
       renderGrid();
     });
@@ -1731,12 +2849,24 @@ function renderRuleTable(){
 
 function renderTplList(){
   const list = document.getElementById('tplList');
-  const sorted = [...template].sort((a,b)=> a.day-b.day || a.start.localeCompare(b.start));
-  list.innerHTML = sorted.length ? sorted.map(it=>`
-    <div class="tplitem" data-id="${it.id}">
-      <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title} (${it.who})</span>
-      <span>✏️</span>
-    </div>`).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
+  const groups = [
+    {who:'Milla', label:'⚽ Milla'},
+    {who:'Jonathan', label:'🏒 Jonathan'},
+    {who:'Begge', label:'✨ Felles'}
+  ];
+  const sortFn = (a,b)=> a.day-b.day || a.start.localeCompare(b.start);
+  const hasAny = template.length>0;
+  list.innerHTML = hasAny ? groups.map(g=>{
+    const items = template.filter(it=>it.who===g.who).sort(sortFn);
+    return `<div class="tpl-group">
+      <div class="tpl-group-head">${g.label}</div>
+      ${items.length ? items.map(it=>`
+        <div class="tplitem" data-id="${it.id}">
+          <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title}</span>
+          <span>✏️</span>
+        </div>`).join('') : '<div class="hint" style="margin:0 0 10px;">Ingen faste avtaler.</div>'}
+    </div>`;
+  }).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
   list.querySelectorAll('.tplitem').forEach(el=>{
     el.addEventListener('click', ()=>{
       const it = template.find(x=>x.id===el.dataset.id);
@@ -1769,7 +2899,6 @@ function unfoldICS(text){
   return out;
 }
 function parseICSDate(val){
-  // val like 20260824 or 20260824T170000 or 20260824T170000Z
   const m = val.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?/);
   if(!m) return null;
   const [,y,mo,d,h,mi,s,z] = m;
@@ -1827,7 +2956,7 @@ document.getElementById('spondParse').addEventListener('click', ()=>{
   lines.forEach(line=>{
     const dayMatch = line.match(DAY_RX);
     const timeMatch = line.match(TIME_RX);
-    if(!dayMatch && !timeMatch) return; // skip lines we can't place at all
+    if(!dayMatch && !timeMatch) return;
     const dayIdx = dayMatch ? WD.findIndex(w=>w.toLowerCase()===dayMatch[0].toLowerCase()) : todayIndexOrZero();
     let start='15:00', end='';
     if(timeMatch){
@@ -1879,6 +3008,187 @@ document.getElementById('spondAdd').addEventListener('click', async ()=>{
   renderAll();
 });
 
+// ---------- Timeplan fra bilde/PDF/Word ----------
+let timetableWhoSel = 'Milla';
+let timetableTypeSel = 'fast';
+let parsedTimetable = [];
+
+document.getElementById('timetableWho').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  timetableWhoSel = b.dataset.v;
+  document.querySelectorAll('#timetableWho button').forEach(x=>x.classList.toggle('active', x===b));
+});
+document.getElementById('timetableType').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  timetableTypeSel = b.dataset.v;
+  document.querySelectorAll('#timetableType button').forEach(x=>x.classList.toggle('active', x===b));
+  document.getElementById('timetableWeekPickWrap').style.display = (timetableTypeSel==='uke') ? 'block' : 'none';
+});
+// Default the week-picker to today, so "denne uken" works with zero clicks.
+document.getElementById('timetableWeekPick').value = isoDate(new Date());
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=> resolve(reader.result.split(',')[1]); // strip data:...;base64,
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------- drag/drop + lim inn (paste) for timeplan-fil ----------
+function setFileInputFiles(input, file){
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  input.files = dt.files;
+}
+const timetableDropEl = document.getElementById('timetableDrop');
+const timetableFileEl = document.getElementById('timetableFile');
+const timetableFileNameEl = document.getElementById('timetableFileName');
+function showTimetableFileName(){
+  const f = timetableFileEl.files[0];
+  timetableFileNameEl.textContent = f ? ('Valgt: ' + f.name) : '';
+}
+timetableFileEl.addEventListener('change', showTimetableFileName);
+['dragenter','dragover'].forEach(ev=>timetableDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); timetableDropEl.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev=>timetableDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); timetableDropEl.classList.remove('dragover');
+}));
+timetableDropEl.addEventListener('drop', e=>{
+  const f = e.dataTransfer.files[0];
+  if(f){ setFileInputFiles(timetableFileEl, f); showTimetableFileName(); }
+});
+document.addEventListener('paste', e=>{
+  const panel = document.getElementById('import-panel-image');
+  if(!panel || !panel.classList.contains('active') || !settingsOverlay.classList.contains('open')) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for(const item of items){
+    if(item.kind==='file' && item.type.startsWith('image/')){
+      const f = item.getAsFile();
+      if(f){ setFileInputFiles(timetableFileEl, f); showTimetableFileName(); }
+      e.preventDefault();
+      break;
+    }
+  }
+});
+
+document.getElementById('timetableParse').addEventListener('click', async ()=>{
+  const fileInput = document.getElementById('timetableFile');
+  const status = document.getElementById('timetableStatus');
+  const btn = document.getElementById('timetableParse');
+  const file = fileInput.files[0];
+  if(!file){ status.textContent = 'Velg en fil først.'; return; }
+
+  btn.disabled = true; btn.textContent = 'Tolker…';
+  status.textContent = 'Leser filen…';
+  document.getElementById('timetableAdd').style.display = 'none';
+  document.getElementById('timetablePreview').innerHTML = '';
+
+  try{
+    let payload;
+    const name = file.name.toLowerCase();
+    if(name.endsWith('.docx')){
+      if(!window.mammoth) throw new Error('Word-leseren lastet ikke inn riktig — prøv å laste siden på nytt.');
+      const buf = await file.arrayBuffer();
+      const result = await window.mammoth.extractRawText({ arrayBuffer: buf });
+      payload = { mediaType:'text/plain', data: result.value, isPdf:false };
+    } else if(name.endsWith('.pdf') || file.type === 'application/pdf'){
+      const b64 = await fileToBase64(file);
+      payload = { mediaType:'application/pdf', data: b64, isPdf:true };
+    } else if(file.type.startsWith('image/')){
+      const b64 = await fileToBase64(file);
+      payload = { mediaType: file.type, data: b64, isPdf:false };
+    } else {
+      throw new Error('Filtypen støttes ikke — bruk bilde (jpg/png), PDF eller .docx.');
+    }
+
+    status.textContent = 'Spør Claude om å lese timeplanen…';
+    const res = await fetch('/api/parse-timetable', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if(!res.ok || json.error){
+      throw new Error((json.error && (json.error.message || json.error)) || ('Feil '+res.status));
+    }
+
+    parsedTimetable = (json.events || []).map(e=>({
+      day: WD.findIndex(w=>w.toLowerCase()===String(e.day||'').toLowerCase()),
+      start: e.start || '',
+      end: e.end || '',
+      title: e.title || 'Aktivitet',
+      include: true
+    })).filter(e=>e.day>=0 && e.start);
+
+    if(!parsedTimetable.length){
+      status.textContent = 'Fant ingen lesbare timer i filen. Prøv et tydeligere bilde.';
+    } else {
+      status.textContent = `Fant ${parsedTimetable.length} timer — velg hvilke som skal legges til.`;
+      renderTimetablePreview();
+    }
+  }catch(e){
+    status.textContent = 'Klarte ikke tolke filen: ' + e.message + '\n\nEr api/parse-timetable.js lagt inn i GitHub-repoet, og ANTHROPIC_API_KEY satt i Vercel?';
+    console.error('timetable parse failed', e);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Tolk timeplan';
+  }
+});
+
+function renderTimetablePreview(){
+  const box = document.getElementById('timetablePreview');
+  box.innerHTML = parsedTimetable.map((p,idx)=>`
+    <label class="prevrow"><input type="checkbox" data-idx="${idx}" checked>
+      ${WD[p.day]} ${p.start}${p.end?'–'+p.end:''} · ${p.title}
+    </label>`).join('');
+  box.querySelectorAll('input').forEach(cb=>{
+    cb.addEventListener('change', ()=>{ parsedTimetable[cb.dataset.idx].include = cb.checked; });
+  });
+  document.getElementById('timetableAdd').style.display = 'block';
+}
+
+document.getElementById('timetableAdd').addEventListener('click', async ()=>{
+  const chosen = parsedTimetable.filter(p=>p.include);
+  if(!chosen.length) return;
+
+  if(timetableTypeSel==='fast'){
+    chosen.forEach(p=>{
+      template.push({id:uid(), day:p.day, start:p.start, end:p.end, title:p.title, who:timetableWhoSel, type:'aktivitet'});
+    });
+    await saveTemplate();
+  } else {
+    const pickedDate = document.getElementById('timetableWeekPick').value;
+    const targetMonday = mondayOf(pickedDate ? new Date(pickedDate+'T00:00:00') : new Date());
+    const key = isoDate(targetMonday);
+    let targetEvents;
+    if(key === isoDate(weekStart)){
+      targetEvents = weekEvents; // currently displayed week — edit in place
+    } else {
+      // Load (or start fresh) that other week's events, add to them, save, but
+      // don't disturb the week the user is currently looking at.
+      try{
+        const w = await window.storage.get('week:'+key);
+        targetEvents = (w && w.value) ? JSON.parse(w.value) : [];
+      }catch(e){ targetEvents = []; }
+    }
+    chosen.forEach(p=>{
+      targetEvents.push({id:uid(), day:p.day, start:p.start, end:p.end, title:p.title, who:timetableWhoSel, type:'aktivitet'});
+    });
+    weekCache[key] = targetEvents;
+    try{ await window.storage.set('week:'+key, JSON.stringify(targetEvents)); }catch(e){ reportSaveError('save target week failed', e); return; }
+    if(key === isoDate(weekStart)) weekEvents = targetEvents;
+  }
+
+  document.getElementById('timetablePreview').innerHTML = '';
+  document.getElementById('timetableAdd').style.display = 'none';
+  document.getElementById('timetableStatus').textContent = 'Lagt til!';
+  document.getElementById('timetableFile').value = '';
+  settingsOverlay.classList.remove('open');
+  renderAll();
+});
+
 // ---------- week navigation ----------
 document.getElementById('prevWeek').addEventListener('click', async ()=>{
   weekStart = addDays(weekStart,-7); loadWeek();
@@ -1901,8 +3211,36 @@ async function loadWeeklyPoints(){
   }catch(e){ weeklyPoints = {Milla:0,Jonathan:0}; }
 }
 async function saveWeeklyPoints(){
-  try{ await window.storage.set(starWeekKey, JSON.stringify(weeklyPoints)); }catch(e){ console.error('save weekly points failed', e); }
+  try{ await window.storage.set(starWeekKey, JSON.stringify(weeklyPoints)); return true; }catch(e){ reportSaveError('save weekly points failed', e); return false; }
 }
+// ---------- PIN-modal (numerisk tastatur, ikke fullt tastatur) ----------
+const pinOverlay = document.getElementById('pinOverlay');
+const pinInput = document.getElementById('pinInput');
+let pinResolve = null;
+
+function askForPin(titleText){
+  return new Promise(resolve=>{
+    pinResolve = resolve;
+    document.getElementById('pinTitle').textContent = titleText;
+    document.getElementById('pinError').textContent = '';
+    pinInput.value = '';
+    pinOverlay.classList.add('open');
+    setTimeout(()=> pinInput.focus(), 50);
+  });
+}
+function closePinModal(result){
+  pinOverlay.classList.remove('open');
+  if(pinResolve){ pinResolve(result); pinResolve = null; }
+}
+document.getElementById('pinCancel').addEventListener('click', ()=> closePinModal(null));
+document.getElementById('pinConfirm').addEventListener('click', ()=> closePinModal(pinInput.value));
+pinInput.addEventListener('keydown', e=>{ if(e.key==='Enter') closePinModal(pinInput.value); });
+pinInput.addEventListener('input', ()=>{
+  // tving rent tall, uansett hva tastaturet tillater
+  pinInput.value = pinInput.value.replace(/[^0-9]/g,'');
+});
+pinOverlay.addEventListener('click', e=>{ if(e.target===pinOverlay) closePinModal(null); });
+
 function renderStars(){
   const box = document.getElementById('starCols');
   box.innerHTML = ['Milla','Jonathan'].map(who=>{
@@ -1932,11 +3270,13 @@ function renderStars(){
   box.querySelectorAll('.chore').forEach(el=>{
     el.addEventListener('click', async ()=>{
       const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title;
-      const code = prompt(`En voksen taster koden for å godkjenne "${title}" (${who}):`);
-      if(code===null) return;
-      if(code !== (settings.pin || '1234')){
-        alert('Feil kode.');
-        return;
+      if(settings.requirePin){
+        const code = await askForPin(`Kode for å godkjenne "${title}" (${who})`);
+        if(code===null) return;
+        if(code !== (settings.pin || '1234')){
+          alert('Feil kode.');
+          return;
+        }
       }
       weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
       await saveWeeklyPoints();
@@ -1953,21 +3293,48 @@ document.getElementById('starQuickAdd').addEventListener('click', ()=>{
   renderChoreList();
   settingsOverlay.classList.add('open');
 });
+let editingChoreId = null;
 function renderChoreList(){
   const list = document.getElementById('choreList');
   list.innerHTML = settings.chores.length ? settings.chores.map(c=>`
     <div class="tplitem" data-id="${c.id}">
-      <span>${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
+      <span class="chore-edit-target" style="cursor:pointer;">${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
       <span class="del" style="cursor:pointer;">✕</span>
     </div>`).join('') : '<div class="hint">Ingen gjøremål ennå.</div>';
-  list.querySelectorAll('.tplitem .del').forEach(el=>{
-    el.addEventListener('click', async ()=>{
+  list.querySelectorAll('.chore-edit-target').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = el.closest('.tplitem').dataset.id;
+      const c = settings.chores.find(x=>x.id===id);
+      if(!c) return;
+      editingChoreId = id;
+      choreWhoSel = c.who;
+      document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v===c.who));
+      document.getElementById('choreTitle').value = c.title;
+      document.getElementById('chorePoints').value = c.points;
+      document.getElementById('choreAdd').textContent = '💾 Lagre endring';
+      document.getElementById('choreCancelEdit').style.display = 'inline-block';
+      document.getElementById('choreTitle').focus();
+    });
+  });
+  list.querySelectorAll('.del').forEach(el=>{
+    el.addEventListener('click', async (e)=>{
+      e.stopPropagation();
       const id = el.closest('.tplitem').dataset.id;
       settings.chores = settings.chores.filter(c=>c.id!==id);
+      if(editingChoreId===id) resetChoreForm();
       await saveSettings();
       renderChoreList(); renderStars();
     });
   });
+}
+function resetChoreForm(){
+  editingChoreId = null;
+  choreWhoSel = 'Milla';
+  document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v==='Milla'));
+  document.getElementById('choreTitle').value = '';
+  document.getElementById('chorePoints').value = '5';
+  document.getElementById('choreAdd').textContent = '＋ Legg til gjøremål';
+  document.getElementById('choreCancelEdit').style.display = 'none';
 }
 let choreWhoSel = 'Milla';
 document.getElementById('choreWho').addEventListener('click', e=>{
@@ -1979,20 +3346,30 @@ document.getElementById('choreAdd').addEventListener('click', async ()=>{
   const title = document.getElementById('choreTitle').value.trim();
   const points = parseInt(document.getElementById('chorePoints').value) || 1;
   if(!title) return;
-  settings.chores.push({id:uid(), who:choreWhoSel, title, points});
-  document.getElementById('choreTitle').value='';
+  if(editingChoreId){
+    const c = settings.chores.find(x=>x.id===editingChoreId);
+    if(c){ c.title = title; c.points = points; c.who = choreWhoSel; }
+  } else {
+    settings.chores.push({id:uid(), who:choreWhoSel, title, points});
+  }
+  resetChoreForm();
   await saveSettings();
   renderChoreList(); renderStars();
 });
+document.getElementById('choreCancelEdit').addEventListener('click', ()=>{
+  resetChoreForm();
+});
 function fillStarSettingsInputs(){
   document.getElementById('starPin').value = settings.pin || '1234';
+  document.getElementById('starRequirePin').checked = settings.requirePin !== false;
   document.getElementById('goalMilla').value = (settings.weeklyGoal && settings.weeklyGoal.Milla) || 100;
   document.getElementById('goalJonathan').value = (settings.weeklyGoal && settings.weeklyGoal.Jonathan) || 100;
   document.getElementById('rewardMilla').value = (settings.rewardText && settings.rewardText.Milla) || '';
   document.getElementById('rewardJonathan').value = (settings.rewardText && settings.rewardText.Jonathan) || '';
 }
 document.getElementById('starSettingsSave').addEventListener('click', async ()=>{
-  settings.pin = document.getElementById('starPin').value.trim() || '1234';
+  settings.pin = (document.getElementById('starPin').value.trim() || '1234').replace(/[^0-9]/g,'') || '1234';
+  settings.requirePin = document.getElementById('starRequirePin').checked;
   settings.weeklyGoal = {
     Milla: parseInt(document.getElementById('goalMilla').value) || 100,
     Jonathan: parseInt(document.getElementById('goalJonathan').value) || 100
@@ -2054,7 +3431,7 @@ async function loadShopping(){
   }catch(e){ shoppingList = []; }
 }
 async function saveShopping(){
-  try{ await window.storage.set('shopping', JSON.stringify(shoppingList)); }catch(e){ console.error('save shopping failed', e); }
+  try{ await window.storage.set('shopping', JSON.stringify(shoppingList)); return true; }catch(e){ reportSaveError('save shopping failed', e); return false; }
 }
 function renderShopping(){
   const box = document.getElementById('shopList');
@@ -2102,7 +3479,7 @@ async function loadPhotos(){
   }catch(e){ photos = []; }
 }
 async function savePhotos(){
-  try{ await window.storage.set('photos', JSON.stringify(photos)); }catch(e){ console.error('save photos failed', e); }
+  try{ await window.storage.set('photos', JSON.stringify(photos)); return true; }catch(e){ reportSaveError('save photos failed', e); return false; }
 }
 function renderPhotos(){
   const frame = document.getElementById('photoFrame');
@@ -2141,7 +3518,7 @@ function renderPhotoManager(){
         await savePhotos();
         renderPhotos();
         renderPhotoManager();
-        document.getElementById('photoInput').value = photos.filter(x=>/^https?:\/\//i.test(x)).join('\\n');
+        document.getElementById('photoInput').value = photos.filter(x=>/^https?:\/\//i.test(x)).join('\n');
       });
     });
   }
@@ -2205,8 +3582,7 @@ photoFilesEl.addEventListener('change', ()=> addPhotoFiles(photoFilesEl.files));
 photoDropEl.addEventListener('drop',e=> addPhotoFiles(e.dataTransfer.files));
 
 document.getElementById('photoSave').addEventListener('click', async ()=>{
-  const urls = document.getElementById('photoInput').value.split('\\n').map(l=>l.trim()).filter(l=>/^https?:\/\//i.test(l));
-  // Keep uploaded data-images and replace only the URL-based entries.
+  const urls = document.getElementById('photoInput').value.split('\n').map(l=>l.trim()).filter(l=>/^https?:\/\//i.test(l));
   photos = [...photos.filter(x=>!/^https?:\/\//i.test(x)), ...urls];
   photoIdx = 0;
   await savePhotos();
@@ -2214,7 +3590,56 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
   renderPhotoManager();
 });
 
-// close overlays on backdrop click
+async function runIcloudAlbumFetch(url, {silent=false, statusEl=null, btn=null}={}){
+  if(!url) return;
+  if(btn){ btn.disabled = true; btn.textContent = 'Henter…'; }
+  if(statusEl) statusEl.textContent = 'Kobler til iCloud…';
+  try{
+    const res = await fetch('/api/icloud-album?url=' + encodeURIComponent(url));
+    const json = await res.json();
+    if(!res.ok || json.error) throw new Error(json.error || ('Feil '+res.status));
+    const newUrls = json.urls || [];
+    if(!newUrls.length){
+      if(statusEl) statusEl.textContent = 'Fant ingen bilder i albumet. Sjekk at "Offentlig nettsted" er påslått.';
+    }else{
+      // Erstatt tidligere iCloud-hentede lenker, behold manuelt opplastede/limte inn.
+      const existingManualUrls = photos.filter(x=>/^https?:\/\//i.test(x) && !x.includes('icloud-content.com'));
+      const uploadedImages = photos.filter(x=>!/^https?:\/\//i.test(x));
+      photos = [...uploadedImages, ...existingManualUrls, ...newUrls];
+      photoIdx = 0;
+      await savePhotos();
+      renderPhotos();
+      renderPhotoManager();
+      if(statusEl) statusEl.textContent = `Hentet ${newUrls.length} bilder fra albumet.`;
+    }
+    settings.icloudAlbumUrl = url;
+    settings.icloudLastFetch = Date.now();
+    await saveSettings();
+    return true;
+  }catch(e){
+    if(statusEl) statusEl.textContent = 'Klarte ikke hente album: ' + e.message;
+    console.error('icloud album fetch failed', e, silent ? '(automatisk sjekk)' : '');
+    return false;
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = 'Hent bilder fra album'; }
+  }
+}
+
+document.getElementById('icloudAlbumFetch').addEventListener('click', ()=>{
+  const url = document.getElementById('icloudAlbumUrl').value.trim();
+  const status = document.getElementById('icloudAlbumStatus');
+  if(!url){ status.textContent = 'Lim inn album-lenken først.'; return; }
+  runIcloudAlbumFetch(url, {statusEl: status, btn: document.getElementById('icloudAlbumFetch')});
+});
+
+const ICLOUD_REFRESH_INTERVAL = 24*60*60*1000; // én gang om dagen
+async function autoRefreshIcloudAlbumIfDue(){
+  if(!settings.icloudAlbumUrl) return;
+  const last = settings.icloudLastFetch || 0;
+  if(Date.now() - last < ICLOUD_REFRESH_INTERVAL) return;
+  await runIcloudAlbumFetch(settings.icloudAlbumUrl, {silent:true});
+}
+
 [eventOverlay, settingsOverlay].forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
@@ -2232,37 +3657,51 @@ function normalizeSettings(){
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(!settings.customColors) settings.customColors = {};
   if(!settings.pin) settings.pin = '1234';
+  if(settings.requirePin===undefined) settings.requirePin = true;
+  if(!settings.icloudAlbumUrl) settings.icloudAlbumUrl = '';
+  if(!settings.icloudLastFetch) settings.icloudLastFetch = 0;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
+  if(!settings.layoutColumns) settings.layoutColumns = '3';
+  if(!settings.publicCalendars) settings.publicCalendars = [];
+  if(!settings.otherCalendars) settings.otherCalendars = [];
 }
 
-function applySnapshot(getter){
+function applySnapshot(getter, {authoritative=false}={}){
   const weekKey = 'week:'+isoDate(weekStart);
   starWeekKey = 'starweek:'+isoDate(mondayOf(new Date()));
 
   const s = getter('settings');
   if(s) settings = safeParseValue(s, settings);
+  else if(authoritative) settings = { matpakkeRule:{Milla:[1,1,1,1,1,0,0],Jonathan:[2,1,2,1,1,0,0]}, theme:'lys', avatars:{Milla:'',Jonathan:''}, chores:[], points:{Milla:0,Jonathan:0} };
   normalizeSettings();
 
   const t = getter('template');
-  template = t ? safeParseValue(t, DEFAULT_TEMPLATE()) : (template.length ? template : DEFAULT_TEMPLATE());
+  if(t) template = safeParseValue(t, DEFAULT_TEMPLATE());
+  else if(authoritative) template = DEFAULT_TEMPLATE();
+  else if(!template.length) template = DEFAULT_TEMPLATE();
 
   const w = getter(weekKey);
   if(w) weekEvents = safeParseValue(w, []);
+  else if(authoritative) weekEvents = [];
   weekCache[isoDate(weekStart)] = weekEvents;
 
   const sh = getter('shopping');
   if(sh) shoppingList = safeParseValue(sh, []);
+  else if(authoritative) shoppingList = [];
 
   const ph = getter('photos');
   if(ph) photos = safeParseValue(ph, []);
+  else if(authoritative) photos = [];
 
   const sp = getter(starWeekKey);
   if(sp) weeklyPoints = safeParseValue(sp, {Milla:0,Jonathan:0});
+  else if(authoritative) weeklyPoints = {Milla:0,Jonathan:0};
 }
 
 function paint(){
   applyTheme(settings.theme);
+  applyLayout();
   renderStars();
   renderAll();
   renderShopping();
@@ -2271,33 +3710,70 @@ function paint(){
   renderPhotoManager();
 }
 
-(async function init(){
-  // First paint uses defaults/browser cache and does not wait for the network.
-  applySnapshot(key => window.storage.getCached(key));
-  paint();
-  renderClock();
-
-  // Fetch everything needed for the first screen in ONE Supabase request.
-  const initialKeys = [
+function currentSyncKeys(){
+  return [
     'settings',
     'template',
     'week:'+isoDate(weekStart),
     'shopping',
     'photos',
-    starWeekKey
+    'starweek:'+isoDate(mondayOf(new Date()))
   ];
+}
+
+let refreshInFlight = false;
+async function refreshFromSupabase(){
+  if(refreshInFlight) return;
+  refreshInFlight = true;
+  setSyncStatus('saving', 'Henter…');
+  try{
+    const fresh = await window.storage.getMany(currentSyncKeys());
+    applySnapshot(key => fresh[key] || null, {authoritative:true});
+    paint();
+    setSyncStatus('ok', 'Synkronisert');
+  }catch(e){
+    console.error('Supabase refresh failed', e);
+    setSyncStatus('error', 'Frakoblet');
+  }finally{
+    refreshInFlight = false;
+  }
+}
+
+function startRealtimeSync(){
+  try{
+    sb.channel('family-store-sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'family_store'}, ()=>{
+        setTimeout(refreshFromSupabase, 120);
+      })
+      .subscribe(status=>{
+        if(status==='SUBSCRIBED') setSyncStatus('ok', 'Synkronisert');
+      });
+  }catch(e){
+    console.warn('Realtime sync unavailable', e);
+  }
+}
+
+(async function init(){
+  applySnapshot(key => window.storage.getCached(key));
+  paint();
+  renderClock();
 
   try{
-    const fresh = await window.storage.getMany(initialKeys);
-    applySnapshot(key => fresh[key] || null);
-    paint();
+    await refreshFromSupabase();
   }catch(e){
     console.error('initial refresh failed', e);
   }
+  startRealtimeSync();
 
   setInterval(renderClock, 15000);
   setInterval(nextPhoto, 7000);
   setInterval(()=>{ renderClock(); }, 60000);
+
+  // Sjekk iCloud-albumet på nytt ved sideoppstart (hvis over 24t siden sist),
+  // og deretter hver time — den gjør ingenting med mindre 24t faktisk har gått,
+  // slik at tavlen holder seg oppdatert selv om skjermen aldri lastes på nytt.
+  autoRefreshIcloudAlbumIfDue();
+  setInterval(autoRefreshIcloudAlbumIfDue, 60*60*1000);
 })();
 </script>
 </body>
