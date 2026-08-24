@@ -1629,6 +1629,64 @@ header{position:relative;display:grid;grid-template-columns:minmax(220px,1fr) au
 @media(max-width:980px){header{grid-template-columns:1fr auto;}.weeknav{grid-row:2;grid-column:1/-1;width:100%;}.header-actions{grid-column:2;grid-row:1;}.sync-status{display:none;}.weeknav .range{min-width:220px;}}
 @media(max-width:760px){header{display:flex;flex-wrap:wrap;gap:10px;}.brand{flex:1;}.header-actions{margin-left:auto;}.header-settings{display:none;}.weeknav{width:100%;order:3;}.weeknav-main{width:100%;}.weeknav .range{min-width:0;flex:1;}}
 
+/* ===== Compact day header / space-use refinement ===== */
+header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
+.weeknav{flex-direction:row;align-items:center;gap:10px;}
+.weeknav .thisweek{order:0;margin-right:2px;}
+.weeknav-main{order:1;}
+.header-settings{display:none!important;}
+
+.compact-day-head{
+  position:relative;
+  min-height:108px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:end;
+  gap:8px;
+  padding:32px 12px 10px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#fff,#fffdfb);
+}
+.weather-corner{position:absolute;top:10px;left:12px;z-index:2;}
+.day-plus{position:absolute;top:9px;right:10px;z-index:2;}
+.day-title-center{align-self:center;text-align:center;min-width:72px;padding-bottom:6px;}
+.day-title-center .dname{font-size:16px;font-weight:850;letter-spacing:-.02em;}
+.day-title-center .ddate{font-size:10.5px;color:var(--ink-soft);margin-top:3px;font-weight:650;}
+.profile-side{display:flex;align-items:center;gap:7px;min-width:0;}
+.profile-side.milla-side{justify-content:flex-end;}
+.profile-side.jonathan-side{justify-content:flex-start;}
+.profile-side .avbadge{display:flex;align-items:center;justify-content:center;}
+.profile-side img.avcircle,.profile-side .avcircle{width:64px!important;height:64px!important;}
+.profile-side .lunch-icons{display:flex;align-items:center;gap:3px;min-height:18px;}
+.profile-side .lunchbox-icon{width:18px;height:13px;border-radius:5px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);}
+.profile-side .lunchbox-icon:before{left:5px;top:-5px;width:8px;height:6px;border-radius:6px 6px 0 0;}
+.profile-side .lunchbox-icon:after{left:4px;right:4px;top:5px;}
+.milla-side .lunchbox-icon{transform:rotate(-3deg);}
+.jonathan-side .lunchbox-icon{transform:rotate(3deg);}
+
+.remember-grid{padding:7px 11px 3px;gap:12px;}
+.reminder-lane{align-items:center;}
+.reminder-lane .huskchip{width:min(92%,170px);justify-content:flex-start;}
+.reminder-shared .huskchip{width:auto;max-width:75%;}
+.huskchip{display:flex;align-items:center;gap:5px;}
+.remember-add-wrap{padding:4px 8px 10px;}
+.remember-add-wrap .huskadd{padding:5px 11px;}
+
+.day.today{border:2px solid #4F8EF7!important;box-shadow:0 0 0 3px rgba(79,142,247,.09),0 12px 34px rgba(47,128,237,.11)!important;}
+.day.today .dname,.day.today .ddate{color:#2F80ED!important;}
+
+@media(max-width:980px){
+  .weeknav{grid-row:2;grid-column:1/-1;justify-content:center;}
+}
+@media(max-width:760px){
+  .weeknav{flex-direction:row;flex-wrap:nowrap;}
+  .weeknav .thisweek{flex:none;}
+  .compact-day-head{grid-template-columns:1fr auto 1fr;padding-left:8px;padding-right:8px;}
+  .profile-side img.avcircle,.profile-side .avcircle{width:56px!important;height:56px!important;}
+  .profile-side{gap:4px;}
+  .profile-side .lunchbox-icon{width:15px;height:11px;}
+}
+
 </style>
 </head>
 <body>
@@ -1645,17 +1703,16 @@ header{position:relative;display:grid;grid-template-columns:minmax(220px,1fr) au
       </div>
     </div>
     <div class="weeknav">
+      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">▣</span><span>Denne uken</span></button>
       <div class="weeknav-main">
         <button id="prevWeek" aria-label="Forrige uke">‹</button>
         <div class="range" id="weekRange">–</div>
         <button id="nextWeek" aria-label="Neste uke">›</button>
       </div>
-      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">▣</span><span>Denne uken</span></button>
     </div>
     <div class="header-actions">
       <div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div>
       <div class="clock" id="clock">--:--</div>
-      <button class="header-settings" id="headerSettingsBtn" type="button"><span>⚙</span> Innstillinger</button>
     </div>
   </header>
 
@@ -2617,28 +2674,24 @@ function renderGrid(){
 
     return `
     <div class="day weekday ${i===idx?'today':''}">
-      <div class="dhead">
-        <div class="dtop">
-          <div>
-            <div class="dname">${name}</div>
-            <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
-          </div>
-          <div class="day-head-actions">${renderWeather(i)}<button class="sharedadd" data-day="${i}" title="Legg til aktivitet">+</button></div>
+      <div class="compact-day-head">
+        <div class="weather-corner">${renderWeather(i)}</div>
+        <button class="sharedadd day-plus" data-day="${i}" title="Legg til aktivitet">+</button>
+        <div class="profile-side milla-side">
+          ${renderLunchIcons('Milla',m)}
+          <span class="avbadge">${avatarHTML('Milla',60)}</span>
+        </div>
+        <div class="day-title-center">
+          <div class="dname">${name}</div>
+          <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
+        </div>
+        <div class="profile-side jonathan-side">
+          <span class="avbadge">${avatarHTML('Jonathan',60)}</span>
+          ${renderLunchIcons('Jonathan',j)}
         </div>
       </div>
 
       ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
-
-      <div class="colheads">
-        <div class="colheadname milla">
-          <span class="avbadge">${avatarHTML('Milla',54)}</span>
-          ${renderLunchIcons('Milla',m)}
-        </div>
-        <div class="colheadname jonathan">
-          <span class="avbadge">${avatarHTML('Jonathan',54)}</span>
-          ${renderLunchIcons('Jonathan',j)}
-        </div>
-      </div>
 
       <div class="split">
         <div class="col milla">
@@ -2820,7 +2873,7 @@ function openSettings(){
   settingsOverlay.classList.add('open');
 }
 document.getElementById('settingsFab').addEventListener('click', openSettings);
-document.getElementById('headerSettingsBtn').addEventListener('click', openSettings);
+document.getElementById('headerSettingsBtn')?.addEventListener('click', openSettings);
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 document.getElementById('settingsX').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 const SETTINGS_META = {
