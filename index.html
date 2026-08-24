@@ -1852,6 +1852,21 @@ html[data-layout="2"] .starpanel{
               <button class="btn ghost" id="photoSave" style="width:100%;margin-top:9px;">Oppdater fra URL-er</button>
             </details>
           </div>
+
+          <div class="settings-section">
+            <p class="hint">
+              <b style="color:var(--ink);">Delt Apple-album (eksperimentelt)</b><br>
+              Lim inn lenken fra et delt iCloud-album med "Offentlig nettsted" påslått i Bilder-appen.
+              Bruker et internt, uoffisielt Apple-grensesnitt — kan slutte å fungere hvis Apple endrer noe,
+              men fungerer godt i dag.
+            </p>
+            <div class="field">
+              <label>iCloud delt album-lenke</label>
+              <input type="text" id="icloudAlbumUrl" placeholder="https://www.icloud.com/sharedalbum/#B1-...">
+            </div>
+            <button class="btn primary" id="icloudAlbumFetch" style="width:100%;">Hent bilder fra album</button>
+            <div class="hint" id="icloudAlbumStatus" style="margin-top:10px;"></div>
+          </div>
         </div>
 
         <div id="tab-tema" style="display:none;">
@@ -2124,6 +2139,8 @@ async function loadAll(){
   }
   if(!settings.pin) settings.pin = '1234';
   if(settings.requirePin===undefined) settings.requirePin = true;
+  if(!settings.icloudAlbumUrl) settings.icloudAlbumUrl = '';
+  if(!settings.icloudLastFetch) settings.icloudLastFetch = 0;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
@@ -2463,6 +2480,7 @@ const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
   renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
+  document.getElementById('icloudAlbumUrl').value = settings.icloudAlbumUrl || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
 });
@@ -3501,6 +3519,56 @@ document.getElementById('photoSave').addEventListener('click', async ()=>{
   renderPhotoManager();
 });
 
+async function runIcloudAlbumFetch(url, {silent=false, statusEl=null, btn=null}={}){
+  if(!url) return;
+  if(btn){ btn.disabled = true; btn.textContent = 'Henter…'; }
+  if(statusEl) statusEl.textContent = 'Kobler til iCloud…';
+  try{
+    const res = await fetch('/api/icloud-album?url=' + encodeURIComponent(url));
+    const json = await res.json();
+    if(!res.ok || json.error) throw new Error(json.error || ('Feil '+res.status));
+    const newUrls = json.urls || [];
+    if(!newUrls.length){
+      if(statusEl) statusEl.textContent = 'Fant ingen bilder i albumet. Sjekk at "Offentlig nettsted" er påslått.';
+    }else{
+      // Erstatt tidligere iCloud-hentede lenker, behold manuelt opplastede/limte inn.
+      const existingManualUrls = photos.filter(x=>/^https?:\/\//i.test(x) && !x.includes('icloud-content.com'));
+      const uploadedImages = photos.filter(x=>!/^https?:\/\//i.test(x));
+      photos = [...uploadedImages, ...existingManualUrls, ...newUrls];
+      photoIdx = 0;
+      await savePhotos();
+      renderPhotos();
+      renderPhotoManager();
+      if(statusEl) statusEl.textContent = `Hentet ${newUrls.length} bilder fra albumet.`;
+    }
+    settings.icloudAlbumUrl = url;
+    settings.icloudLastFetch = Date.now();
+    await saveSettings();
+    return true;
+  }catch(e){
+    if(statusEl) statusEl.textContent = 'Klarte ikke hente album: ' + e.message;
+    console.error('icloud album fetch failed', e, silent ? '(automatisk sjekk)' : '');
+    return false;
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = 'Hent bilder fra album'; }
+  }
+}
+
+document.getElementById('icloudAlbumFetch').addEventListener('click', ()=>{
+  const url = document.getElementById('icloudAlbumUrl').value.trim();
+  const status = document.getElementById('icloudAlbumStatus');
+  if(!url){ status.textContent = 'Lim inn album-lenken først.'; return; }
+  runIcloudAlbumFetch(url, {statusEl: status, btn: document.getElementById('icloudAlbumFetch')});
+});
+
+const ICLOUD_REFRESH_INTERVAL = 24*60*60*1000; // én gang om dagen
+async function autoRefreshIcloudAlbumIfDue(){
+  if(!settings.icloudAlbumUrl) return;
+  const last = settings.icloudLastFetch || 0;
+  if(Date.now() - last < ICLOUD_REFRESH_INTERVAL) return;
+  await runIcloudAlbumFetch(settings.icloudAlbumUrl, {silent:true});
+}
+
 [eventOverlay, settingsOverlay].forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
@@ -3519,6 +3587,8 @@ function normalizeSettings(){
   if(!settings.customColors) settings.customColors = {};
   if(!settings.pin) settings.pin = '1234';
   if(settings.requirePin===undefined) settings.requirePin = true;
+  if(!settings.icloudAlbumUrl) settings.icloudAlbumUrl = '';
+  if(!settings.icloudLastFetch) settings.icloudLastFetch = 0;
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
@@ -3587,6 +3657,12 @@ function paint(){
   setInterval(renderClock, 15000);
   setInterval(nextPhoto, 7000);
   setInterval(()=>{ renderClock(); }, 60000);
+
+  // Sjekk iCloud-albumet på nytt ved sideoppstart (hvis over 24t siden sist),
+  // og deretter hver time — den gjør ingenting med mindre 24t faktisk har gått,
+  // slik at tavlen holder seg oppdatert selv om skjermen aldri lastes på nytt.
+  autoRefreshIcloudAlbumIfDue();
+  setInterval(autoRefreshIcloudAlbumIfDue, 60*60*1000);
 })();
 </script>
 </body>
