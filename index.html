@@ -1582,6 +1582,53 @@ header{
   html[data-layout="2"] .weekend-day{flex:1;min-height:0;}
 }
 
+
+/* ===== Header / weather / today / lunchbox refinement ===== */
+header{position:relative;display:grid;grid-template-columns:minmax(220px,1fr) auto minmax(300px,1fr);align-items:center;gap:18px;padding:14px 18px;}
+.brand .mark.calendar-mark{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#ff719b,#f54e88);display:grid;place-items:center;position:relative;box-shadow:0 8px 18px rgba(241,76,132,.18);}
+.calendar-mark .cal-top,.calendar-mark .cal-grid{display:none!important;}
+.calendar-mark .cal-rings{position:absolute;top:9px;left:14px;right:14px;height:5px;border-top:2px solid rgba(255,255,255,.95);border-bottom:2px solid rgba(255,255,255,.95);border-radius:2px;}
+.calendar-mark .cal-face{width:26px;height:23px;border:2px solid #fff;border-radius:5px;position:relative;margin-top:5px;}
+.calendar-mark .cal-face:before{content:"";position:absolute;left:4px;right:4px;top:6px;border-top:2px solid rgba(255,255,255,.9);}
+.calendar-mark .cal-dot{position:absolute;width:6px;height:6px;border:2px solid #fff;border-radius:50%;right:2px;bottom:2px;}
+.weeknav{display:flex;flex-direction:column;align-items:center;gap:7px;}
+.weeknav-main{display:flex;align-items:center;gap:10px;}
+.weeknav .range{min-width:270px;height:39px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;font-size:14px;font-weight:750;}
+.weeknav button{width:39px;height:39px;border-radius:11px;background:#fff;}
+.weeknav .thisweek{width:auto!important;height:31px!important;padding:6px 13px!important;border-radius:10px!important;font-size:10.5px!important;color:#423a34!important;}
+.weeknav .thisweek .today-ico{font-size:12px;color:#28231f;}
+.header-actions{justify-self:end;display:flex;align-items:center;gap:12px;}
+.header-settings{border:1px solid var(--line);background:#fff;color:var(--ink);height:39px;padding:0 14px;border-radius:12px;font:700 11px/1 Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.header-settings:hover{background:var(--surface-alt);}
+.sync-status{font-size:9.5px;}
+.clock{font-size:18px;}
+
+.day.today{border:2px solid #7C5CFC!important;box-shadow:0 0 0 3px rgba(124,92,252,.08),0 12px 34px rgba(73,54,145,.12)!important;transform:translateY(-1px);}
+.day.today .dname,.day.today .ddate{color:#6D50E7!important;font-weight:850;}
+.weekend-day.today{box-shadow:inset 0 0 0 2px #7C5CFC!important;background:linear-gradient(180deg,#FBFAFF,#fff)!important;}
+.weekend-day.today .dname,.weekend-day.today .ddate{color:#6D50E7!important;}
+.day-head-actions,.weekend-head-actions{display:flex;align-items:center;gap:7px;}
+.day-weather{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:750;color:#6f665e;white-space:nowrap;min-height:18px;}
+.weather-icon{font-size:15px;line-height:1;}
+.weather-loading{min-width:10px;}
+.weekend-head-actions .day-weather{font-size:10px;}
+
+.colheadname img.avcircle,.colheadname .avcircle{width:60px!important;height:60px!important;}
+.colheadname{min-height:94px;gap:10px;}
+.lunch-icons{min-height:21px;gap:5px;color:inherit;}
+.lunchbox-icon{position:relative;display:inline-block;width:21px;height:15px;border-radius:4px;background:currentColor;box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);}
+.lunchbox-icon:before{content:"";position:absolute;left:6px;top:-5px;width:9px;height:6px;border:2px solid currentColor;border-bottom:0;border-radius:5px 5px 0 0;box-sizing:border-box;}
+.lunchbox-icon:after{content:"";position:absolute;left:3px;right:3px;top:5px;border-top:1px solid rgba(255,255,255,.72);}
+.lunch-icons.milla{color:#F4548D;}.lunch-icons.jonathan{color:#2F80ED;}.empty-lunch{min-height:21px;}
+
+#eventOverlay .modal{max-width:460px;}
+#eventOverlay .event-main-field input{font-size:17px;font-weight:750;padding:13px 14px;}
+#eventOverlay .event-day-field{margin-top:5px;}
+#eventOverlay .event-day-field select{background:var(--surface-alt);}
+
+@media(max-width:980px){header{grid-template-columns:1fr auto;}.weeknav{grid-row:2;grid-column:1/-1;width:100%;}.header-actions{grid-column:2;grid-row:1;}.sync-status{display:none;}.weeknav .range{min-width:220px;}}
+@media(max-width:760px){header{display:flex;flex-wrap:wrap;gap:10px;}.brand{flex:1;}.header-actions{margin-left:auto;}.header-settings{display:none;}.weeknav{width:100%;order:3;}.weeknav-main{width:100%;}.weeknav .range{min-width:0;flex:1;}}
+
 </style>
 </head>
 <body>
@@ -1589,27 +1636,34 @@ header{
   <header>
     <div class="brand">
       <div class="mark calendar-mark" aria-hidden="true">
-        <span class="cal-top"></span><span class="cal-grid">▦</span>
+        <span class="cal-rings"></span>
+        <span class="cal-face"><span class="cal-dot"></span></span>
       </div>
       <div>
         <h1>Ukeplan</h1>
-        <span class="sub">Milla &amp; Jonathan</span>
+        <span class="sub">Familiekalender</span>
       </div>
     </div>
     <div class="weeknav">
-      <button id="prevWeek">‹</button>
-      <div class="range" id="weekRange">–</div>
-      <button id="nextWeek">›</button>
+      <div class="weeknav-main">
+        <button id="prevWeek" aria-label="Forrige uke">‹</button>
+        <div class="range" id="weekRange">–</div>
+        <button id="nextWeek" aria-label="Neste uke">›</button>
+      </div>
       <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">▣</span><span>Denne uken</span></button>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;"><div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div><div class="clock" id="clock">--:--</div></div>
+    <div class="header-actions">
+      <div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div>
+      <div class="clock" id="clock">--:--</div>
+      <button class="header-settings" id="headerSettingsBtn" type="button"><span>⚙</span> Innstillinger</button>
+    </div>
   </header>
 
   <div class="grid" id="grid"></div>
 
   <div class="panel starpanel">
     <div class="panelhead" style="display:flex;justify-content:space-between;align-items:center;">
-      <span>⭐ Stjerner — for å hjelpe til hjemme</span>
+      <span>⭐ Stjerner</span>
       <button class="sharedadd" id="starQuickAdd" title="Legg til gjøremål">+</button>
     </div>
     <div class="starcols" id="starCols"></div>
@@ -1639,9 +1693,9 @@ header{
 <div class="overlay" id="eventOverlay">
   <div class="modal">
     <h2 id="eventTitle">Ny aktivitet</h2>
-    <div class="field">
-      <label>Dag</label>
-      <select id="fDay"></select>
+    <div class="field event-main-field">
+      <label id="fTitleLabel">Hva</label>
+      <input type="text" id="fTitle" placeholder="F.eks. Fotballtrening">
     </div>
     <div class="field">
       <label>Type</label>
@@ -1656,16 +1710,16 @@ header{
       <div class="field"><label>Til (valgfritt)</label><input type="time" id="fEnd"></div>
     </div>
     <div class="field">
-      <label id="fTitleLabel">Hva</label>
-      <input type="text" id="fTitle" placeholder="F.eks. Fotballtrening">
-    </div>
-    <div class="field">
       <label>Hvem</label>
       <div class="whopick" id="fWho">
         <button data-v="Milla" class="milla">⚽ Milla</button>
         <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
         <button data-v="Begge" class="begge">✨ Begge</button>
       </div>
+    </div>
+    <div class="field event-day-field">
+      <label>Ukedag</label>
+      <select id="fDay"></select>
     </div>
     <label class="chk" id="repeatRow"><input type="checkbox" id="fRepeat"> Gjenta hver uke (fast del av ukeplanen)</label>
     <div class="modalbtns">
@@ -1687,7 +1741,7 @@ header{
 
       <div class="tabs">
         <button class="active" data-tab="matpakker">
-          <span class="settings-nav-icon">🧳</span>
+          <span class="settings-nav-icon">🍱</span>
           <span class="settings-nav-copy">Matpakker</span>
           <span class="settings-nav-sub">Antall per dag</span>
         </button>
@@ -2438,6 +2492,42 @@ async function saveWeek(){
 }
 
 
+// ---------- vær kl. 12 (Open-Meteo, ingen API-nøkkel) ----------
+const WEATHER_LAT = 59.91;
+const WEATHER_LON = 10.55;
+let weatherByDate = {};
+function weatherIcon(code){
+  if(code===0) return '☀️';
+  if([1,2].includes(code)) return '🌤️';
+  if(code===3) return '☁️';
+  if([45,48].includes(code)) return '🌫️';
+  if([51,53,55,56,57].includes(code)) return '🌦️';
+  if([61,63,65,66,67,80,81,82].includes(code)) return '🌧️';
+  if([71,73,75,77,85,86].includes(code)) return '🌨️';
+  if([95,96,99].includes(code)) return '⛈️';
+  return '🌤️';
+}
+function renderWeather(dayIdx){
+  const key = isoDate(addDays(weekStart,dayIdx));
+  const w = weatherByDate[key];
+  if(!w) return '<span class="day-weather weather-loading" title="Vær kl. 12"></span>';
+  return `<span class="day-weather" title="Vær kl. 12"><span class="weather-icon">${weatherIcon(w.code)}</span><span>${Math.round(w.temp)}°</span></span>`;
+}
+async function loadWeather(){
+  const monday = isoDate(weekStart), sunday = isoDate(addDays(weekStart,6));
+  try{
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_LAT}&longitude=${WEATHER_LON}&hourly=temperature_2m,weather_code&timezone=Europe%2FOslo&start_date=${monday}&end_date=${sunday}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Weather '+res.status);
+    const json = await res.json();
+    const times=json.hourly?.time||[], temps=json.hourly?.temperature_2m||[], codes=json.hourly?.weather_code||[];
+    const next={};
+    times.forEach((t,i)=>{ if(t.endsWith('T12:00')) next[t.slice(0,10)]={temp:temps[i],code:codes[i]}; });
+    weatherByDate={...weatherByDate,...next};
+  }catch(e){ console.warn('Kunne ikke hente vær',e); }
+  renderGrid();
+}
+
 // ---------- rendering ----------
 function todayIndex(){
   const t = new Date(); const tm = mondayOf(t);
@@ -2483,7 +2573,7 @@ function renderWeekendDay(dayIdx, idx){
         <span class="dname">${name}</span>
         <span class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</span>
       </div>
-      <button class="weekend-add" data-day="${dayIdx}">＋ Aktivitet</button>
+      <div class="weekend-head-actions">${renderWeather(dayIdx)}<button class="weekend-add" data-day="${dayIdx}">＋ Aktivitet</button></div>
     </div>
 
     <div class="weekend-list">
@@ -2499,8 +2589,8 @@ function renderWeekendDay(dayIdx, idx){
 
 function renderLunchIcons(child, count){
   const cls = child.toLowerCase();
-  if(!count) return `<span class="lunch-icons empty-lunch" aria-label="0 matpakker">—</span>`;
-  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>'<span class="lunch-box">🧳</span>').join('')}</span>`;
+  if(!count) return `<span class="lunch-icons empty-lunch" aria-label="0 matpakker"></span>`;
+  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>'<span class="lunchbox-icon" aria-hidden="true"></span>').join('')}</span>`;
 }
 
 function renderReminderLane(items, who){
@@ -2533,7 +2623,7 @@ function renderGrid(){
             <div class="dname">${name}</div>
             <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
           </div>
-          <button class="sharedadd" data-day="${i}" title="Legg til aktivitet">+</button>
+          <div class="day-head-actions">${renderWeather(i)}<button class="sharedadd" data-day="${i}" title="Legg til aktivitet">+</button></div>
         </div>
       </div>
 
@@ -2598,14 +2688,14 @@ function renderGrid(){
 }
 
 const EMOJI_RULES = [
-  [/fotball/i,'⚽'], [/håndball|handball/i,'🤾'], [/hockey|kølle/i,'🏒'], [/svøm/i,'🏊'], [/dans/i,'💃'],
+  [/fotball/i,'⚽'], [/håndball|handball/i,'🤾'], [/hockey|kølle/i,'🏒'], [/svøm/i,'🌊'], [/dans/i,'💃'],
   [/musikk|piano|gitar|korps|kor\b/i,'🎵'], [/tegn|kunst|maling|håndverk/i,'🎨'],
-  [/bursdag/i,'🎂'], [/turn|gym/i,'🤸'], [/\bski\b|slalåm/i,'⛷️'],
-  [/matte|matematikk/i,'🔢'], [/norsk/i,'✏️'], [/engelsk/i,'💬'], [/samfunn/i,'🌍'],
+  [/bursdag/i,'🎂'], [/turn|gym/i,'🏋️'], [/\bski\b|slalåm/i,'⛷️'],
+  [/matte|matematikk/i,'📖'], [/norsk/i,'✏️'], [/engelsk/i,'💬'], [/samfunn/i,'🌍'],
   [/krle|religion/i,'💙'], [/naturfag/i,'🌿'], [/alle med|fellestid|samling/i,'👥'],
   [/skole/i,'📚'], [/lesing|bibliotek/i,'📖'], [/spond/i,'📅'],
   [/tannlege|lege|time/i,'🩺'], [/bursdagsselskap|selskap/i,'🎈']
-]
+];
 function emojiFor(it){
   if(it.type==='skole') return '📚';
   const hit = EMOJI_RULES.find(([rx])=>rx.test(it.title));
@@ -2722,13 +2812,15 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
-document.getElementById('settingsFab').addEventListener('click', ()=>{
+function openSettings(){
   renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); applySectionVisibility(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('icloudAlbumUrl').value = settings.icloudAlbumUrl || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
   settingsOverlay.classList.add('open');
-});
+}
+document.getElementById('settingsFab').addEventListener('click', openSettings);
+document.getElementById('headerSettingsBtn').addEventListener('click', openSettings);
 document.getElementById('settingsClose').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 document.getElementById('settingsX').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 const SETTINGS_META = {
@@ -3397,13 +3489,13 @@ document.getElementById('timetableAdd').addEventListener('click', async ()=>{
 
 // ---------- week navigation ----------
 document.getElementById('prevWeek').addEventListener('click', async ()=>{
-  weekStart = addDays(weekStart,-7); loadWeek();
+  weekStart = addDays(weekStart,-7); loadWeek(); loadWeather();
 });
 document.getElementById('nextWeek').addEventListener('click', async ()=>{
-  weekStart = addDays(weekStart,7); loadWeek();
+  weekStart = addDays(weekStart,7); loadWeek(); loadWeather();
 });
 document.getElementById('thisWeekBtn').addEventListener('click', async ()=>{
-  weekStart = mondayOf(new Date()); loadWeek();
+  weekStart = mondayOf(new Date()); loadWeek(); loadWeather();
 });
 
 // ---------- Stjerner (gjøremål) ----------
