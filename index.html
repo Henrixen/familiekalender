@@ -854,7 +854,30 @@ html[data-layout="2"] .grid{
   grid-template-columns:repeat(2,minmax(0,1fr));
 }
 html[data-layout="2"] .day.weekday{grid-column:span 1;min-height:390px;}
-html[data-layout="2"] .weekend-section{grid-column:1/-1;}
+/* With five weekdays, Friday becomes row 3 / column 1. Keep the weekend card
+   as the sixth grid item so it fills row 3 / column 2 instead of creating row 4. */
+html[data-layout="2"] .weekend-section{
+  grid-column:span 1;
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+}
+html[data-layout="2"] .weekend-divider{
+  width:100%;
+  height:1px;
+  flex:none;
+}
+html[data-layout="2"] .weekend-day{
+  flex:1;
+  min-height:0;
+  padding:12px 13px 10px;
+}
+html[data-layout="2"] .weekend-list{min-height:45px;}
+html[data-layout="2"] .weekend-item{min-height:34px;padding:6px 8px;}
+html[data-layout="2"] .weekend-head{margin-bottom:7px;}
+html[data-layout="2"] .weekend-title .dname{font-size:14px;}
+html[data-layout="2"] .weekend-title .ddate{font-size:9.5px;}
+html[data-layout="2"] .weekend-add{padding:5px 8px;font-size:9.5px;}
 
 html[data-layout="3"] .starpanel,
 html[data-layout="5"] .starpanel,
@@ -921,7 +944,7 @@ html[data-layout="2"] .starpanel{
 
   html[data-layout="2"] .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
   html[data-layout="2"] .day.weekday{grid-column:span 1!important;}
-  html[data-layout="2"] .weekend-section{grid-column:1/-1!important;}
+  html[data-layout="2"] .weekend-section{grid-column:span 1!important;}
 }
 
 #settingsOverlay{
@@ -1426,13 +1449,148 @@ html[data-layout="2"] .starpanel{
 .sync-status.error .dot{background:#d65749;}
 @media(max-width:760px){.sync-status{display:none;}}
 
+
+/* ===== Polished pastel family-board refresh ===== */
+:root{
+  --bg:#FFF9F3;
+  --surface:#FFFFFF;
+  --surface-alt:#FFFCF8;
+  --line:#F0E5DA;
+  --ink:#27231F;
+  --ink-soft:#958B82;
+  --milla:#F4548D;
+  --milla-soft:#FFF0F5;
+  --jonathan:#2F80ED;
+  --jonathan-soft:#EEF5FF;
+  --today:#F4A63B;
+  --today-soft:#FFF5E4;
+  --skole:#68AA84;
+  --shadow:0 8px 28px rgba(84,61,41,.07);
+}
+body{background:linear-gradient(180deg,#FFFDFB 0%,var(--bg) 55%,#FFF7EF 100%);}
+.wrap{max-width:1780px;padding-top:14px;}
+header{
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  box-shadow:0 8px 28px rgba(84,61,41,.055);
+  border-radius:22px;
+  padding:12px 16px;
+  margin-bottom:16px;
+}
+.brand{gap:12px;}
+.brand .mark.calendar-mark{
+  position:relative;width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(145deg,#FF729E,#F14C84);
+  box-shadow:0 8px 18px rgba(241,76,132,.18);
+  color:#fff;overflow:hidden;
+}
+.calendar-mark .cal-top{position:absolute;left:10px;right:10px;top:10px;height:3px;border-radius:3px;background:rgba(255,255,255,.95);}
+.calendar-mark .cal-grid{font-size:22px;line-height:1;transform:translateY(2px);color:#fff;}
+.brand h1{font-size:22px;}
+.brand .sub{font-size:11.5px;margin-top:3px;}
+.weeknav .thisweek{height:34px;padding:7px 12px;border:1px solid var(--line);background:#fff;color:#655C54;font-size:11px;}
+.weeknav .thisweek .today-ico{font-size:12px;color:var(--today);}
+.weeknav button{box-shadow:none;border:1px solid var(--line);}
+.clock{font-size:18px;color:#766D65;}
+
+.day{
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  border-radius:19px;
+  background:rgba(255,255,255,.96);
+}
+.day .dhead{padding:12px 13px 10px;background:transparent;}
+.day .dname{font-size:16px;letter-spacing:-.02em;}
+.day .ddate{font-size:10.5px;margin-top:2px;}
+.sharedadd{
+  width:27px;height:27px;border:1px solid var(--line);background:#FFFDFB;
+  color:#9C8F82;font-size:15px;font-weight:700;
+}
+
+.colheads{grid-template-columns:1fr 1fr;padding:10px 7px 10px;align-items:start;}
+.colheadname{flex-direction:column;gap:8px;min-height:80px;}
+.colheadname img.avcircle,.colheadname .avcircle{
+  width:54px!important;height:54px!important;
+  box-shadow:0 0 0 3px #fff,0 0 0 5px currentColor,0 7px 17px rgba(43,33,24,.10)!important;
+}
+.lunch-icons{display:flex;justify-content:center;gap:3px;min-height:17px;align-items:center;}
+.lunch-icons .lunch-box{font-size:14px;line-height:1;filter:saturate(.85);}
+.lunch-icons.milla .lunch-box{filter:hue-rotate(305deg) saturate(1.05);}
+.lunch-icons.jonathan .lunch-box{filter:hue-rotate(170deg) saturate(1.05);}
+.empty-lunch{font-size:10px;color:#C9C0B7;}
+.lunchstrip,.colfoot{display:none!important;}
+
+.split{min-height:150px;}
+.col{padding:7px;gap:7px;}
+.col.milla{border-right:1px solid var(--line);}
+[data-theme="myk"] .col.milla,[data-theme="myk"] .col.jonathan{background:transparent;}
+.item{
+  padding:8px 9px;border-radius:11px;border:1px solid transparent;box-shadow:none;
+  color:var(--ink);gap:7px;align-items:center;transition:.14s ease;
+}
+.item:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(60,45,30,.06);}
+.item .emo{font-size:15px;}
+.item .t{font-size:9.5px;font-weight:750;color:inherit;opacity:.72;}
+.item .ti{font-size:11.5px;color:var(--ink);font-weight:800;line-height:1.2;}
+.item .who{font-size:9px;color:inherit;opacity:.65;}
+.item.milla{background:#FFF1F6;border-color:#F9D6E3;color:#D44D7B;}
+.item.jonathan{background:#EEF5FF;border-color:#D7E7FB;color:#2F75D0;}
+.item.begge{background:#FFF6E8;border-color:#F4E2C6;color:#A97022;}
+.item.skole{background:#F0F7F2;border-color:#DCEBDD;color:#4F8765;}
+.item.skole .t{color:#4F8765;}
+.shared{padding:7px 9px;border-bottom:1px solid var(--line);gap:6px;background:#FFFCF8;}
+.shared .item{background:#FFF6E8;border-color:#F4E2C6;color:#A97022;}
+
+.remember-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);padding:7px 7px 4px;gap:7px;}
+.reminder-lane{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.reminder-lane.milla{padding-right:2px;}
+.reminder-lane.jonathan{padding-left:2px;}
+.reminder-shared{grid-column:1/-1;display:flex;justify-content:center;flex-wrap:wrap;gap:5px;}
+.reminder-empty{min-height:1px;}
+.huskchip{border:1px solid #F0E2D3;background:#FFF9F2;color:#6E5B49;border-radius:10px;padding:6px 8px;font-size:10.5px;font-weight:700;min-width:0;}
+.huskchip.milla{background:#FFF4F8;border-color:#F8DCE6;color:#B94A72;}
+.huskchip.jonathan{background:#F2F7FF;border-color:#DCE9FA;color:#316FB6;}
+.huskchip.begge{background:#FFF8EA;border-color:#F1DFC0;color:#986A27;}
+.husk-ico{font-size:12px;}
+.remember-add-wrap{display:flex;justify-content:center;padding:5px 8px 9px;}
+.remember-add-wrap .huskadd,.weekend-husk .huskadd{
+  border:1px solid var(--line);background:#FFFCF8;color:#88796A;border-radius:999px;padding:5px 10px;font-size:10px;font-weight:700;
+}
+
+.weekend-section{border-radius:19px;box-shadow:var(--shadow);}
+.weekend-day{background:#FFFEFC;}
+.weekend-item{background:#FFF7EC;border-color:#F2E1C8;color:#5E4B37;}
+.weekend-who.milla{background:#FFF0F5;color:#D44D7B;}
+.weekend-who.jonathan{background:#EEF5FF;color:#2F75D0;}
+.weekend-husk{justify-content:center;}
+
+.panel{border:1px solid var(--line);box-shadow:var(--shadow);}
+.starpanel{background:linear-gradient(180deg,#fff,#FFFCF9);}
+
+/* 2-column: Fri left, weekend right on the last calendar row */
+@media(min-width:761px){
+  html[data-layout="2"] .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  html[data-layout="2"] .day.weekday{grid-column:span 1!important;}
+  html[data-layout="2"] .weekend-section{
+    grid-column:2!important;
+    grid-row:3!important;
+    min-height:390px!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  html[data-layout="2"] .weekend-divider{width:100%;height:1px;flex:none;}
+  html[data-layout="2"] .weekend-day{flex:1;min-height:0;}
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="brand">
-      <div class="mark">🏡</div>
+      <div class="mark calendar-mark" aria-hidden="true">
+        <span class="cal-top"></span><span class="cal-grid">▦</span>
+      </div>
       <div>
         <h1>Ukeplan</h1>
         <span class="sub">Milla &amp; Jonathan</span>
@@ -1442,7 +1600,7 @@ html[data-layout="2"] .starpanel{
       <button id="prevWeek">‹</button>
       <div class="range" id="weekRange">–</div>
       <button id="nextWeek">›</button>
-      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">⌖</span><span>I dag</span></button>
+      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">▣</span><span>Denne uken</span></button>
     </div>
     <div style="display:flex;align-items:center;gap:10px;"><div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div><div class="clock" id="clock">--:--</div></div>
   </header>
@@ -1457,8 +1615,8 @@ html[data-layout="2"] .starpanel{
     <div class="starcols" id="starCols"></div>
   </div>
 
-  <div class="bottomrow">
-    <div class="panel">
+  <div class="bottomrow" id="bottomRow">
+    <div class="panel" id="shoppingPanel">
       <div class="panelhead">🛒 Handle og Huske</div>
       <div class="shoplist" id="shopList"></div>
       <div class="shopadd">
@@ -1466,7 +1624,7 @@ html[data-layout="2"] .starpanel{
         <button id="shopAddBtn">+</button>
       </div>
     </div>
-    <div class="panel">
+    <div class="panel" id="photosPanel">
       <div class="panelhead">📷 Bilder</div>
       <div class="photoframe" id="photoFrame">
         <div class="photoempty" id="photoEmpty">Ingen bilder lagt til ennå — se Innstillinger → Bilder</div>
@@ -1924,6 +2082,17 @@ html[data-layout="2"] .starpanel{
             </div>
 
             <div style="height:1px;background:var(--line);margin:18px 0;"></div>
+            <p class="hint" style="margin-bottom:10px;"><b style="color:var(--ink);">Seksjoner nederst</b><br>Velg hvilke ekstra seksjoner som skal vises på familietavlen.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
+              <label class="chk" style="margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-alt);cursor:pointer;">
+                <input type="checkbox" id="showShoppingSection"> 🛒 Vis handleliste
+              </label>
+              <label class="chk" style="margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-alt);cursor:pointer;">
+                <input type="checkbox" id="showPhotosSection"> 📷 Vis bilder
+              </label>
+            </div>
+
+            <div style="height:1px;background:var(--line);margin:18px 0;"></div>
             <p class="hint">Du kan også overstyre aktivitetsfargene:</p>
             <div class="row2">
               <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:44px;padding:4px;"></div>
@@ -2027,8 +2196,8 @@ html[data-layout="2"] .starpanel{
 <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
 <script>
 // ---------- Supabase-backed storage shim ----------
-const SUPABASE_URL = 'https://rgmbpawcegdkarjhjnxd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnbWJwYXdjZWdka2FyamhqbnhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTY4NzUsImV4cCI6MjA5MDEzMjg3NX0.YVfbZD3BAQ14j2MB6r3Vi9ZAgILEL577MEVb728gQaE';
+const SUPABASE_URL = 'https://DITT-PROSJEKT.supabase.co';
+const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2206,6 +2375,8 @@ async function loadAll(){
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
+  if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
+  if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
   if(tRes.status==='fulfilled' && tRes.value && tRes.value.value){
@@ -2326,6 +2497,17 @@ function renderWeekendDay(dayIdx, idx){
   </section>`;
 }
 
+function renderLunchIcons(child, count){
+  const cls = child.toLowerCase();
+  if(!count) return `<span class="lunch-icons empty-lunch" aria-label="0 matpakker">—</span>`;
+  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>'<span class="lunch-box">🧳</span>').join('')}</span>`;
+}
+
+function renderReminderLane(items, who){
+  if(!items.length) return '<div class="reminder-empty"> </div>';
+  return `<div class="reminder-lane ${who.toLowerCase()}">${items.map(it=>renderHusk(it)).join('')}</div>`;
+}
+
 function renderGrid(){
   const grid = document.getElementById('grid');
   const idx = todayIndex();
@@ -2338,6 +2520,9 @@ function renderGrid(){
     const shared = schedule.filter(it=> it.who==='Begge');
     const millaItems = schedule.filter(it=> it.who==='Milla');
     const jonathanItems = schedule.filter(it=> it.who==='Jonathan');
+    const millaHusk = husk.filter(it=>it.who==='Milla');
+    const jonathanHusk = husk.filter(it=>it.who==='Jonathan');
+    const sharedHusk = husk.filter(it=>it.who==='Begge');
     const m = matpakkeFor('Milla', i), j = matpakkeFor('Jonathan', i);
 
     return `
@@ -2348,7 +2533,7 @@ function renderGrid(){
             <div class="dname">${name}</div>
             <div class="ddate">${date.getDate()}. ${MONTHS[date.getMonth()]}</div>
           </div>
-          <button class="sharedadd" data-day="${i}" title="Legg til felles">+</button>
+          <button class="sharedadd" data-day="${i}" title="Legg til aktivitet">+</button>
         </div>
       </div>
 
@@ -2356,10 +2541,12 @@ function renderGrid(){
 
       <div class="colheads">
         <div class="colheadname milla">
-          <span class="avbadge">${avatarHTML('Milla',42)}</span>
+          <span class="avbadge">${avatarHTML('Milla',54)}</span>
+          ${renderLunchIcons('Milla',m)}
         </div>
         <div class="colheadname jonathan">
-          <span class="avbadge">${avatarHTML('Jonathan',42)}</span>
+          <span class="avbadge">${avatarHTML('Jonathan',54)}</span>
+          ${renderLunchIcons('Jonathan',j)}
         </div>
       </div>
 
@@ -2372,24 +2559,13 @@ function renderGrid(){
         </div>
       </div>
 
-      <div class="colfoot">
-        <button class="miniadd" data-day="${i}" data-who="Milla">+</button>
-        <button class="miniadd" data-day="${i}" data-who="Jonathan">+</button>
-      </div>
+      ${(husk.length) ? `<div class="remember-grid">
+        ${renderReminderLane(millaHusk,'Milla')}
+        ${renderReminderLane(jonathanHusk,'Jonathan')}
+        ${sharedHusk.length ? `<div class="reminder-shared">${sharedHusk.map(it=>renderHusk(it)).join('')}</div>` : ''}
+      </div>` : ''}
 
-      <div class="lunchstrip">
-        <div class="lunchmini milla ${m===0?'zero':''}">
-          <span class="lunch-icon">🥪</span><span>Milla ${m}</span>
-        </div>
-        <div class="lunchmini jonathan ${j===0?'zero':''}">
-          <span class="lunch-icon">🥪</span><span>Jonathan ${j}</span>
-        </div>
-      </div>
-
-      <div class="husk">
-        ${husk.map(it=>renderHusk(it)).join('')}
-        <button class="huskadd" data-day="${i}">🎒 Husk +</button>
-      </div>
+      <div class="remember-add-wrap"><button class="huskadd" data-day="${i}">🎒 Husk +</button></div>
     </div>`;
   }).join('');
 
@@ -2404,9 +2580,6 @@ function renderGrid(){
 
   grid.querySelectorAll('.sharedadd').forEach(b=>{
     b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'aktivitet'));
-  });
-  grid.querySelectorAll('.miniadd').forEach(b=>{
-    b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, b.dataset.who, 'aktivitet'));
   });
   grid.querySelectorAll('.weekend-add').forEach(b=>{
     b.addEventListener('click', ()=> openEventModal(null, parseInt(b.dataset.day), null, 'Begge', 'aktivitet'));
@@ -2426,11 +2599,13 @@ function renderGrid(){
 
 const EMOJI_RULES = [
   [/fotball/i,'⚽'], [/håndball|handball/i,'🤾'], [/hockey|kølle/i,'🏒'], [/svøm/i,'🏊'], [/dans/i,'💃'],
-  [/musikk|piano|gitar|korps|kor\b/i,'🎵'], [/tegn|kunst|maling/i,'🎨'],
+  [/musikk|piano|gitar|korps|kor\b/i,'🎵'], [/tegn|kunst|maling|håndverk/i,'🎨'],
   [/bursdag/i,'🎂'], [/turn|gym/i,'🤸'], [/\bski\b|slalåm/i,'⛷️'],
+  [/matte|matematikk/i,'🔢'], [/norsk/i,'✏️'], [/engelsk/i,'💬'], [/samfunn/i,'🌍'],
+  [/krle|religion/i,'💙'], [/naturfag/i,'🌿'], [/alle med|fellestid|samling/i,'👥'],
   [/skole/i,'📚'], [/lesing|bibliotek/i,'📖'], [/spond/i,'📅'],
   [/tannlege|lege|time/i,'🩺'], [/bursdagsselskap|selskap/i,'🎈']
-];
+]
 function emojiFor(it){
   if(it.type==='skole') return '📚';
   const hit = EMOJI_RULES.find(([rx])=>rx.test(it.title));
@@ -2450,9 +2625,8 @@ function renderItem(it){
 }
 function renderHusk(it){
   const cls = (it.who||'Begge').toLowerCase();
-  const glyph = it.who==='Milla' ? '⚽' : it.who==='Jonathan' ? '🏒' : '🎒';
   return `<div class="huskchip ${cls}" data-src="${it._src}" data-id="${it.id}">
-    <span>${glyph}</span><span>${it.title}</span>
+    <span class="husk-ico">🎒</span><span>${it.title}</span>
   </div>`;
 }
 
@@ -2549,7 +2723,7 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
 // ---------- settings modal ----------
 const settingsOverlay = document.getElementById('settingsOverlay');
 document.getElementById('settingsFab').addEventListener('click', ()=>{
-  renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
+  renderRuleTable(); renderTplList(); updateThemeButtons(); updateLayoutButtons(); applySectionVisibility(); renderChoreList(); fillColorInputs(); fillStarSettingsInputs(); renderPhotoManager();
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('icloudAlbumUrl').value = settings.icloudAlbumUrl || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
@@ -2774,6 +2948,38 @@ document.getElementById('layoutPick').addEventListener('click', async (e)=>{
   applyLayout();
   await saveSettings();
 });
+
+function applySectionVisibility(){
+  const showShopping = settings.showShoppingSection !== false;
+  const showPhotos = settings.showPhotosSection !== false;
+  const bottomRow = document.getElementById('bottomRow');
+  const shoppingPanel = document.getElementById('shoppingPanel');
+  const photosPanel = document.getElementById('photosPanel');
+
+  if(shoppingPanel) shoppingPanel.style.display = showShopping ? 'flex' : 'none';
+  if(photosPanel) photosPanel.style.display = showPhotos ? 'flex' : 'none';
+  if(bottomRow){
+    bottomRow.style.display = (showShopping || showPhotos) ? 'grid' : 'none';
+    bottomRow.style.gridTemplateColumns = (showShopping && showPhotos) ? '1fr 1fr' : '1fr';
+  }
+
+  const shoppingToggle = document.getElementById('showShoppingSection');
+  const photosToggle = document.getElementById('showPhotosSection');
+  if(shoppingToggle) shoppingToggle.checked = showShopping;
+  if(photosToggle) photosToggle.checked = showPhotos;
+}
+
+document.getElementById('showShoppingSection')?.addEventListener('change', async (e)=>{
+  settings.showShoppingSection = e.target.checked;
+  applySectionVisibility();
+  await saveSettings();
+});
+document.getElementById('showPhotosSection')?.addEventListener('change', async (e)=>{
+  settings.showPhotosSection = e.target.checked;
+  applySectionVisibility();
+  await saveSettings();
+});
+
 function fillColorInputs(){
   const c = settings.customColors || {};
   const cs = getComputedStyle(document.documentElement);
@@ -3663,6 +3869,8 @@ function normalizeSettings(){
   if(!settings.weeklyGoal) settings.weeklyGoal = {Milla:100, Jonathan:100};
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
+  if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
+  if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
 }
@@ -3702,6 +3910,7 @@ function applySnapshot(getter, {authoritative=false}={}){
 function paint(){
   applyTheme(settings.theme);
   applyLayout();
+  applySectionVisibility();
   renderStars();
   renderAll();
   renderShopping();
