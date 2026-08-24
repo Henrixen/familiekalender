@@ -263,7 +263,9 @@
   .stepper button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface-alt);font-size:15px;cursor:pointer;}
   .stepper span{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;width:16px;text-align:center;font-size:14px;}
   .tplist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:12px;}
-  .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;}
+  .tplitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;cursor:pointer;margin-bottom:6px;}
+  .tpl-group{margin-bottom:16px;}
+  .tpl-group-head{font-weight:800;font-size:12.5px;margin-bottom:8px;color:var(--ink-soft);}
   .hint{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;}
   .preview{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin:12px 0;}
   .prevrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surface-alt);font-size:12px;}
@@ -1519,7 +1521,7 @@ html[data-layout="2"] .starpanel{
         </button>
         <button data-tab="spond">
           <span class="settings-nav-icon">S</span>
-          <span class="settings-nav-copy">Importer kalender</span>
+          <span class="settings-nav-copy">Importer</span>
           <span class="settings-nav-sub">Spond, offentlige og andre</span>
         </button>
         <button data-tab="bilder">
@@ -1678,6 +1680,16 @@ html[data-layout="2"] .starpanel{
               <button class="btn primary" id="spondFetch" style="width:100%;margin-bottom:16px;">Hent fra lenke</button>
 
               <div class="field">
+                <label>Eller last opp / dra inn en .ics-fil</label>
+                <label class="photo-drop" id="icsDrop" style="min-height:80px;padding:16px;">
+                  <input type="file" id="icsFile" accept=".ics,text/calendar">
+                  <div>
+                    <b style="font-size:13px;">Slipp .ics-fil her, eller trykk for å velge</b>
+                  </div>
+                </label>
+              </div>
+
+              <div class="field">
                 <label>Eller lim inn kalenderdata direkte</label>
                 <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
               </div>
@@ -1771,7 +1783,14 @@ html[data-layout="2"] .starpanel{
 
               <div class="field">
                 <label>Fil (bilde, PDF eller Word)</label>
-                <input type="file" id="timetableFile" accept="image/*,.pdf,.docx">
+                <label class="photo-drop" id="timetableDrop" style="min-height:110px;">
+                  <input type="file" id="timetableFile" accept="image/*,.pdf,.docx">
+                  <div>
+                    <div class="photo-drop-icon">🖼</div>
+                    <h4 style="font-size:13.5px;">Slipp fil her, lim inn (Ctrl/Cmd+V), eller trykk for å velge</h4>
+                    <p id="timetableFileName" style="margin-top:5px;"></p>
+                  </div>
+                </label>
               </div>
 
               <div class="field">
@@ -1960,7 +1979,7 @@ html[data-layout="2"] .starpanel{
 <div class="overlay" id="pinOverlay">
   <div class="modal" style="max-width:320px;text-align:center;">
     <h2 id="pinTitle" style="font-size:18px;">Kode</h2>
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" id="pinInput"
+    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="pinInput"
       style="width:100%;font-size:28px;letter-spacing:6px;text-align:center;padding:14px;border-radius:12px;border:1px solid var(--line);margin:12px 0;">
     <div id="pinError" style="color:#a3392b;font-size:12px;min-height:16px;margin-bottom:8px;"></div>
     <div class="modalbtns">
@@ -1974,8 +1993,8 @@ html[data-layout="2"] .starpanel{
 <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
 <script>
 // ---------- Supabase-backed storage shim ----------
-const SUPABASE_URL = 'https://rgmbpawcegdkarjhjnxd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnbWJwYXdjZWdka2FyamhqbnhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTY4NzUsImV4cCI6MjA5MDEzMjg3NX0.YVfbZD3BAQ14j2MB6r3Vi9ZAgILEL577MEVb728gQaE';
+const SUPABASE_URL = 'https://DITT-PROSJEKT.supabase.co';
+const SUPABASE_ANON_KEY = 'DIN-ANON-KEY';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2452,7 +2471,7 @@ document.getElementById('settingsX').addEventListener('click', ()=> settingsOver
 const SETTINGS_META = {
   matpakker:['Matpakker','Matpakker per dag','Sett antall matpakker som trengs hver skoledag, per barn.'],
   ukeplan:['Fast ukeplan','Faste rutiner','Administrer skole, trening og andre aktiviteter som gjentas hver uke.'],
-  spond:['Kalenderimport','Importer kalender','Importer fra Spond, offentlige kalendere eller andre iCal/Google-kalendere.'],
+  spond:['Importer','Importer','Importer fra Spond, offentlige kalendere eller andre iCal/Google-kalendere.'],
   bilder:['Bilder','Familiebilder','Legg til bilder til slideshowet nederst på familietavlen.'],
   tema:['Utseende','Tema og farger','Tilpass tavlen til skjermen og familiens stil.'],
   profil:['Profil','Profilbilder','Velg bildene som vises for Milla og Jonathan i kalenderen.'],
@@ -2517,6 +2536,35 @@ document.getElementById('spondFetch').addEventListener('click', async ()=>{
     btn.textContent = 'Hent fra lenke'; btn.disabled = false;
   }
 });
+
+// ---------- ICS-fil via drag/drop eller filvalg ----------
+function readFileAsText(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=> resolve(reader.result);
+    reader.readAsText(file);
+  });
+}
+async function handleIcsFile(file){
+  if(!file) return;
+  try{
+    const text = await readFileAsText(file);
+    showSpondFetchResult(text);
+  }catch(e){
+    alert('Klarte ikke lese .ics-filen: ' + e.message);
+  }
+}
+const icsDropEl = document.getElementById('icsDrop');
+const icsFileEl = document.getElementById('icsFile');
+icsFileEl.addEventListener('change', ()=> handleIcsFile(icsFileEl.files[0]));
+['dragenter','dragover'].forEach(ev=>icsDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); icsDropEl.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev=>icsDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); icsDropEl.classList.remove('dragover');
+}));
+icsDropEl.addEventListener('drop', e=> handleIcsFile(e.dataTransfer.files[0]));
 
 document.getElementById('publicCalendarSave')?.addEventListener('click', async ()=>{
   const url = document.getElementById('publicCalendarUrl').value.trim();
@@ -2712,12 +2760,24 @@ function renderRuleTable(){
 
 function renderTplList(){
   const list = document.getElementById('tplList');
-  const sorted = [...template].sort((a,b)=> a.day-b.day || a.start.localeCompare(b.start));
-  list.innerHTML = sorted.length ? sorted.map(it=>`
-    <div class="tplitem" data-id="${it.id}">
-      <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title} (${it.who})</span>
-      <span>✏️</span>
-    </div>`).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
+  const groups = [
+    {who:'Milla', label:'⚽ Milla'},
+    {who:'Jonathan', label:'🏒 Jonathan'},
+    {who:'Begge', label:'✨ Felles'}
+  ];
+  const sortFn = (a,b)=> a.day-b.day || a.start.localeCompare(b.start);
+  const hasAny = template.length>0;
+  list.innerHTML = hasAny ? groups.map(g=>{
+    const items = template.filter(it=>it.who===g.who).sort(sortFn);
+    return `<div class="tpl-group">
+      <div class="tpl-group-head">${g.label}</div>
+      ${items.length ? items.map(it=>`
+        <div class="tplitem" data-id="${it.id}">
+          <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title}</span>
+          <span>✏️</span>
+        </div>`).join('') : '<div class="hint" style="margin:0 0 10px;">Ingen faste avtaler.</div>'}
+    </div>`;
+  }).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
   list.querySelectorAll('.tplitem').forEach(el=>{
     el.addEventListener('click', ()=>{
       const it = template.find(x=>x.id===el.dataset.id);
@@ -2886,6 +2946,44 @@ function fileToBase64(file){
     reader.readAsDataURL(file);
   });
 }
+
+// ---------- drag/drop + lim inn (paste) for timeplan-fil ----------
+function setFileInputFiles(input, file){
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  input.files = dt.files;
+}
+const timetableDropEl = document.getElementById('timetableDrop');
+const timetableFileEl = document.getElementById('timetableFile');
+const timetableFileNameEl = document.getElementById('timetableFileName');
+function showTimetableFileName(){
+  const f = timetableFileEl.files[0];
+  timetableFileNameEl.textContent = f ? ('Valgt: ' + f.name) : '';
+}
+timetableFileEl.addEventListener('change', showTimetableFileName);
+['dragenter','dragover'].forEach(ev=>timetableDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); timetableDropEl.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev=>timetableDropEl.addEventListener(ev,e=>{
+  e.preventDefault(); timetableDropEl.classList.remove('dragover');
+}));
+timetableDropEl.addEventListener('drop', e=>{
+  const f = e.dataTransfer.files[0];
+  if(f){ setFileInputFiles(timetableFileEl, f); showTimetableFileName(); }
+});
+document.addEventListener('paste', e=>{
+  const panel = document.getElementById('import-panel-image');
+  if(!panel || !panel.classList.contains('active') || !settingsOverlay.classList.contains('open')) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for(const item of items){
+    if(item.kind==='file' && item.type.startsWith('image/')){
+      const f = item.getAsFile();
+      if(f){ setFileInputFiles(timetableFileEl, f); showTimetableFileName(); }
+      e.preventDefault();
+      break;
+    }
+  }
+});
 
 document.getElementById('timetableParse').addEventListener('click', async ()=>{
   const fileInput = document.getElementById('timetableFile');
