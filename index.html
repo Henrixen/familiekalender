@@ -1904,7 +1904,19 @@ html[data-trans-milla="1"] .item.milla,html[data-trans-jonathan="1"] .item.jonat
 @media(max-width:1200px){.routine-days-grid{grid-template-columns:repeat(3,minmax(150px,1fr));}}
 @media(max-width:760px){.routine-days-grid{grid-template-columns:1fr 1fr}.routine-weekend{grid-template-columns:1fr}.kid-lunchbox{width:23px!important;height:22px!important}}
 
+
+/* Matpakkeikon: åpen matboks med brødskiver, ikke koffert */
+.lunch-icons .foodbox-svg{display:block;overflow:visible;flex:none;}
+.compact-day-head .lunch-icons{min-width:26px;}
 </style>
+
+<style id="matpakke-lunchbox-fix">
+  .profile-side .lunch-icons{display:flex;align-items:center;justify-content:center;gap:3px;flex:none;}
+  .profile-side .foodbox-svg{width:34px!important;height:30px!important;display:block;overflow:visible;flex:none;filter:drop-shadow(0 2px 2px rgba(43,33,24,.10));}
+  html[data-layout="5"] .profile-side .foodbox-svg{width:30px!important;height:27px!important;}
+  @media(max-width:760px){.profile-side .foodbox-svg{width:29px!important;height:26px!important;}}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2946,11 +2958,27 @@ function kidLunchboxSVG(child){
   </svg>`;
 }
 function matboksSVG(color){
-  return `<svg viewBox="0 0 20 16" width="17" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1.5" y="4.5" width="17" height="10" rx="3" fill="${color}"/>
-    <path d="M6.5 4.5V3.2C6.5 2 7.4 1 8.6 1h2.8C12.6 1 13.5 2 13.5 3.2V4.5" stroke="${color}" stroke-width="1.6" fill="none"/>
-    <path d="M5.5 9.2H14.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity="0.9"/>
-    <circle cx="10" cy="6.6" r="0.9" fill="#fff" opacity="0.85"/>
+  // Åpen matboks med sandwich + frukt. Bevisst uten håndtak/koffertform.
+  return `<svg class="foodbox-svg" viewBox="0 0 48 42" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matpakke">
+    <defs>
+      <linearGradient id="lb_${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+        <stop offset="1" stop-color="${color}" stop-opacity=".22"/>
+      </linearGradient>
+    </defs>
+    <rect x="7" y="3.5" width="34" height="13" rx="5" fill="url(#lb_${color.replace('#','')})" stroke="${color}" stroke-width="2"/>
+    <path d="M11 14.5h26" stroke="${color}" stroke-width="1.4" opacity=".5"/>
+    <rect x="5" y="15" width="38" height="22" rx="6" fill="${color}" opacity=".16" stroke="${color}" stroke-width="2"/>
+    <rect x="8" y="18" width="32" height="16" rx="4" fill="#FFF9EF"/>
+    <path d="M11.5 24.5v-2.2c0-2.2 1.8-4 4-4h9c2.2 0 4 1.8 4 4v2.2Z" fill="#F2C46D" stroke="#B87931" stroke-width="1.2"/>
+    <path d="M12.4 25.1h15.2l-2.2 2.2H14.6Z" fill="#F2C94C"/>
+    <path d="M13.6 27.1h12.7l-1.6 1.8h-9.6Z" fill="#E97882"/>
+    <path d="M12.5 30.3v-2.6c0-1.7 1.4-3.1 3.1-3.1h8.8c1.7 0 3.1 1.4 3.1 3.1v2.6Z" fill="#F6D690" stroke="#B87931" stroke-width="1.1"/>
+    <path d="M13.7 28.2c2-1.2 3.6 1 5.7 0 2.1-1 3.8 1 6.8-.1" fill="none" stroke="#65A84B" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="33.5" cy="26" r="4.6" fill="#F25F5C" stroke="#C64340" stroke-width="1"/>
+    <path d="M33.7 21.3c.2-1.4 1.2-2.4 2.2-2.8" fill="none" stroke="#6F8C3A" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M35.3 19.2c1.5-.2 2.4.4 3 1.2-1.5.4-2.6.1-3-.3Z" fill="#79B957"/>
+    <path d="M10 34.3h28" stroke="${color}" stroke-width="1" opacity=".35"/>
   </svg>`;
 }
 function renderLunchIcons(child, count){
