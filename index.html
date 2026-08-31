@@ -2298,6 +2298,15 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   .schedule-layer.fast-layer{padding-top:1px}
 </style>
 
+
+<style id="event-future-edit-style">
+.event-scope-modal{max-width:460px!important;text-align:left}
+.event-scope-modal h2{margin-bottom:7px}
+.event-scope-actions{display:grid;grid-template-columns:auto 1fr 1.4fr;gap:8px;margin-top:18px}
+.event-scope-actions .btn{min-height:42px}
+@media(max-width:580px){.event-scope-actions{grid-template-columns:1fr}.event-scope-actions .btn{width:100%}}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2405,6 +2414,19 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
       <button class="btn danger" id="fDelete" style="display:none;">Slett</button>
       <button class="btn ghost" id="fCancel">Avbryt</button>
       <button class="btn primary" id="fSave">Lagre</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit recurring imported event scope -->
+<div class="overlay" id="eventScopeOverlay">
+  <div class="modal event-scope-modal">
+    <h2>Endre kalenderhendelse</h2>
+    <p class="hint">Denne hendelsen er del av en gjentakende importert kalender. Hva vil du endre?</p>
+    <div class="event-scope-actions">
+      <button class="btn ghost" id="eventScopeCancel" type="button">Avbryt</button>
+      <button class="btn ghost" id="eventScopeOne" type="button">Kun denne</button>
+      <button class="btn primary" id="eventScopeFuture" type="button">Denne og alle fremtidige</button>
     </div>
   </div>
 </div>
@@ -3142,6 +3164,7 @@ let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0]
 let template = [];
 let weekEvents = [];
 let editing = null;
+let editingOriginal = null;
 let openedEventModalFromSettings = false;
 
 const DEFAULT_TEMPLATE = () => ([
@@ -3614,6 +3637,7 @@ document.getElementById('fType').addEventListener('click', e=>{
 
 function openEventModal(item, dayIdx, src, presetWho, presetType, fromSettings){
   editing = item ? {id:item.id, src} : null;
+  editingOriginal = item ? (typeof structuredClone==='function' ? structuredClone(item) : JSON.parse(JSON.stringify(item))) : null;
   openedEventModalFromSettings = !!fromSettings;
   document.getElementById('eventTitle').textContent = item ? 'Rediger' : 'Ny oppføring';
   const daySel = document.getElementById('fDay');
@@ -3651,6 +3675,89 @@ document.getElementById('fWho').addEventListener('click', e=>{
   currentWho = b.dataset.v; updateWhoButtons();
 });
 document.getElementById('fCancel').addEventListener('click', ()=> closeEventModalReturn());
+let eventScopeResolve=null;
+function importedSeriesBase(event){
+  if(!event || !event.calendarId || !event.externalKey) return '';
+  return String(event.externalKey).replace(/#\d+$/,'');
+}
+function importedOccurrenceIndex(event){
+  const m=String(event?.externalKey||'').match(/#(\d+)$/);
+  return m ? Number(m[1]) : null;
+}
+function isRecurringImportedEvent(event){
+  return !!(event && event.calendarId && event.externalKey && /#\d+$/.test(String(event.externalKey)));
+}
+function askImportedEditScope(){
+  const ov=document.getElementById('eventScopeOverlay');
+  if(!ov) return Promise.resolve('one');
+  ov.classList.add('open');
+  return new Promise(resolve=>{ eventScopeResolve=resolve; });
+}
+function closeImportedEditScope(result){
+  const ov=document.getElementById('eventScopeOverlay');
+  if(ov) ov.classList.remove('open');
+  const r=eventScopeResolve; eventScopeResolve=null;
+  if(r) r(result);
+}
+document.getElementById('eventScopeCancel')?.addEventListener('click',()=>closeImportedEditScope('cancel'));
+document.getElementById('eventScopeOne')?.addEventListener('click',()=>closeImportedEditScope('one'));
+document.getElementById('eventScopeFuture')?.addEventListener('click',()=>closeImportedEditScope('future'));
+document.getElementById('eventScopeOverlay')?.addEventListener('click',e=>{if(e.target.id==='eventScopeOverlay') closeImportedEditScope('cancel');});
+
+function changedEventFields(original,next){
+  const fields=['day','start','end','title','who','type','emoji'];
+  const changed={};
+  fields.forEach(k=>{ if((original?.[k]??'') !== (next?.[k]??'')) changed[k]=next[k]; });
+  return changed;
+}
+function eventDateFromWeekAndDay(weekKey,day){
+  const d=new Date(weekKey+'T00:00:00');
+  if(Number.isNaN(d.getTime())) return '';
+  d.setDate(d.getDate()+(Number(day)||0));
+  return isoDate(d);
+}
+async function updateImportedSeriesFuture(original, changed){
+  const base=importedSeriesBase(original);
+  if(!base || !Object.keys(changed).length) return 0;
+  const currentDate=original.eventDate||'';
+  const currentIdx=importedOccurrenceIndex(original);
+
+  const {data,error}=await sb.from('family_store').select('key,value').like('key','week:%');
+  if(error) throw error;
+
+  const updates=[];
+  let count=0;
+  (data||[]).forEach(row=>{
+    let events;
+    try{ events=JSON.parse(row.value||'[]'); }catch(e){ return; }
+    if(!Array.isArray(events)) return;
+    let touched=false;
+    const weekKey=String(row.key||'').replace(/^week:/,'');
+    events=events.map(ev=>{
+      if(ev.calendarId!==original.calendarId || importedSeriesBase(ev)!==base) return ev;
+      const idx=importedOccurrenceIndex(ev);
+      const isFuture = currentDate && ev.eventDate
+        ? ev.eventDate>currentDate
+        : (currentIdx!==null && idx!==null ? idx>currentIdx : false);
+      if(!isFuture) return ev;
+      const next={...ev,...changed};
+      if(Object.prototype.hasOwnProperty.call(changed,'day')) next.eventDate=eventDateFromWeekAndDay(weekKey,changed.day);
+      touched=true; count++;
+      return next;
+    });
+    if(touched){
+      updates.push({key:row.key,value:JSON.stringify(events),updated_at:new Date().toISOString()});
+      weekCache[weekKey]=events;
+    }
+  });
+  if(updates.length){
+    const {error:upErr}=await sb.from('family_store').upsert(updates,{onConflict:'key'});
+    if(upErr) throw upErr;
+    updates.forEach(r=>localCacheSet(r.key,r.value));
+  }
+  return count;
+}
+
 document.getElementById('fSave').addEventListener('click', async ()=>{
   const day = parseInt(document.getElementById('fDay').value);
   const isHusk = currentType==='husk';
@@ -3659,19 +3766,51 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
   const title = document.getElementById('fTitle').value.trim() || (isHusk?'Husk':'Aktivitet');
   const repeat = !isHusk && document.getElementById('fRepeat').checked;
   const who = currentWho;
+  const original=editingOriginal;
+
+  const obj = {
+    ...(original||{}),
+    id: editing?editing.id:uid(),
+    day,start,end,title,who,type:currentType,emoji:currentEmoji||''
+  };
+
+  let scope='one';
+  if(editing && editing.src!=='template' && isRecurringImportedEvent(original)){
+    const changes=changedEventFields(original,obj);
+    if(Object.keys(changes).length){
+      scope=await askImportedEditScope();
+      if(scope==='cancel') return;
+    }
+  }
 
   if(editing){
     if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
     else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
   }
+
   const addAllWeekdays = repeat && document.getElementById('fAllWeekdays') && document.getElementById('fAllWeekdays').checked;
   if(addAllWeekdays){
     [0,1,2,3,4].forEach((d,idx)=>template.push({id:(editing && idx===0)?editing.id:uid(),day:d,start,end,title,who,type:currentType,emoji:currentEmoji||''}));
+  }else if(repeat && (!editing || editing.src==='template')){
+    template.push({id:editing?editing.id:uid(),day,start,end,title,who,type:currentType,emoji:currentEmoji||''});
   }else{
-    const obj = {id: editing?editing.id:uid(), day, start, end, title, who, type:currentType, emoji:currentEmoji||''};
-    if(repeat) template.push(obj); else weekEvents.push(obj);
+    weekEvents.push(obj);
   }
-  await saveTemplate(); await saveWeek();
+
+  await saveTemplate();
+  await saveWeek();
+
+  if(scope==='future' && original){
+    const changes=changedEventFields(original,obj);
+    try{
+      const updated=await updateImportedSeriesFuture(original,changes);
+      console.info(`Oppdaterte ${updated} fremtidige kalenderhendelser`);
+    }catch(e){
+      console.error('Kunne ikke oppdatere fremtidige hendelser',e);
+      alert('Denne hendelsen ble lagret, men jeg klarte ikke å oppdatere alle fremtidige hendelser.');
+    }
+  }
+
   closeEventModalReturn();
   renderAll();
 });
