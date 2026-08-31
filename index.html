@@ -2212,6 +2212,8 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
     display:flex;align-items:center;gap:4px;z-index:2
   }
   .star-history-btn:hover{background:var(--surface);color:var(--ink);box-shadow:0 4px 12px rgba(43,33,24,.06)}
+  /* Jonathan: 30-dagersknappen på venstre side av avataren, unna + på høyre side */
+  .star-profile.jonathan .star-history-btn{right:auto;left:0}
 
   .star-history-overlay{position:fixed;inset:0;z-index:9998;background:rgba(28,25,22,.48);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
   .star-history-overlay.open{display:flex}
@@ -3024,7 +3026,7 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
             </div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Grad av transparens</b><small>Juster hvor gjennomsiktig valgte aktivitetsfarger skal være.</small></div><div class="opacity-control"><input type="range" id="transparencyLevel" min="0" max="100" step="5" value="75"><b id="transparencyLevelValue">75 %</b></div></div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Fri / friminutt</b><small>Velg et diskret skille fra vanlige timer.</small></div><select id="recessStyle" class="recess-style-select"><option value="line">Tynn grå linje</option><option value="soft">Svak grå bakgrunn</option><option value="none">Ingen eget skille</option></select></div>
-            <div class="theme-detail-card"><div class="theme-detail-copy"><b>Spond og andre aktiviteter</b><small>Over = rett under avatarene og over den grå skillelinjen. Under = etter skole/fast ukeplan, sortert på tidspunkt og skilt med en tynn grå linje.</small></div><select id="eventLayerPosition" class="recess-style-select"><option value="above">Mellom avatar og skole</option><option value="below">Under skole / fast kalender</option></select></div>
+            <div class="theme-detail-card"><div class="theme-detail-copy"><b>Spond og andre aktiviteter</b><small>Over = rett under avatarene og over den grå skillelinjen. Under = etter skole/fast ukeplan, sortert på tidspunkt og skilt med en tynn grå linje.</small></div><select id="eventLayerPosition" class="recess-style-select"><option value="above">Aktiviteter over skoledagen</option><option value="below">Aktiviteter under skoledagen</option></select></div>
             <button class="btn ghost" id="colorReset" style="width:100%;margin-top:12px;">Tilbakestill temafarger</button>
           </div>
         </div>
@@ -3333,6 +3335,10 @@ async function loadAll(){
   if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
   if(!settings.shoppingPanelMode) settings.shoppingPanelMode='normal';
   if(!settings.eventLayerPosition) settings.eventLayerPosition='above';
+  if(!settings.activityLayerLayoutFixV1){
+    settings.eventLayerPosition='above';
+    settings.activityLayerLayoutFixV1=true;
+  }
   if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
@@ -3589,7 +3595,21 @@ function renderReminderLane(items, who){
   return `<div class="reminder-lane ${who.toLowerCase()}">${items.map(it=>renderHusk(it)).join('')}</div>`;
 }
 
+
+function normalizeCalendarLayers(){
+  const fix=(it)=>{
+    if(!it) return it;
+    if(it.type==='husk') it.calendarLayer='husk';
+    else if(it.type==='skole') it.calendarLayer='school';
+    else if(!it.calendarLayer || it.calendarLayer==='school') it.calendarLayer='activity';
+    return it;
+  };
+  template.forEach(fix);
+  weekEvents.forEach(fix);
+}
+
 function renderGrid(){
+  normalizeCalendarLayers();
   const grid = document.getElementById('grid');
   const idx = todayIndex();
 
@@ -3599,8 +3619,8 @@ function renderGrid(){
     const schedule = items.filter(it=>it.type!=='husk');
     const husk = items.filter(it=>it.type==='husk');
 
-    const fastItems = schedule.filter(it=>it.type==='skole');
-    const otherItems = schedule.filter(it=>it.type!=='skole');
+    const fastItems = schedule.filter(it=>(it.calendarLayer||'')==='school' || (!(it.calendarLayer) && it.type==='skole'));
+    const otherItems = schedule.filter(it=>!((it.calendarLayer||'')==='school' || (!(it.calendarLayer) && it.type==='skole')));
 
     const millaHusk = husk.filter(it=>it.who==='Milla');
     const jonathanHusk = husk.filter(it=>it.who==='Jonathan');
@@ -3937,7 +3957,8 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
     ...(original||{}),
     id: editing?editing.id:uid(),
     day,start,end,title,who,type:currentType,emoji:currentEmoji||'',
-    color:safeCssColor(currentEventColor,defaultEventColor(currentType,who))
+    color:safeCssColor(currentEventColor,defaultEventColor(currentType,who)),
+    calendarLayer: currentType==='skole' ? 'school' : (currentType==='husk' ? 'husk' : 'activity')
   };
   if(isHusk){
     delete obj.calendarId;
@@ -5946,6 +5967,10 @@ function normalizeSettings(){
   if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
   if(!settings.shoppingPanelMode) settings.shoppingPanelMode='normal';
   if(!settings.eventLayerPosition) settings.eventLayerPosition='above';
+  if(!settings.activityLayerLayoutFixV1){
+    settings.eventLayerPosition='above';
+    settings.activityLayerLayoutFixV1=true;
+  }
   if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
