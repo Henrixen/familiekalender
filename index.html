@@ -1952,14 +1952,44 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
 @media(max-width:760px){.starcols{grid-template-columns:1fr!important}.chorelist.two-chore-rows{grid-auto-columns:minmax(130px,1fr)}}
 
 /* Konfetti */
-.star-celebration{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .12s ease}
-.star-celebration.go{opacity:1}.confetti-field{position:absolute;inset:0}.confetti-field i{position:absolute;left:var(--x);top:48%;width:9px;height:15px;border-radius:2px;background:var(--c);transform:translate(-50%,-50%) scale(.1);opacity:0}.confetti-field i.star-piece{background:none;width:auto;height:auto;font-style:normal;font-size:17px}
-.star-celebration.go .confetti-field i{animation:starBurst var(--dur) cubic-bezier(.12,.72,.28,1) var(--delay) forwards}
-.star-good-job{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%) scale(.65);padding:13px 22px;border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 14px 45px rgba(43,33,24,.22);font-size:24px;font-weight:900;letter-spacing:-.03em;color:var(--ink);opacity:0;white-space:nowrap}
-.star-celebration.go .star-good-job{animation:goodJobPop 1.45s ease forwards}
-@keyframes starBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + 52vh)) scale(1) rotate(var(--rot))}}
-@keyframes goodJobPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}35%{transform:translate(-50%,-50%) scale(1)}78%{opacity:1}100%{opacity:0;transform:translate(-50%,-57%) scale(.96)}}
-@media(prefers-reduced-motion:reduce){.confetti-field{display:none}.star-celebration.go .star-good-job{animation:none;opacity:1}}
+.star-celebration{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .18s ease}
+.star-celebration.go{opacity:1}
+.confetti-field{position:absolute;inset:0}
+.confetti-field i{
+  position:absolute;left:var(--x);top:-7%;
+  width:10px;height:18px;border-radius:2px;background:var(--c);
+  transform:translate(-50%,-50%) scale(.7) rotate(0);opacity:0
+}
+.confetti-field i.star-piece{background:none;width:auto;height:auto;font-style:normal;font-size:24px}
+.star-celebration.go .confetti-field i{animation:starBurst var(--dur) cubic-bezier(.18,.55,.30,1) var(--delay) forwards}
+.star-good-job{
+  position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) scale(.55);
+  padding:20px 34px;border-radius:999px;background:rgba(255,255,255,.96);
+  box-shadow:0 18px 60px rgba(43,33,24,.24);
+  font-size:clamp(38px,6vw,68px);font-weight:950;letter-spacing:-.045em;
+  color:var(--ink);opacity:0;white-space:nowrap;text-align:center
+}
+.star-celebration.go .star-good-job{animation:goodJobPop 3s cubic-bezier(.18,.8,.24,1) forwards}
+@keyframes starBurst{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.65) rotate(0)}
+  7%{opacity:1}
+  82%{opacity:1}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(112vh + var(--drop))) scale(1) rotate(var(--rot))}
+}
+@keyframes goodJobPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}
+  12%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+  25%{transform:translate(-50%,-50%) scale(1)}
+  78%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-58%) scale(.96)}
+}
+@media(max-width:600px){
+  .star-good-job{font-size:clamp(32px,10vw,48px);padding:17px 24px}
+}
+@media(prefers-reduced-motion:reduce){
+  .confetti-field{display:none}
+  .star-celebration.go .star-good-job{animation:none;opacity:1}
+}
 
 /* Faste rutiner – tid over tekst */
 .routine-copy{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:2px!important;min-width:0}
@@ -2245,6 +2275,27 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   /* Only show separator when 'other activities below fast calendar' is selected */
   .event-layer-divider{height:1px;background:#DDDAD6;margin:4px 2px 5px;border-radius:1px;opacity:.72;flex:none}
   .shared .event-layer-divider{margin-left:1px;margin-right:1px}
+</style>
+
+
+<style id="requested-layout-fix-v2">
+  .chore{border-left:0!important;box-shadow:none!important}
+  .chore::before,.chore::after{box-shadow:none!important}
+  .star-reset-quick{display:none!important}
+
+  .schedule-layer{display:flex;flex-direction:column;min-width:0}
+  .schedule-layer .shared{border-bottom:0!important}
+  .schedule-layer .split{min-height:0!important;flex:none!important}
+  .schedule-layer .col{min-height:0!important;overflow:visible!important}
+  .schedule-layer .empty{display:none!important}
+
+  .calendar-layer-separator{
+    height:1px;background:#DDDAD6;margin:5px 9px 6px;
+    opacity:.72;border-radius:1px;flex:none
+  }
+
+  .schedule-layer.other-layer{padding-top:3px}
+  .schedule-layer.fast-layer{padding-top:1px}
 </style>
 
 </head>
@@ -2823,7 +2874,7 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
             </div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Grad av transparens</b><small>Juster hvor gjennomsiktig valgte aktivitetsfarger skal være.</small></div><div class="opacity-control"><input type="range" id="transparencyLevel" min="0" max="100" step="5" value="75"><b id="transparencyLevelValue">75 %</b></div></div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Fri / friminutt</b><small>Velg et diskret skille fra vanlige timer.</small></div><select id="recessStyle" class="recess-style-select"><option value="line">Tynn grå linje</option><option value="soft">Svak grå bakgrunn</option><option value="none">Ingen eget skille</option></select></div>
-            <div class="theme-detail-card"><div class="theme-detail-copy"><b>Andre aktiviteter</b><small>Velg om Spond, importerte og egne hendelser skal vises før eller etter Fast ukeplan.</small></div><select id="eventLayerPosition" class="recess-style-select"><option value="above">Over fast kalender</option><option value="below">Under fast kalender</option></select></div>
+            <div class="theme-detail-card"><div class="theme-detail-copy"><b>Spond og andre aktiviteter</b><small>Over = rett under avatarene og over den grå skillelinjen. Under = etter skole/fast ukeplan, sortert på tidspunkt og skilt med en tynn grå linje.</small></div><select id="eventLayerPosition" class="recess-style-select"><option value="above">Mellom avatar og skole</option><option value="below">Under skole / fast kalender</option></select></div>
             <button class="btn ghost" id="colorReset" style="width:100%;margin-top:12px;">Tilbakestill temafarger</button>
           </div>
         </div>
@@ -3290,15 +3341,23 @@ function itemsForDay(dayIdx){
 
 function renderOrderedItems(items, renderer=renderItem){
   if(!items || !items.length) return '';
-  const fast=items.filter(it=>it._src==='template');
-  const other=items.filter(it=>it._src!=='template');
-  const position=settings.eventLayerPosition||'above';
-  if(position==='below'){
-    const fastHtml=fast.map(renderer).join('');
-    const otherHtml=other.map(renderer).join('');
-    return fastHtml + (fast.length&&other.length?'<div class="event-layer-divider" aria-hidden="true"></div>':'') + otherHtml;
-  }
-  return other.map(renderer).join('') + fast.map(renderer).join('');
+  return [...items].sort((a,b)=>(a.start||'').localeCompare(b.start||'')).map(renderer).join('');
+}
+
+function renderScheduleLayer(items, layerClass){
+  if(!items || !items.length) return '';
+  const ordered=[...items].sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  const shared=ordered.filter(it=>it.who==='Begge');
+  const milla=ordered.filter(it=>it.who==='Milla');
+  const jonathan=ordered.filter(it=>it.who==='Jonathan');
+
+  return `<div class="schedule-layer ${layerClass}">
+    ${shared.length?`<div class="shared">${shared.map(renderItem).join('')}</div>`:''}
+    ${(milla.length||jonathan.length)?`<div class="split">
+      <div class="col milla">${milla.map(renderItem).join('')}</div>
+      <div class="col jonathan">${jonathan.map(renderItem).join('')}</div>
+    </div>`:''}
+  </div>`;
 }
 
 function renderWeekendItem(it){
@@ -3385,13 +3444,24 @@ function renderGrid(){
     const items = itemsForDay(i);
     const schedule = items.filter(it=>it.type!=='husk');
     const husk = items.filter(it=>it.type==='husk');
-    const shared = schedule.filter(it=> it.who==='Begge');
-    const millaItems = schedule.filter(it=> it.who==='Milla');
-    const jonathanItems = schedule.filter(it=> it.who==='Jonathan');
+
+    const fastItems = schedule.filter(it=>it._src==='template');
+    const otherItems = schedule.filter(it=>it._src!=='template');
+
     const millaHusk = husk.filter(it=>it.who==='Milla');
     const jonathanHusk = husk.filter(it=>it.who==='Jonathan');
     const sharedHusk = husk.filter(it=>it.who==='Begge');
     const m = matpakkeFor('Milla', i), j = matpakkeFor('Jonathan', i);
+
+    const fastLayer=renderScheduleLayer(fastItems,'fast-layer');
+    const otherLayer=renderScheduleLayer(otherItems,'other-layer');
+    const hasBoth=fastItems.length && otherItems.length;
+    const separator=hasBoth?'<div class="calendar-layer-separator" aria-hidden="true"></div>':'';
+    const position=settings.eventLayerPosition||'above';
+
+    const calendarLayers = position==='below'
+      ? fastLayer + separator + otherLayer
+      : otherLayer + separator + fastLayer;
 
     return `
     <div class="day weekday ${i===idx?'today':''}">
@@ -3411,16 +3481,7 @@ function renderGrid(){
         </div>
       </div>
 
-      ${shared.length? `<div class="shared">${renderOrderedItems(shared)}</div>` : ''}
-
-      <div class="split">
-        <div class="col milla">
-          ${millaItems.length? renderOrderedItems(millaItems) : '<div class="empty">–</div>'}
-        </div>
-        <div class="col jonathan">
-          ${jonathanItems.length? renderOrderedItems(jonathanItems) : '<div class="empty">–</div>'}
-        </div>
-      </div>
+      ${calendarLayers}
 
       ${(husk.length) ? `<div class="remember-grid">
         ${renderReminderLane(millaHusk,'Milla')}
@@ -4770,7 +4831,6 @@ function renderStars(){
         <span class="star-profile-name">${who}</span>
         <span class="star-profile-points">⭐ <b>${pts}</b><span class="star-goal-total"> / ${goal}</span></span>
         <button type="button" class="star-history-btn" data-history-who="${who}" title="Vis stjernefordeling siste 30 dager">▥ <span>30 dager</span></button>
-        <button type="button" class="star-reset-quick" data-star-quick-reset="${who}" title="Nullstill ukens stjerner og tellinger">↺ Nullstill</button>
       </div>
       <div class="progresswrap segmented-progress" aria-label="${pts} av ${goal} stjerner">
         <div class="progresssegments">${buildProgressSegments(who,list,pts,goal)}</div>
@@ -4844,20 +4904,21 @@ function launchStarConfetti(who){
   layer.innerHTML='<div class="star-good-job">⭐ Bra jobba! ⭐</div><div class="confetti-field"></div>';
   const field=layer.querySelector('.confetti-field');
   const colors=who==='Milla'?['#FF4FA0','#FF8BC0','#FFD24C','#7BD88F','#63A4FF']:['#2F80ED','#69A7FF','#FFD24C','#7BD88F','#FF7A7A'];
-  for(let i=0;i<54;i++){
+  for(let i=0;i<110;i++){
     const p=document.createElement('i');
     p.style.setProperty('--x',(Math.random()*100)+'vw');
-    p.style.setProperty('--dx',((Math.random()-.5)*260)+'px');
-    p.style.setProperty('--rot',(Math.random()*720-360)+'deg');
-    p.style.setProperty('--delay',(Math.random()*.18)+'s');
-    p.style.setProperty('--dur',(.85+Math.random()*.7)+'s');
+    p.style.setProperty('--dx',((Math.random()-.5)*360)+'px');
+    p.style.setProperty('--drop',(Math.random()*18)+'vh');
+    p.style.setProperty('--rot',(Math.random()*1080-540)+'deg');
+    p.style.setProperty('--delay',(Math.random()*.7)+'s');
+    p.style.setProperty('--dur',(2.35+Math.random()*1.45)+'s');
     p.style.setProperty('--c',colors[i%colors.length]);
-    if(i%9===0){p.className='star-piece';p.textContent='⭐';}
+    if(i%11===0){p.className='star-piece';p.textContent='⭐';}
     field.appendChild(p);
   }
   document.body.appendChild(layer);
   requestAnimationFrame(()=>layer.classList.add('go'));
-  setTimeout(()=>layer.remove(),1900);
+  setTimeout(()=>layer.remove(),4700);
 }
 document.getElementById('starQuickAdd').addEventListener('click', ()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
@@ -5491,7 +5552,7 @@ document.querySelectorAll('[data-star-adjust]').forEach(btn=>btn.addEventListene
 });
 document.querySelectorAll('[data-star-reset]').forEach(btn=>btn.addEventListener('click',async()=>{
   const who=btn.dataset.starReset;
-  if(!confirm(`Nullstill stjerner og tellinger for ${who}?`)) return;
+  if(!confirm(`Nullstill ukens stjerner og alle oppgavetellinger for ${who}?\n\nDette kan ikke angres.`)) return;
   weeklyPoints[who]=0;
   (settings.chores||[]).filter(c=>c.who===who).forEach(c=>{weeklyChoreCounts[c.id]=0});
   await Promise.all([saveWeeklyPoints(),saveWeeklyChoreCounts()]);renderStars();fillCurrentStarPoints();
