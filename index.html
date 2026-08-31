@@ -2113,6 +2113,50 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   #importWho button{min-height:38px;}
 </style>
 
+
+<style id="external-calendar-color-layer">
+  .item.external-calendar-event{
+    background:var(--external-calendar-color,#FFF1B8)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 72%,#BFAF7E 28%)!important;
+    color:#5F5537!important;
+    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 58%,#B5973D 42%)!important;
+    opacity:1!important;
+  }
+  .item.external-calendar-event .t{color:#8B7638!important;}
+  .item.external-calendar-event .ti{color:#544B32!important;}
+  .item.external-calendar-event .emo{opacity:.95;}
+
+  .weekend-item.external-calendar-event{
+    background:var(--external-calendar-color,#FFF1B8)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 72%,#BFAF7E 28%)!important;
+    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 58%,#B5973D 42%)!important;
+  }
+
+  .calendar-source-main{
+    grid-template-columns:auto minmax(0,1fr) auto auto auto!important;
+  }
+  .calendar-color-control{
+    width:30px;height:30px;border-radius:50%;
+    display:grid;place-items:center;
+    border:1px solid var(--line);
+    background:var(--surface);
+    overflow:hidden;
+    cursor:pointer;
+  }
+  .calendar-color-control input[type="color"]{
+    -webkit-appearance:none;appearance:none;
+    width:34px;height:34px;border:0;padding:0;background:none;cursor:pointer;
+  }
+  .calendar-color-control input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+  .calendar-color-control input[type="color"]::-webkit-color-swatch{border:3px solid #fff;border-radius:50%}
+  .calendar-color-control input[type="color"]::-moz-color-swatch{border:3px solid #fff;border-radius:50%}
+
+  @media(max-width:760px){
+    .calendar-source-main{grid-template-columns:auto minmax(0,1fr) auto auto!important;}
+    .calendar-source-main .calendar-remove{grid-column:auto}
+  }
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3105,6 +3149,27 @@ function matpakkeFor(child, dayIdx){
   return arr ? (arr[dayIdx]||0) : 0;
 }
 
+
+function defaultCalendarColor(type){
+  const t=String(type||'').toLowerCase();
+  if(t==='spond') return '#FFF1B8';      // light yellow, as requested
+  if(t==='public') return '#E9F4FF';
+  if(t==='google') return '#E8F5E9';
+  if(t==='ical' || t==='ics') return '#F1EAFE';
+  return '#FFF1B8';
+}
+function calendarSourceById(calendarId){
+  return (settings.calendarSources||[]).find(c=>c.id===calendarId) || null;
+}
+function calendarColorFor(calendarId){
+  const src=calendarSourceById(calendarId);
+  return src ? (src.color || defaultCalendarColor(src.type)) : '#FFF1B8';
+}
+function safeCssColor(value,fallback='#FFF1B8'){
+  const v=String(value||'').trim();
+  return /^#[0-9a-f]{6}$/i.test(v) ? v : fallback;
+}
+
 function calendarIsVisible(calendarId){
   const vis = settings.calendarVisibility || {};
   if(calendarId==='template') return vis.template !== false;
@@ -3135,7 +3200,10 @@ function renderWeekendItem(it){
   const timeStr = it.end ? `${it.start}–${it.end}` : (it.start || '');
   const who = it.who || 'Begge';
   const whoClass = who.toLowerCase();
-  return `<div class="weekend-item ${isRecessItem(it)?'recess':''}" data-src="${it._src}" data-id="${it.id}">
+  const isExternal=!!it.calendarId;
+  const extClass=isExternal?' external-calendar-event':'';
+  const extStyle=isExternal ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"` : '';
+  return `<div class="weekend-item ${isRecessItem(it)?'recess':''}${extClass}"${extStyle} data-src="${it._src}" data-id="${it.id}">
     <span class="weekend-emo">${emojiFor(it)}</span>
     <div class="weekend-copy">
       ${timeStr ? `<div class="weekend-time">${timeStr}</div>` : ''}
@@ -3304,9 +3372,12 @@ function emojiFor(it){
 }
 function isRecessItem(it){ return /fri\s*minutt|friminutt|frikvarter|\bpause\b/i.test((it&&it.title)||''); }
 function renderItem(it){
-  const whoClass = isRecessItem(it) ? 'recess' : (it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase());
+  const isExternal=!!it.calendarId;
+  const baseClass = isRecessItem(it) ? 'recess' : (it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase());
+  const whoClass = `${baseClass}${isExternal?' external-calendar-event':''}`;
   const timeStr = it.end ? `${it.start}–${it.end}` : it.start;
-  return `<div class="item ${whoClass}" data-src="${it._src}" data-id="${it.id}" title="${it.title}">
+  const extStyle=isExternal ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"` : '';
+  return `<div class="item ${whoClass}"${extStyle} data-src="${it._src}" data-id="${it.id}" title="${it.title}">
     <span class="emo">${emojiFor(it)}</span>
     <span class="t">${timeStr}</span>
     <span class="ti">${it.title}</span>
@@ -4865,11 +4936,12 @@ function ensureCalendarSource(type, name, url){
   const cleanUrl = (url||'').trim();
   let src = settings.calendarSources.find(c => cleanUrl && c.url===cleanUrl && c.type===type);
   if(!src){
-    src = {id:'cal-'+uid(), type:type||'import', name:name||'Importert kalender', url:cleanUrl, visible:true, createdAt:Date.now()};
+    src = {id:'cal-'+uid(), type:type||'import', name:name||'Importert kalender', url:cleanUrl, visible:true, color:defaultCalendarColor(type), createdAt:Date.now()};
     settings.calendarSources.push(src);
   }else{
     src.name = name || src.name;
     src.visible = src.visible !== false;
+    if(!src.color) src.color=defaultCalendarColor(src.type);
   }
   return src.id;
 }
@@ -4896,8 +4968,11 @@ function renderCalendarManager(){
     const visible = c.id==='template'||c.id==='manual' ? calendarIsVisible(c.id) : c.visible!==false;
     return `<div class="calendar-source-row" data-cal="${c.id}">
       <div class="calendar-source-main">
-        <span class="calendar-dot"></span>
+        <span class="calendar-dot" style="background:${c.id==='template'?'var(--skole)':c.id==='manual'?'var(--today)':safeCssColor(c.color||defaultCalendarColor(c.type))}"></span>
         <div class="calendar-source-copy"><b>${c.name}</b><small>${c.type==='fast'?'Fast kalender':c.type==='manual'?'Hendelser lagt inn manuelt':(c.type||'Importert')} · ${evs.length} hendelser denne uken</small></div>
+        ${c.id!=='template'&&c.id!=='manual'?`<label class="calendar-color-control" title="Farge på denne kalenderen">
+          <input type="color" data-cal-color="${c.id}" value="${safeCssColor(c.color||defaultCalendarColor(c.type))}" aria-label="Velg kalenderfarge">
+        </label>`:''}
         <label class="calendar-toggle" title="${visible?'Skjul':'Vis'} kalender"><input type="checkbox" data-cal-toggle="${c.id}" ${visible?'checked':''}><span></span></label>
         ${c.removable===false?'<button class="calendar-expand" type="button" data-cal-expand="'+c.id+'">Hendelser</button>':'<button class="calendar-remove" type="button" data-cal-remove="'+c.id+'" title="Fjern kalender">✕</button>'}
       </div>
@@ -4911,6 +4986,16 @@ function renderCalendarManager(){
     </div>`;
   }).join('');
 
+  box.querySelectorAll('[data-cal-color]').forEach(inp=>inp.addEventListener('input',async()=>{
+    const src=(settings.calendarSources||[]).find(c=>c.id===inp.dataset.calColor);
+    if(!src) return;
+    src.color=safeCssColor(inp.value,defaultCalendarColor(src.type));
+    const row=inp.closest('.calendar-source-row');
+    const dot=row?.querySelector('.calendar-dot');
+    if(dot) dot.style.background=src.color;
+    await saveSettings();
+    renderAll();
+  }));
   box.querySelectorAll('[data-cal-toggle]').forEach(inp=>inp.addEventListener('change',async()=>{
     const id=inp.dataset.calToggle;
     if(id==='template'||id==='manual'){
@@ -5145,6 +5230,7 @@ function normalizeSettings(){
   if(!settings.otherCalendars) settings.otherCalendars = [];
   if(!settings.avatarHistory) settings.avatarHistory = {Milla:[],Jonathan:[]};
   if(!settings.calendarSources) settings.calendarSources = [];
+  settings.calendarSources.forEach(c=>{ if(!c.color) c.color=defaultCalendarColor(c.type); });
   if(!settings.calendarVisibility) settings.calendarVisibility = {template:true,templateMilla:true,templateJonathan:true,manual:true};
   if(settings.calendarVisibility.templateMilla===undefined) settings.calendarVisibility.templateMilla = true;
   if(settings.calendarVisibility.templateJonathan===undefined) settings.calendarVisibility.templateJonathan = true;
