@@ -2116,10 +2116,10 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
 
 <style id="external-calendar-color-layer">
   .item.external-calendar-event{
-    background:var(--external-calendar-color,#FFF1B8)!important;
-    border-color:color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 72%,#BFAF7E 28%)!important;
+    background:var(--external-calendar-color,#FFFBEA)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 72%,#BFAF7E 28%)!important;
     color:#5F5537!important;
-    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 58%,#B5973D 42%)!important;
+    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 58%,#B5973D 42%)!important;
     opacity:1!important;
   }
   .item.external-calendar-event .t{color:#8B7638!important;}
@@ -2127,9 +2127,9 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   .item.external-calendar-event .emo{opacity:.95;}
 
   .weekend-item.external-calendar-event{
-    background:var(--external-calendar-color,#FFF1B8)!important;
-    border-color:color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 72%,#BFAF7E 28%)!important;
-    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFF1B8) 58%,#B5973D 42%)!important;
+    background:var(--external-calendar-color,#FFFBEA)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 72%,#BFAF7E 28%)!important;
+    box-shadow:inset 3px 0 0 color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 58%,#B5973D 42%)!important;
   }
 
   .calendar-source-main{
@@ -2155,6 +2155,96 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
     .calendar-source-main{grid-template-columns:auto minmax(0,1fr) auto auto!important;}
     .calendar-source-main .calendar-remove{grid-column:auto}
   }
+</style>
+
+
+<style id="star-color-analytics-v1">
+  .chore-form-row{display:grid!important;grid-template-columns:minmax(0,1fr) 92px 76px!important;gap:10px!important;align-items:end}
+  .chore-points-field{max-width:none!important}
+  .chore-color-field input[type="color"]{
+    width:46px!important;height:42px!important;border:1px solid var(--line)!important;border-radius:12px!important;padding:3px!important;background:var(--surface)!important;cursor:pointer
+  }
+  .settings-chore-child .tplitem{display:grid!important;grid-template-columns:12px minmax(0,1fr) auto!important;align-items:center!important;gap:8px!important}
+  .settings-chore-color{width:10px;height:28px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+
+  .segmented-progress{position:relative;overflow:hidden!important;padding:0!important}
+  .progresssegments{height:100%;display:flex;overflow:hidden;border-radius:inherit}
+  .progress-segment{height:100%;display:block;flex:none;transition:width .28s ease}
+  .progress-other{background:#B7B2AC!important}
+  .chore{border-left:3px solid var(--chore-color)!important}
+  .chore .cbox{color:#fff!important;box-shadow:0 2px 6px color-mix(in srgb,var(--chore-color) 30%,transparent)!important}
+
+  .star-profile{position:relative}
+  .star-history-btn{
+    position:absolute;right:0;top:50%;transform:translateY(-50%);
+    border:1px solid var(--line);background:var(--surface-alt);color:var(--ink-soft);
+    border-radius:10px;padding:6px 8px;font:750 9px/1 Inter,sans-serif;cursor:pointer;
+    display:flex;align-items:center;gap:4px;z-index:2
+  }
+  .star-history-btn:hover{background:var(--surface);color:var(--ink);box-shadow:0 4px 12px rgba(43,33,24,.06)}
+
+  .star-history-overlay{position:fixed;inset:0;z-index:9998;background:rgba(28,25,22,.48);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+  .star-history-overlay.open{display:flex}
+  .star-history-modal{position:relative;width:min(900px,96vw);max-height:88vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+  .star-history-close{position:absolute;right:14px;top:14px;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--surface-alt);font-size:20px;cursor:pointer;z-index:3}
+  .star-history-head{display:flex;align-items:center;gap:14px;padding-right:45px;margin-bottom:18px}
+  .star-history-head h3{margin:2px 0 4px;font-size:19px}.star-history-head p{margin:0;color:var(--ink-soft);font-size:11px}
+  .star-history-avatar img,.star-history-avatar .avcircle{width:58px!important;height:58px!important}
+  .history-chart{height:260px;display:grid;grid-template-columns:repeat(30,minmax(6px,1fr));gap:5px;align-items:end;padding:10px 0 26px;border-bottom:1px solid var(--line);position:relative;background:repeating-linear-gradient(to top,transparent 0,transparent 64px,color-mix(in srgb,var(--line) 55%,transparent) 65px)}
+  .history-day{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
+  .history-bar-track{height:100%;width:100%;display:flex;align-items:flex-end;justify-content:center}
+  .history-bar{width:min(18px,82%);min-height:0;border-radius:5px 5px 2px 2px;overflow:hidden;display:flex;flex-direction:column-reverse;box-shadow:0 1px 3px rgba(43,33,24,.10);transition:height .25s ease}
+  .history-stack{width:100%;display:block;min-height:1px}
+  .history-day-label{height:18px;margin-top:7px;font-size:8px;color:var(--ink-soft);white-space:nowrap}
+  .history-scale{height:0;position:relative;z-index:2;font-size:8px;color:var(--ink-soft);pointer-events:none}
+  .history-scale span{position:absolute;left:0}.history-scale span:nth-child(1){top:8px}.history-scale span:nth-child(2){top:135px}.history-scale span:nth-child(3){top:260px}
+  .history-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px}
+  .history-legend-item{font-size:10px;color:var(--ink-soft);display:flex;align-items:center;gap:5px}
+  .history-legend-item i{width:9px;height:9px;border-radius:3px}
+  .history-note{margin-top:12px;font-size:9px;color:var(--ink-soft)}
+  .star-history-loading{padding:70px 20px;text-align:center;color:var(--ink-soft)}
+  @media(max-width:760px){
+    .chore-form-row{grid-template-columns:1fr 86px!important}.chore-color-field{grid-column:1/-1}
+    .history-chart{gap:2px;height:220px}.history-bar{width:80%}.star-history-btn span{display:none}
+  }
+</style>
+
+
+<style id="compact-stars-shopping-event-order-v1">
+  /* Stjerner: remove title row and move content upward */
+  .starpanel{position:relative;padding-top:9px!important;margin-top:9px!important;min-height:0!important}
+  .starpanel .starcols{margin-top:0!important}
+  .star-quick-floating{position:absolute;right:10px;top:7px;z-index:4;width:25px!important;height:25px!important;font-size:15px!important;opacity:.78}
+  .star-profile{margin-top:0!important}
+
+  /* Shopping panel minimize / expand */
+  .shop-panel-actions{display:flex;align-items:center;gap:5px}
+  .shop-panel-btn{width:27px;height:27px;border:1px solid var(--line);border-radius:8px;background:var(--surface-alt);color:var(--ink-soft);font:800 14px/1 Inter,sans-serif;cursor:pointer;display:grid;place-items:center}
+  .shop-panel-btn:hover,.shop-panel-btn.active{background:var(--surface);color:var(--ink);border-color:color-mix(in srgb,var(--ink-soft) 35%,var(--line))}
+  #shoppingPanel.shopping-collapsed{min-height:0!important;padding-bottom:10px!important}
+  #shoppingPanel.shopping-collapsed .shoplist,#shoppingPanel.shopping-collapsed .shopadd{display:none!important}
+  #shoppingPanel.shopping-collapsed .panelhead{margin-bottom:0!important}
+  #shoppingPanel.shopping-expanded{min-height:360px!important}
+  #shoppingPanel.shopping-expanded .shoplist{max-height:330px!important}
+
+  /* Imported/external calendar: lighter and no left-side shadow/accent */
+  .item.external-calendar-event{
+    background:var(--external-calendar-color,#FFFBEA)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 82%,#D9D3C2 18%)!important;
+    color:#665F49!important;
+    box-shadow:none!important;
+  }
+  .item.external-calendar-event .t{color:#94886C!important}
+  .item.external-calendar-event .ti{color:#625B49!important}
+  .weekend-item.external-calendar-event{
+    background:var(--external-calendar-color,#FFFBEA)!important;
+    border-color:color-mix(in srgb,var(--external-calendar-color,#FFFBEA) 82%,#D9D3C2 18%)!important;
+    box-shadow:none!important;
+  }
+
+  /* Only show separator when 'other activities below fast calendar' is selected */
+  .event-layer-divider{height:1px;background:#DDDAD6;margin:4px 2px 5px;border-radius:1px;opacity:.72;flex:none}
+  .shared .event-layer-divider{margin-left:1px;margin-right:1px}
 </style>
 
 </head>
@@ -2193,16 +2283,13 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   <div class="grid" id="grid"></div>
 
   <div class="panel starpanel">
-    <div class="panelhead" style="display:flex;justify-content:space-between;align-items:center;">
-      <span>⭐ Stjerner</span>
-      <button class="sharedadd" id="starQuickAdd" title="Legg til gjøremål">+</button>
-    </div>
+    <button class="sharedadd star-quick-floating" id="starQuickAdd" title="Legg til gjøremål" aria-label="Legg til gjøremål">+</button>
     <div class="starcols" id="starCols"></div>
   </div>
 
   <div class="bottomrow" id="bottomRow">
     <div class="panel" id="shoppingPanel">
-      <div class="panelhead panelhead-actions"><span>🛒 Handle og Huske</span><button class="clear-all-btn" id="shopClearAll" type="button">Fjern alt</button></div>
+      <div class="panelhead panelhead-actions"><span>🛒 Handle og Huske</span><div class="shop-panel-actions"><button class="shop-panel-btn" id="shopMinimize" type="button" title="Minimer">−</button><button class="shop-panel-btn" id="shopExpand" type="button" title="Ekspander">↕</button><button class="clear-all-btn" id="shopClearAll" type="button">Fjern alt</button></div></div>
       <div class="shoplist" id="shopList"></div>
       <div class="shopadd">
         <input type="text" id="shopInput" placeholder="Legg til vare…">
@@ -2736,6 +2823,7 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
             </div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Grad av transparens</b><small>Juster hvor gjennomsiktig valgte aktivitetsfarger skal være.</small></div><div class="opacity-control"><input type="range" id="transparencyLevel" min="0" max="100" step="5" value="75"><b id="transparencyLevelValue">75 %</b></div></div>
             <div class="theme-detail-card"><div class="theme-detail-copy"><b>Fri / friminutt</b><small>Velg et diskret skille fra vanlige timer.</small></div><select id="recessStyle" class="recess-style-select"><option value="line">Tynn grå linje</option><option value="soft">Svak grå bakgrunn</option><option value="none">Ingen eget skille</option></select></div>
+            <div class="theme-detail-card"><div class="theme-detail-copy"><b>Andre aktiviteter</b><small>Velg om Spond, importerte og egne hendelser skal vises før eller etter Fast ukeplan.</small></div><select id="eventLayerPosition" class="recess-style-select"><option value="above">Over fast kalender</option><option value="below">Under fast kalender</option></select></div>
             <button class="btn ghost" id="colorReset" style="width:100%;margin-top:12px;">Tilbakestill temafarger</button>
           </div>
         </div>
@@ -2810,9 +2898,10 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
                 <button data-v="Jonathan" class="jonathan">🏒 Jonathan</button>
               </div>
             </div>
-            <div class="row2">
+            <div class="row2 chore-form-row">
               <div class="field"><label>Gjøremål</label><input type="text" id="choreTitle" placeholder="F.eks. Rydde rommet"></div>
-              <div class="field" style="max-width:100px;"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
+              <div class="field chore-points-field"><label>Poeng</label><input type="text" id="chorePoints" value="5"></div>
+              <div class="field chore-color-field"><label>Farge</label><input type="color" id="choreColor" value="#4F8EF7" aria-label="Farge på gjøremål"></div>
             </div>
             <div class="modalbtns" style="margin-top:0;">
               <button class="btn ghost" id="choreCancelEdit" style="display:none;">Avbryt</button>
@@ -3025,6 +3114,7 @@ async function loadAll(){
   if(!settings.theme) settings.theme = 'lys';
   if(!settings.avatars) settings.avatars = {Milla:'',Jonathan:''};
   if(!settings.chores) settings.chores = [];
+  settings.chores.forEach((c,i)=>{ if(!c.color) c.color=defaultChoreColor(c,i); });
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(!settings.customColors) settings.customColors = {};
   if(settings.customColors && settings.customColors.skole &&
@@ -3039,6 +3129,8 @@ async function loadAll(){
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
   if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
+  if(!settings.shoppingPanelMode) settings.shoppingPanelMode='normal';
+  if(!settings.eventLayerPosition) settings.eventLayerPosition='above';
   if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
@@ -3152,11 +3244,11 @@ function matpakkeFor(child, dayIdx){
 
 function defaultCalendarColor(type){
   const t=String(type||'').toLowerCase();
-  if(t==='spond') return '#FFF1B8';      // light yellow, as requested
+  if(t==='spond') return '#FFFBEA';      // very light, discreet yellow
   if(t==='public') return '#E9F4FF';
   if(t==='google') return '#E8F5E9';
   if(t==='ical' || t==='ics') return '#F1EAFE';
-  return '#FFF1B8';
+  return '#FFFBEA';
 }
 function calendarSourceById(calendarId){
   return (settings.calendarSources||[]).find(c=>c.id===calendarId) || null;
@@ -3165,7 +3257,7 @@ function calendarColorFor(calendarId){
   const src=calendarSourceById(calendarId);
   return src ? (src.color || defaultCalendarColor(src.type)) : '#FFF1B8';
 }
-function safeCssColor(value,fallback='#FFF1B8'){
+function safeCssColor(value,fallback='#FFFBEA'){
   const v=String(value||'').trim();
   return /^#[0-9a-f]{6}$/i.test(v) ? v : fallback;
 }
@@ -3194,6 +3286,19 @@ function itemsForDay(dayIdx){
   const t = template.filter(i=>i.day===dayIdx && eventIsVisible(i,'template')).map(i=>({...i, _src:'template'}));
   const w = weekEvents.filter(i=>i.day===dayIdx && eventIsVisible(i,'week')).map(i=>({...i, _src:'week'}));
   return [...t, ...w].sort((a,b)=> (a.start||'').localeCompare(b.start||''));
+}
+
+function renderOrderedItems(items, renderer=renderItem){
+  if(!items || !items.length) return '';
+  const fast=items.filter(it=>it._src==='template');
+  const other=items.filter(it=>it._src!=='template');
+  const position=settings.eventLayerPosition||'above';
+  if(position==='below'){
+    const fastHtml=fast.map(renderer).join('');
+    const otherHtml=other.map(renderer).join('');
+    return fastHtml + (fast.length&&other.length?'<div class="event-layer-divider" aria-hidden="true"></div>':'') + otherHtml;
+  }
+  return other.map(renderer).join('') + fast.map(renderer).join('');
 }
 
 function renderWeekendItem(it){
@@ -3230,7 +3335,7 @@ function renderWeekendDay(dayIdx, idx){
     </div>
 
     <div class="weekend-list">
-      ${schedule.length ? schedule.map(renderWeekendItem).join('') : '<div class="weekend-empty">Ingen aktiviteter</div>'}
+      ${schedule.length ? renderOrderedItems(schedule,renderWeekendItem) : '<div class="weekend-empty">Ingen aktiviteter</div>'}
     </div>
 
     <div class="weekend-husk">
@@ -3306,14 +3411,14 @@ function renderGrid(){
         </div>
       </div>
 
-      ${shared.length? `<div class="shared">${shared.map(it=>renderItem(it)).join('')}</div>` : ''}
+      ${shared.length? `<div class="shared">${renderOrderedItems(shared)}</div>` : ''}
 
       <div class="split">
         <div class="col milla">
-          ${millaItems.length? millaItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
+          ${millaItems.length? renderOrderedItems(millaItems) : '<div class="empty">–</div>'}
         </div>
         <div class="col jonathan">
-          ${jonathanItems.length? jonathanItems.map(it=>renderItem(it)).join('') : '<div class="empty">–</div>'}
+          ${jonathanItems.length? renderOrderedItems(jonathanItems) : '<div class="empty">–</div>'}
         </div>
       </div>
 
@@ -3760,6 +3865,27 @@ document.getElementById('layoutPick').addEventListener('click', async (e)=>{
   await saveSettings();
 });
 
+function applyShoppingPanelMode(){
+  const panel=document.getElementById('shoppingPanel');
+  if(!panel) return;
+  const mode=settings.shoppingPanelMode||'normal';
+  panel.classList.toggle('shopping-collapsed',mode==='collapsed');
+  panel.classList.toggle('shopping-expanded',mode==='expanded');
+  const minBtn=document.getElementById('shopMinimize');
+  const expBtn=document.getElementById('shopExpand');
+  if(minBtn) minBtn.classList.toggle('active',mode==='collapsed');
+  if(expBtn) expBtn.classList.toggle('active',mode==='expanded');
+}
+
+document.getElementById('shopMinimize')?.addEventListener('click',async()=>{
+  settings.shoppingPanelMode=(settings.shoppingPanelMode==='collapsed')?'normal':'collapsed';
+  applyShoppingPanelMode(); await saveSettings();
+});
+document.getElementById('shopExpand')?.addEventListener('click',async()=>{
+  settings.shoppingPanelMode=(settings.shoppingPanelMode==='expanded')?'normal':'expanded';
+  applyShoppingPanelMode(); await saveSettings();
+});
+
 function applySectionVisibility(){
   const showShopping = settings.showShoppingSection !== false;
   const showPhotos = settings.showPhotosSection !== false;
@@ -3768,6 +3894,7 @@ function applySectionVisibility(){
   const photosPanel = document.getElementById('photosPanel');
 
   if(shoppingPanel) shoppingPanel.style.display = showShopping ? 'flex' : 'none';
+  applyShoppingPanelMode();
   if(photosPanel) photosPanel.style.display = showPhotos ? 'flex' : 'none';
   if(bottomRow){
     bottomRow.style.display = (showShopping || showPhotos) ? 'grid' : 'none';
@@ -4471,13 +4598,169 @@ pinInput.addEventListener('input', ()=>{
 });
 pinOverlay.addEventListener('click', e=>{ if(e.target===pinOverlay) closePinModal(null); });
 
+
+const CHORE_COLOR_PALETTE=['#4F8EF7','#F0648B','#63B77A','#F1B24A','#8A6FE8','#41A8A0','#E26B52','#7A8CA8'];
+
+function defaultChoreColor(chore,index=0){
+  if(chore && /^#[0-9a-f]{6}$/i.test(String(chore.color||''))) return chore.color;
+  const id=String(chore?.id||chore?.title||index);
+  let hash=0;
+  for(let i=0;i<id.length;i++) hash=((hash<<5)-hash)+id.charCodeAt(i);
+  return CHORE_COLOR_PALETTE[Math.abs(hash)%CHORE_COLOR_PALETTE.length];
+}
+function normalizeChoreColors(){
+  settings.chores=settings.chores||[];
+  settings.chores.forEach((c,i)=>{ if(!c.color) c.color=defaultChoreColor(c,i); });
+}
+
+async function appendStarHistory(entry){
+  try{
+    const key='starhistory';
+    const r=await window.storage.get(key);
+    let arr=(r&&r.value)?JSON.parse(r.value):[];
+    if(!Array.isArray(arr)) arr=[];
+    arr.push(entry);
+    // Keep a bounded history: 400 days is plenty for future analytics.
+    const cutoff=Date.now()-400*86400000;
+    arr=arr.filter(x=>(Number(x.ts)||0)>=cutoff);
+    await window.storage.set(key,JSON.stringify(arr));
+    return true;
+  }catch(e){
+    console.warn('Kunne ikke lagre stjernehistorikk',e);
+    return false;
+  }
+}
+
+async function loadStarHistory(){
+  try{
+    const r=await window.storage.get('starhistory');
+    const arr=(r&&r.value)?JSON.parse(r.value):[];
+    return Array.isArray(arr)?arr:[];
+  }catch(e){
+    console.warn('Kunne ikke hente stjernehistorikk',e);
+    return [];
+  }
+}
+
+function buildProgressSegments(who,list,pts,goal){
+  const safeGoal=Math.max(1,goal||100);
+  let used=0;
+  const parts=[];
+  list.forEach((c,i)=>{
+    const contribution=(weeklyChoreCounts[c.id]||0)*(Number(c.points)||0);
+    if(contribution<=0 || used>=safeGoal) return;
+    const visible=Math.min(contribution,safeGoal-used);
+    const width=visible/safeGoal*100;
+    used+=visible;
+    parts.push(`<span class="progress-segment" style="width:${width}%;background:${defaultChoreColor(c,i)}" title="${c.title}: ${contribution} poeng"></span>`);
+  });
+  const mapped=list.reduce((sum,c)=>sum+(weeklyChoreCounts[c.id]||0)*(Number(c.points)||0),0);
+  const other=Math.max(0,(Number(pts)||0)-mapped);
+  if(other>0 && used<safeGoal){
+    const visible=Math.min(other,safeGoal-used);
+    parts.push(`<span class="progress-segment progress-other" style="width:${visible/safeGoal*100}%" title="Andre/manuelt justerte poeng: ${other}"></span>`);
+  }
+  return parts.join('');
+}
+
+function starHistoryOverlay(){
+  let ov=document.getElementById('starHistoryOverlay');
+  if(ov) return ov;
+  ov=document.createElement('div');
+  ov.id='starHistoryOverlay';
+  ov.className='star-history-overlay';
+  ov.innerHTML=`<div class="star-history-modal">
+    <button type="button" class="star-history-close" aria-label="Lukk">×</button>
+    <div id="starHistoryContent"></div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('.star-history-close').addEventListener('click',()=>ov.classList.remove('open'));
+  ov.addEventListener('click',e=>{if(e.target===ov) ov.classList.remove('open');});
+  return ov;
+}
+
+function fmtHistoryDay(d){
+  return `${d.getDate()}.${d.getMonth()+1}`;
+}
+async function openStarHistory(who){
+  const ov=starHistoryOverlay();
+  const content=ov.querySelector('#starHistoryContent');
+  content.innerHTML='<div class="star-history-loading">Henter historikk…</div>';
+  ov.classList.add('open');
+
+  const all=await loadStarHistory();
+  const now=new Date();
+  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-29);
+  const relevant=all.filter(x=>x.who===who && Number(x.ts)>=start.getTime());
+
+  const chores=(settings.chores||[]).filter(c=>c.who===who);
+  const colorFor=id=>{
+    const c=chores.find(x=>x.id===id);
+    return c?defaultChoreColor(c):'#A8A29B';
+  };
+  const titleFor=(id,fallback)=>{
+    const c=chores.find(x=>x.id===id);
+    return c?.title || fallback || 'Tidligere gjøremål';
+  };
+
+  const days=[];
+  let maxPts=1;
+  for(let i=0;i<30;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const next=new Date(d); next.setDate(d.getDate()+1);
+    const entries=relevant.filter(x=>Number(x.ts)>=d.getTime() && Number(x.ts)<next.getTime());
+    const groups={};
+    entries.forEach(x=>{
+      const key=x.choreId||'other';
+      if(!groups[key]) groups[key]={points:0,title:x.title||'Gjøremål',color:x.color||'#A8A29B',count:0};
+      groups[key].points+=Number(x.points)||0;
+      groups[key].count++;
+    });
+    const total=Object.values(groups).reduce((a,g)=>a+g.points,0);
+    maxPts=Math.max(maxPts,total);
+    days.push({d,groups,total});
+  }
+
+  const usedIds=[...new Set(relevant.map(x=>x.choreId).filter(Boolean))];
+  const total30=relevant.reduce((a,x)=>a+(Number(x.points)||0),0);
+  const actions30=relevant.length;
+
+  const bars=days.map((day,idx)=>{
+    const h=day.total?Math.max(4,(day.total/maxPts)*100):0;
+    const stacks=Object.entries(day.groups).map(([id,g])=>{
+      const share=day.total?g.points/day.total*100:0;
+      const col=id==='other'?(g.color||'#A8A29B'):colorFor(id);
+      return `<span class="history-stack" style="height:${share}%;background:${col}" title="${titleFor(id,g.title)}: ${g.points} poeng (${g.count}x)"></span>`;
+    }).join('');
+    const showLabel=idx%5===0 || idx===29;
+    return `<div class="history-day">
+      <div class="history-bar-track"><div class="history-bar" style="height:${h}%">${stacks}</div></div>
+      <span class="history-day-label">${showLabel?fmtHistoryDay(day.d):''}</span>
+    </div>`;
+  }).join('');
+
+  const legend=usedIds.map(id=>{
+    const sample=relevant.find(x=>x.choreId===id);
+    return `<span class="history-legend-item"><i style="background:${colorFor(id)}"></i>${titleFor(id,sample?.title)}</span>`;
+  }).join('');
+
+  content.innerHTML=`<div class="star-history-head">
+      <div class="star-history-avatar">${avatarHTML(who,58)}</div>
+      <div><div class="settings-kicker">SISTE 30 DAGER</div><h3>${who} – stjernefordeling</h3><p><b>${total30}</b> poeng fra <b>${actions30}</b> registrerte gjøremål</p></div>
+    </div>
+    <div class="history-scale"><span>${maxPts}</span><span>${Math.round(maxPts/2)}</span><span>0</span></div>
+    <div class="history-chart">${bars}</div>
+    <div class="history-legend">${legend || '<span class="hint">Ingen stjerner registrert i historikken ennå.</span>'}</div>
+    <div class="history-note">Historikken bygges fra denne versjonen av kalenderen og lagres i Supabase.</div>`;
+}
+
 function renderStars(){
+  normalizeChoreColors();
   const box = document.getElementById('starCols');
   box.innerHTML = ['Milla','Jonathan'].map(who=>{
     const list = settings.chores.filter(c=>c.who===who);
     const pts = weeklyPoints[who]||0;
     const goal = (settings.weeklyGoal && settings.weeklyGoal[who]) || 100;
-    const pct = Math.min(100, Math.round(pts/goal*100));
     const reached = pts>=goal;
     const reward = settings.rewardText && settings.rewardText[who];
     return `
@@ -4486,19 +4769,44 @@ function renderStars(){
         <span class="star-profile-avatar">${avatarHTML(who,46)}</span>
         <span class="star-profile-name">${who}</span>
         <span class="star-profile-points">⭐ <b>${pts}</b><span class="star-goal-total"> / ${goal}</span></span>
+        <button type="button" class="star-history-btn" data-history-who="${who}" title="Vis stjernefordeling siste 30 dager">▥ <span>30 dager</span></button>
+        <button type="button" class="star-reset-quick" data-star-quick-reset="${who}" title="Nullstill ukens stjerner og tellinger">↺ Nullstill</button>
       </div>
-      <div class="progresswrap" aria-label="${pts} av ${goal} stjerner"><div class="progressfill" style="width:${pct}%"></div></div>
+      <div class="progresswrap segmented-progress" aria-label="${pts} av ${goal} stjerner">
+        <div class="progresssegments">${buildProgressSegments(who,list,pts,goal)}</div>
+      </div>
       ${reward? `<div class="rewardlabel ${reached?'reached':''}">${reached?'🎉 ':'🎁 '}${reward}</div>` : ''}
       <div class="chorelist two-chore-rows">
-        ${list.length? list.map(c=>{
+        ${list.length? list.map((c,i)=>{
           const count = weeklyChoreCounts[c.id] || 0;
-          return `<div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
-            <span class="cbox">+</span><span class="ctxt">${c.title} <span class="chore-count">(${count})</span></span><span class="cpts">+${c.points}</span>
+          const color=defaultChoreColor(c,i);
+          return `<div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}" style="--chore-color:${color}">
+            <span class="cbox" style="background:${color};border-color:${color}">+</span><span class="ctxt">${c.title} <span class="chore-count">(${count})</span></span><span class="cpts">+${c.points}</span>
           </div>`;
         }).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
       </div>
     </div>`;
   }).join('');
+
+  box.querySelectorAll('[data-history-who]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      openStarHistory(btn.dataset.historyWho);
+    });
+  });
+
+  box.querySelectorAll('[data-star-quick-reset]').forEach(btn=>{
+    btn.addEventListener('click',async e=>{
+      e.stopPropagation();
+      const who=btn.dataset.starQuickReset;
+      if(!confirm(`Nullstill ukens stjerner og alle oppgavetellinger for ${who}? Dette kan ikke angres.`)) return;
+      weeklyPoints[who]=0;
+      (settings.chores||[]).filter(c=>c.who===who).forEach(c=>{ weeklyChoreCounts[c.id]=0; });
+      await Promise.all([saveWeeklyPoints(),saveWeeklyChoreCounts()]);
+      renderStars(); fillCurrentStarPoints();
+    });
+  });
+
   box.querySelectorAll('.chore').forEach(el=>{
     el.addEventListener('click', async ()=>{
       const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title, choreId=el.dataset.id;
@@ -4509,14 +4817,26 @@ function renderStars(){
       }
       weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
       weeklyChoreCounts[choreId] = (weeklyChoreCounts[choreId]||0) + 1;
-      await Promise.all([saveWeeklyPoints(), saveWeeklyChoreCounts()]);
+      const chore=(settings.chores||[]).find(c=>c.id===choreId);
+      await Promise.all([
+        saveWeeklyPoints(),
+        saveWeeklyChoreCounts(),
+        appendStarHistory({
+          ts:Date.now(),
+          date:isoDate(new Date()),
+          who,
+          choreId,
+          title,
+          points:pts,
+          color:defaultChoreColor(chore)
+        })
+      ]);
       renderStars();
       fillCurrentStarPoints();
       launchStarConfetti(who);
     });
   });
 }
-
 function launchStarConfetti(who){
   const old=document.querySelector('.star-celebration'); if(old) old.remove();
   const layer=document.createElement('div');
@@ -4550,13 +4870,15 @@ document.getElementById('starQuickAdd').addEventListener('click', ()=>{
 });
 let editingChoreId = null;
 function renderChoreList(){
+  normalizeChoreColors();
   const list = document.getElementById('choreList');
   const childCol = who => {
     const chores=settings.chores.filter(c=>c.who===who);
     return `<div class="settings-chore-child ${who.toLowerCase()}">
       <div class="settings-chore-child-head"><span>${avatarHTML(who,34)}</span><div><b>${who}</b><small>${chores.length} gjøremål</small></div></div>
       <div class="settings-chore-items">
-        ${chores.length?chores.map(c=>`<div class="tplitem" data-id="${c.id}">
+        ${chores.length?chores.map((c,i)=>`<div class="tplitem" data-id="${c.id}">
+          <span class="settings-chore-color" style="background:${defaultChoreColor(c,i)}"></span>
           <span class="chore-edit-target" style="cursor:pointer;"><b>${c.title}</b><small>+${c.points} poeng</small></span>
           <span class="del" style="cursor:pointer;">✕</span>
         </div>`).join(''):'<div class="hint">Ingen gjøremål ennå.</div>'}
@@ -4570,6 +4892,7 @@ function renderChoreList(){
       editingChoreId=c.id; choreWhoSel=c.who;
       document.querySelectorAll('#choreWho button').forEach(b=>b.classList.toggle('active',b.dataset.v===choreWhoSel));
       document.getElementById('choreTitle').value=c.title; document.getElementById('chorePoints').value=c.points;
+      document.getElementById('choreColor').value=defaultChoreColor(c);
       document.getElementById('choreAdd').textContent='Lagre endring'; document.getElementById('choreCancelEdit').style.display='block';
     });
   });
@@ -4584,6 +4907,7 @@ function resetChoreForm(){
   document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v==='Milla'));
   document.getElementById('choreTitle').value = '';
   document.getElementById('chorePoints').value = '5';
+  document.getElementById('choreColor').value = '#4F8EF7';
   document.getElementById('choreAdd').textContent = '＋ Legg til gjøremål';
   document.getElementById('choreCancelEdit').style.display = 'none';
 }
@@ -4596,12 +4920,13 @@ document.getElementById('choreWho').addEventListener('click', e=>{
 document.getElementById('choreAdd').addEventListener('click', async ()=>{
   const title = document.getElementById('choreTitle').value.trim();
   const points = parseInt(document.getElementById('chorePoints').value) || 1;
+  const color = document.getElementById('choreColor').value || '#4F8EF7';
   if(!title) return;
   if(editingChoreId){
     const c = settings.chores.find(x=>x.id===editingChoreId);
-    if(c){ c.title = title; c.points = points; c.who = choreWhoSel; }
+    if(c){ c.title = title; c.points = points; c.who = choreWhoSel; c.color=color; }
   } else {
-    settings.chores.push({id:uid(), who:choreWhoSel, title, points});
+    settings.chores.push({id:uid(), who:choreWhoSel, title, points, color});
   }
   resetChoreForm();
   await saveSettings();
@@ -5063,15 +5388,18 @@ function fillTransparentInputs(){
 
 
 function fillThemeDetailControls(){
-  const slider=document.getElementById('transparencyLevel'), val=document.getElementById('transparencyLevelValue'), recess=document.getElementById('recessStyle');
+  const slider=document.getElementById('transparencyLevel'), val=document.getElementById('transparencyLevelValue'), recess=document.getElementById('recessStyle'), layer=document.getElementById('eventLayerPosition');
   if(slider){slider.value=settings.transparencyLevel??75;if(val) val.textContent=slider.value+' %';}
   if(recess) recess.value=settings.recessStyle||'line';
+  if(layer) layer.value=settings.eventLayerPosition||'above';
 }
 const transparencyLevel=document.getElementById('transparencyLevel');
 if(transparencyLevel) transparencyLevel.addEventListener('input',()=>{settings.transparencyLevel=Number(transparencyLevel.value);const v=document.getElementById('transparencyLevelValue');if(v)v.textContent=transparencyLevel.value+' %';applyTransparentColors();});
 if(transparencyLevel) transparencyLevel.addEventListener('change',()=>saveSettings());
 const recessStyle=document.getElementById('recessStyle');
 if(recessStyle) recessStyle.addEventListener('change',async()=>{settings.recessStyle=recessStyle.value;applyTransparentColors();await saveSettings();});
+const eventLayerPosition=document.getElementById('eventLayerPosition');
+if(eventLayerPosition) eventLayerPosition.addEventListener('change',async()=>{settings.eventLayerPosition=eventLayerPosition.value||'above';await saveSettings();renderGrid();});
 
 function normalizeAvatarHistory(){
   settings.avatarHistory=settings.avatarHistory||{Milla:[],Jonathan:[]};
@@ -5150,7 +5478,15 @@ document.querySelectorAll('[data-star-adjust]').forEach(btn=>btn.addEventListene
 ['Milla','Jonathan'].forEach(who=>{
   const inp=document.getElementById('currentPoints'+who);
   if(inp) inp.addEventListener('change',async()=>{
-    weeklyPoints[who]=Math.max(0,parseInt(inp.value)||0);await saveWeeklyPoints();renderStars();fillCurrentStarPoints();
+    const next=Math.max(0,parseInt(inp.value)||0);
+    if(next===0 && (weeklyPoints[who]||0)>0){
+      const hasCounts=(settings.chores||[]).filter(c=>c.who===who).some(c=>(weeklyChoreCounts[c.id]||0)>0);
+      if(hasCounts && confirm(`Du setter ${who} til 0 stjerner. Vil du også nullstille oppgavetellingene for denne uken?`)){
+        (settings.chores||[]).filter(c=>c.who===who).forEach(c=>{weeklyChoreCounts[c.id]=0});
+        await saveWeeklyChoreCounts();
+      }
+    }
+    weeklyPoints[who]=next;await saveWeeklyPoints();renderStars();fillCurrentStarPoints();
   });
 });
 document.querySelectorAll('[data-star-reset]').forEach(btn=>btn.addEventListener('click',async()=>{
@@ -5215,6 +5551,7 @@ function normalizeSettings(){
   if(!settings.theme) settings.theme = 'lys';
   if(!settings.avatars) settings.avatars = {Milla:'',Jonathan:''};
   if(!settings.chores) settings.chores = [];
+  settings.chores.forEach((c,i)=>{ if(!c.color) c.color=defaultChoreColor(c,i); });
   if(!settings.points) settings.points = {Milla:0,Jonathan:0};
   if(!settings.customColors) settings.customColors = {};
   if(!settings.pin) settings.pin = '1234';
@@ -5225,11 +5562,14 @@ function normalizeSettings(){
   if(!settings.rewardText) settings.rewardText = {Milla:'', Jonathan:''};
   if(!settings.layoutColumns) settings.layoutColumns = '3';
   if(settings.showShoppingSection===undefined) settings.showShoppingSection = true;
+  if(!settings.shoppingPanelMode) settings.shoppingPanelMode='normal';
+  if(!settings.eventLayerPosition) settings.eventLayerPosition='above';
   if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
   if(!settings.avatarHistory) settings.avatarHistory = {Milla:[],Jonathan:[]};
   if(!settings.calendarSources) settings.calendarSources = [];
+  settings.calendarSources.forEach(c=>{ if(String(c.type||'').toLowerCase()==='spond' && String(c.color||'').toUpperCase()==='#FFF1B8') c.color='#FFFBEA'; });
   settings.calendarSources.forEach(c=>{ if(!c.color) c.color=defaultCalendarColor(c.type); });
   if(!settings.calendarVisibility) settings.calendarVisibility = {template:true,templateMilla:true,templateJonathan:true,manual:true};
   if(settings.calendarVisibility.templateMilla===undefined) settings.calendarVisibility.templateMilla = true;
