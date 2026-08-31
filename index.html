@@ -1814,6 +1814,96 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
   background:var(--surface);cursor:pointer;font-size:14px;
 }
 
+
+/* ===== V3: requested settings/calendar/profile refinements ===== */
+.panelhead-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.clear-all-btn{border:1px solid var(--line);background:var(--surface-alt);color:var(--ink-soft);border-radius:9px;padding:6px 9px;font:750 10px/1 Inter,sans-serif;cursor:pointer}
+.clear-all-btn:hover{color:#b33b33;border-color:#efcaca;background:#fff5f5}
+
+.modern-color-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modern-color-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;column-gap:10px;row-gap:5px;border:1px solid var(--line);background:var(--surface-alt);border-radius:16px;padding:12px}
+.color-avatar{grid-row:1 / span 2;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:850;font-size:14px;box-shadow:0 0 0 3px var(--surface),0 4px 12px rgba(43,33,24,.10)}
+.color-avatar.milla{background:var(--milla)}.color-avatar.jonathan{background:var(--jonathan)}.color-avatar.skole{background:var(--skole)}.color-avatar.today{background:var(--today)}
+.color-copy b{display:block;font-size:12.5px}.color-copy small{display:block;color:var(--ink-soft);font-size:9.5px;margin-top:2px}
+.round-color{-webkit-appearance:none;appearance:none;width:38px!important;height:38px!important;border:0!important;border-radius:50%!important;padding:0!important;background:none!important;cursor:pointer;overflow:hidden}
+.round-color::-webkit-color-swatch-wrapper{padding:0}.round-color::-webkit-color-swatch{border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--line) inset}.round-color::-moz-color-swatch{border:3px solid #fff;border-radius:50%}
+.transparent-choice{grid-column:2 / 4;display:flex;align-items:center;gap:6px;font-size:10px;color:var(--ink-soft);cursor:pointer}
+html[data-trans-milla="1"] .item.milla,html[data-trans-jonathan="1"] .item.jonathan,html[data-trans-skole="1"] .item.skole,html[data-trans-today="1"] .item.begge,html[data-trans-today="1"] .shared .item{background:transparent!important}
+
+.profile-count{margin-left:auto;color:var(--ink-soft);font-size:10px;font-weight:650}
+.active-profile-preview{height:128px;border:1px solid var(--line);border-radius:15px;background:var(--surface);display:grid;place-items:center;margin-bottom:10px;overflow:hidden}
+.active-profile-preview img{width:108px;height:108px;border-radius:50%;object-fit:cover;image-rendering:auto;box-shadow:0 0 0 4px #fff,0 0 0 6px currentColor}
+.profile-history{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-bottom:12px;min-height:54px}
+.profile-history button{position:relative;aspect-ratio:1;border:2px solid transparent;border-radius:50%;padding:0;background:var(--surface);overflow:hidden;cursor:pointer}
+.profile-history button.active{border-color:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 12%,transparent)}
+.profile-history img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-history .profile-delete{position:absolute;right:-1px;top:-1px;width:18px;height:18px;border-radius:50%;background:#2d2824;color:#fff;font-size:9px;display:grid;place-items:center;border:1px solid #fff}
+.profile-card:first-child .active-profile-preview,.profile-card:first-child .profile-history{color:var(--milla)}
+.profile-card:nth-child(2) .active-profile-preview,.profile-card:nth-child(2) .profile-history{color:var(--jonathan)}
+.avcircle{image-rendering:auto;backface-visibility:hidden;transform:translateZ(0)}
+
+.calendar-manager{border:1px solid var(--line);border-radius:18px;background:var(--surface-alt);padding:13px;margin-bottom:14px}
+.calendar-manager-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.calendar-manager-head b{display:block;font-size:12.5px}.calendar-manager-head small{display:block;color:var(--ink-soft);font-size:9.5px;margin-top:3px}
+.calendar-source-row{border-top:1px solid var(--line);padding:10px 0}.calendar-source-row:first-child{border-top:0}
+.calendar-source-main{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:9px}
+.calendar-dot{width:11px;height:11px;border-radius:50%;background:var(--jonathan)}
+.calendar-source-copy{min-width:0}.calendar-source-copy b{font-size:11.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.calendar-source-copy small{font-size:9px;color:var(--ink-soft)}
+.calendar-toggle{position:relative;width:38px;height:22px;display:inline-block}.calendar-toggle input{opacity:0;width:0;height:0}.calendar-toggle span{position:absolute;inset:0;border-radius:999px;background:#d8d2cb;cursor:pointer;transition:.15s}.calendar-toggle span:before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.16);transition:.15s}.calendar-toggle input:checked+span{background:var(--jonathan)}.calendar-toggle input:checked+span:before{transform:translateX(16px)}
+.calendar-remove{border:0;background:transparent;color:var(--ink-soft);font-size:14px;cursor:pointer}
+.calendar-event-list{display:none;margin:8px 0 0 20px;padding-left:10px;border-left:2px solid var(--line)}.calendar-source-row.open .calendar-event-list{display:block}
+.calendar-event-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:7px;padding:5px 0;font-size:9.5px;color:var(--ink-soft)}.calendar-event-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calendar-expand{border:0;background:transparent;color:var(--ink-soft);font-size:10px;cursor:pointer;padding:4px}
+
+.secure-pin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:var(--surface-alt);border-radius:14px;padding:12px 13px;margin-bottom:14px}.secure-pin-row b{display:block;font-size:12px}.secure-pin-row small{display:block;color:var(--ink-soft);font-size:9.5px;margin-top:2px}.star-code-btn{border:1px solid #f0dba4;background:#fff8df;color:#8d6914;border-radius:10px;padding:8px 10px;font-size:10.5px;font-weight:800;cursor:pointer}
+.star-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}.star-admin-card{border:1px solid var(--line);border-radius:14px;background:var(--surface-alt);padding:12px}.star-admin-card>b{font-size:11.5px}.star-adjust-row{display:grid;grid-template-columns:42px 1fr 42px;gap:6px;margin:9px 0}.star-adjust-row button,.star-adjust-row input{height:34px;border:1px solid var(--line);border-radius:9px;background:var(--surface);text-align:center;font-family:inherit}.star-adjust-row button{font-weight:800;cursor:pointer}.star-reset-btn{width:100%;padding:8px!important;font-size:10.5px!important}
+
+.item{min-height:31px}
+.item .t{font-size:9.5px!important}.item .ti{font-size:11px!important}
+.tplist .tplitem>span:first-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tab-ukeplan .tplist{overflow-y:auto;min-height:0;padding-right:4px}
+
+/* cleaner three-part day top row: avatar – centered day/weather – avatar */
+.compact-day-head{min-height:106px!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(105px,auto) minmax(0,1fr)!important;align-items:center!important;padding:9px 8px 7px!important;overflow:hidden!important}
+.day-title-center{position:static!important;transform:none!important;grid-column:2!important;grid-row:1!important;min-width:0!important;width:100%!important;padding:0 3px!important;background:transparent!important;backdrop-filter:none!important;align-self:center!important}
+.profile-side{height:88px!important;padding:0!important;overflow:visible}
+.profile-side img.avcircle,.profile-side .avcircle{width:72px!important;height:72px!important}
+.milla-side{grid-column:1;grid-row:1;justify-content:center!important}.jonathan-side{grid-column:3;grid-row:1;justify-content:center!important}
+.profile-side .lunch-icons{position:static!important;transform:none!important;min-width:34px;max-width:66px;display:flex!important;flex-wrap:wrap;justify-content:center;gap:1px!important}
+.milla-side{flex-direction:row}.jonathan-side{flex-direction:row}
+.kid-lunchbox{width:24px!important;height:23px!important;filter:drop-shadow(0 2px 2px rgba(43,33,24,.08))}
+.day-title-line{flex-direction:column;gap:1px!important}.day-title-line .day-weather{min-height:20px;font-size:9.5px!important}.day-title-line .weather-icon{font-size:17px!important}.day-title-center .dname{font-size:15px!important}.day-title-center .ddate{font-size:9.5px!important;margin-top:1px!important}
+.day-plus{top:7px!important;right:7px!important;width:24px!important;height:24px!important}
+
+@media(max-width:760px){.modern-color-grid,.star-admin-grid{grid-template-columns:1fr}.profile-history{grid-template-columns:repeat(5,44px)}.compact-day-head{grid-template-columns:1fr 92px 1fr!important}.profile-side img.avcircle,.profile-side .avcircle{width:64px!important;height:64px!important}.profile-side .lunch-icons{max-width:48px}.kid-lunchbox{width:20px!important;height:19px!important}}
+
+
+/* ===== Aug 31 fixes: routines, recess, profile history, lunchbox ===== */
+#tab-ukeplan .tplist{display:block!important;overflow-y:auto!important;padding:2px 4px 10px!important;}
+.routine-days-grid{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px;align-items:start;}
+.routine-day-card{border:1px solid var(--line);border-radius:16px;background:var(--surface-alt);overflow:hidden;min-width:0;}
+.routine-day-head{padding:10px 11px 8px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;background:color-mix(in srgb,var(--surface) 75%,var(--surface-alt) 25%);}
+.routine-day-head b{font-size:12px;letter-spacing:-.01em}.routine-day-head span{font-size:9px;color:var(--ink-soft);font-weight:700;}
+.routine-day-items{padding:7px;display:flex;flex-direction:column;gap:6px;}
+.routine-day-empty{font-size:9.5px;color:var(--ink-soft);text-align:center;padding:12px 4px;}
+.routine-day-card .tplitem{margin:0!important;padding:7px 8px!important;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;gap:6px!important;align-items:center!important;border-radius:10px!important;background:var(--surface)!important;}
+.routine-who-dot{width:7px;height:7px;border-radius:50%;display:block;flex:none}.routine-who-dot.milla{background:var(--milla)}.routine-who-dot.jonathan{background:var(--jonathan)}.routine-who-dot.begge{background:var(--today)}
+.routine-copy{min-width:0}.routine-time{font-size:8.5px;color:var(--ink-soft);font-weight:750;white-space:nowrap}.routine-title{font-size:10.5px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.routine-edit{font-size:10px;color:var(--ink-soft)}
+.routine-weekend{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px}.routine-weekend .routine-day-card{background:color-mix(in srgb,var(--today-soft) 24%,var(--surface-alt) 76%)}
+
+.item.recess{background:#F7F4EF!important;border-color:#DED7CF!important;color:#746A61!important;box-shadow:inset 3px 0 0 #C9BEB2!important;}
+.item.recess .t,.item.recess .ti{color:#746A61!important}.item.recess .emo{opacity:.75}
+.weekend-item.recess{background:#F7F4EF!important;border-color:#DED7CF!important;color:#746A61!important;box-shadow:inset 3px 0 0 #C9BEB2!important;}
+
+/* More recognisable soft lunch bag: handle + zipper + sandwich mark */
+.kid-lunchbox{width:28px!important;height:26px!important;filter:drop-shadow(0 2px 2px rgba(43,33,24,.10))!important;overflow:visible;}
+.profile-side .lunch-icons{gap:2px!important;}
+
+.profile-history{min-height:54px;}
+.profile-upload-note{display:block;margin-top:5px;font-size:9.5px;color:var(--ink-soft)}
+@media(max-width:1200px){.routine-days-grid{grid-template-columns:repeat(3,minmax(150px,1fr));}}
+@media(max-width:760px){.routine-days-grid{grid-template-columns:1fr 1fr}.routine-weekend{grid-template-columns:1fr}.kid-lunchbox{width:23px!important;height:22px!important}}
+
 </style>
 </head>
 <body>
@@ -1855,7 +1945,7 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
 
   <div class="bottomrow" id="bottomRow">
     <div class="panel" id="shoppingPanel">
-      <div class="panelhead">🛒 Handle og Huske</div>
+      <div class="panelhead panelhead-actions"><span>🛒 Handle og Huske</span><button class="clear-all-btn" id="shopClearAll" type="button">Fjern alt</button></div>
       <div class="shoplist" id="shopList"></div>
       <div class="shopadd">
         <input type="text" id="shopInput" placeholder="Legg til vare…">
@@ -1989,7 +2079,7 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                       <div class="lunch-person-name">Milla</div>
                       <div class="lunch-person-sub">Matpakker på skoledager</div>
                     </div>
-                    <div class="lunch-person-icon">🧳</div>
+                    <div class="lunch-person-icon" aria-label="Matpakke">🍱</div>
                   </div>
 
                   <div class="lunch-family-divider"></div>
@@ -2000,7 +2090,7 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                       <div class="lunch-person-name">Jonathan</div>
                       <div class="lunch-person-sub">Matpakker på skoledager</div>
                     </div>
-                    <div class="lunch-person-icon">🧳</div>
+                    <div class="lunch-person-icon" aria-label="Matpakke">🍱</div>
                   </div>
                 </div>
               </div>
@@ -2076,6 +2166,13 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                 <span class="calendar-import-icon image">🖼</span>
                 <span><b>Bilde / PDF / Word</b><small>Last opp et bilde av timeplanen</small></span>
               </button>
+            </div>
+
+            <div class="calendar-manager" id="calendarManager">
+              <div class="calendar-manager-head">
+                <div><b>Mine kalendere</b><small>Vis/skjul hele kalendere eller enkelte hendelser. Importerte kalendere kan også fjernes.</small></div>
+              </div>
+              <div id="calendarSourceList"></div>
             </div>
 
             <div class="calendar-import-panel active" id="import-panel-spond">
@@ -2336,25 +2433,41 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
             </div>
 
             <div style="height:1px;background:var(--line);margin:18px 0;"></div>
-            <p class="hint">Du kan også overstyre aktivitetsfargene:</p>
-            <div class="row2">
-              <div class="field"><label>Milla</label><input type="color" id="colMilla" style="height:44px;padding:4px;"></div>
-              <div class="field"><label>Jonathan</label><input type="color" id="colJonathan" style="height:44px;padding:4px;"></div>
+            <p class="hint">Du kan også overstyre aktivitetsfargene. Velg en farge eller gjør selve aktivitetsbakgrunnen transparent.</p>
+            <div class="modern-color-grid">
+              <div class="modern-color-card" data-color-key="milla">
+                <span class="color-avatar milla">M</span><div class="color-copy"><b>Milla</b><small>Aktiviteter</small></div>
+                <input type="color" id="colMilla" class="round-color" aria-label="Farge Milla">
+                <label class="transparent-choice"><input type="checkbox" id="transMilla"> Transparent</label>
+              </div>
+              <div class="modern-color-card" data-color-key="jonathan">
+                <span class="color-avatar jonathan">J</span><div class="color-copy"><b>Jonathan</b><small>Aktiviteter</small></div>
+                <input type="color" id="colJonathan" class="round-color" aria-label="Farge Jonathan">
+                <label class="transparent-choice"><input type="checkbox" id="transJonathan"> Transparent</label>
+              </div>
+              <div class="modern-color-card" data-color-key="skole">
+                <span class="color-avatar skole">📚</span><div class="color-copy"><b>Skole / felles</b><small>Fast skole</small></div>
+                <input type="color" id="colSkole" class="round-color" aria-label="Farge skole">
+                <label class="transparent-choice"><input type="checkbox" id="transSkole"> Transparent</label>
+              </div>
+              <div class="modern-color-card" data-color-key="today">
+                <span class="color-avatar today">✦</span><div class="color-copy"><b>Begge</b><small>Felles aktivitet</small></div>
+                <input type="color" id="colToday" class="round-color" aria-label="Farge begge">
+                <label class="transparent-choice"><input type="checkbox" id="transToday"> Transparent</label>
+              </div>
             </div>
-            <div class="row2">
-              <div class="field"><label>Skole / felles</label><input type="color" id="colSkole" style="height:44px;padding:4px;"></div>
-              <div class="field"><label>Merkefarge / Begge</label><input type="color" id="colToday" style="height:44px;padding:4px;"></div>
-            </div>
-            <button class="btn ghost" id="colorReset" style="width:100%;">Tilbakestill temafarger</button>
+            <button class="btn ghost" id="colorReset" style="width:100%;margin-top:12px;">Tilbakestill temafarger</button>
           </div>
         </div>
 
         <div id="tab-profil" style="display:none;">
           <div class="settings-section">
-            <p class="hint">Velg et profilbilde fra enheten, eller bruk en bildelenke.</p>
+            <p class="hint">Opptil fem profilbilder lagres per barn i Supabase. Nye opplastinger legges i bildebiblioteket og settes aktive. Trykk på et tidligere bilde for å bytte tilbake. Når bilde nr. 6 legges til, fjernes det eldste fra listen.</p>
             <div class="profile-grid">
               <div class="profile-card">
-                <div class="profile-card-title"><span style="color:var(--milla);">●</span> Milla</div>
+                <div class="profile-card-title"><span style="color:var(--milla);">●</span> Milla <span class="profile-count" id="profileCountMilla"></span></div>
+                <div class="active-profile-preview" id="activeProfileMilla"></div>
+                <div class="profile-history" id="profileHistoryMilla"></div>
                 <input type="file" id="fileMilla" accept="image/*">
                 <div class="field" style="margin:0;">
                   <input type="text" id="avMilla" placeholder="…eller https-lenke">
@@ -2362,7 +2475,9 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                 <span class="hint" id="avMillaStatus" style="display:block;margin:7px 0 0;"></span>
               </div>
               <div class="profile-card">
-                <div class="profile-card-title"><span style="color:var(--jonathan);">●</span> Jonathan</div>
+                <div class="profile-card-title"><span style="color:var(--jonathan);">●</span> Jonathan <span class="profile-count" id="profileCountJonathan"></span></div>
+                <div class="active-profile-preview" id="activeProfileJonathan"></div>
+                <div class="profile-history" id="profileHistoryJonathan"></div>
                 <input type="file" id="fileJonathan" accept="image/*">
                 <div class="field" style="margin:0;">
                   <input type="text" id="avJonathan" placeholder="…eller https-lenke">
@@ -2370,7 +2485,7 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                 <span class="hint" id="avJonathanStatus" style="display:block;margin:7px 0 0;"></span>
               </div>
             </div>
-            <button class="btn primary" id="avatarSave" style="width:100%;margin-top:14px;">Lagre profilbilder</button>
+            <button class="btn primary" id="avatarSave" style="width:100%;margin-top:14px;">Lagre / bruk profilbilde</button>
           </div>
         </div>
 
@@ -2378,10 +2493,10 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
           <div class="settings-section">
             <p class="hint">Barna kan trykke på et gjøremål for å legge det til. Poengene nullstilles hver mandag.</p>
             <label class="chk"><input type="checkbox" id="starRequirePin" checked> Krev voksen-kode for å godkjenne et trykk</label>
-            <div class="field pin-field-wrap">
-              <label>Voksen-kode (kun tall)</label>
-              <input type="password" id="starPin" inputmode="numeric" pattern="[0-9]*" placeholder="f.eks. 1234" autocomplete="off">
-              <button type="button" class="pin-reveal" id="starPinReveal" title="Vis kode">👁</button>
+            <div class="secure-pin-row">
+              <div><b>Voksen-kode</b><small>Koden skjules i innstillinger.</small></div>
+              <button type="button" class="star-code-btn" id="starPinReveal">⭐ Endre kode</button>
+              <input type="password" id="starPin" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="display:none;">
             </div>
             <div class="row2">
               <div class="field"><label>Milla — ukemål</label><input type="text" id="goalMilla" value="100"></div>
@@ -2392,6 +2507,18 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
               <div class="field"><label>Belønning Jonathan</label><input type="text" id="rewardJonathan" placeholder="F.eks. fotball, is, Vipps"></div>
             </div>
             <button class="btn primary" id="starSettingsSave" style="width:100%;margin-bottom:18px;">Lagre stjerneinnstillinger</button>
+            <div class="star-admin-grid">
+              <div class="star-admin-card">
+                <b>Milla — poeng nå</b>
+                <div class="star-adjust-row"><button type="button" data-star-adjust="Milla" data-delta="-5">−5</button><input id="currentPointsMilla" inputmode="numeric"><button type="button" data-star-adjust="Milla" data-delta="5">+5</button></div>
+                <button class="btn ghost star-reset-btn" type="button" data-star-reset="Milla">Nullstill Milla</button>
+              </div>
+              <div class="star-admin-card">
+                <b>Jonathan — poeng nå</b>
+                <div class="star-adjust-row"><button type="button" data-star-adjust="Jonathan" data-delta="-5">−5</button><input id="currentPointsJonathan" inputmode="numeric"><button type="button" data-star-adjust="Jonathan" data-delta="5">+5</button></div>
+                <button class="btn ghost star-reset-btn" type="button" data-star-reset="Jonathan">Nullstill Jonathan</button>
+              </div>
+            </div>
           </div>
 
           <div class="settings-section">
@@ -2441,10 +2568,11 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
 
 <!-- Reveal-popup for admin-koden (ekstra dekket, vises kun midlertidig) -->
 <div class="overlay" id="pinRevealOverlay">
-  <div class="modal" style="max-width:300px;text-align:center;">
-    <h2 style="font-size:16px;">Voksen-koden</h2>
-    <div id="pinRevealValue" style="font-size:32px;font-weight:800;letter-spacing:6px;margin:14px 0;font-family:'Inter',sans-serif;"></div>
-    <button class="btn primary" id="pinRevealClose" style="width:100%;">Lukk</button>
+  <div class="modal" style="max-width:330px;text-align:center;">
+    <h2 style="font-size:17px;">Endre voksen-kode</h2>
+    <p class="hint">Koden vises bare i dette vinduet.</p>
+    <input id="pinRevealValue" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" style="width:100%;font-size:28px;font-weight:800;letter-spacing:6px;text-align:center;margin:8px 0 14px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-alt);">
+    <div class="modalbtns"><button class="btn ghost" id="pinRevealClose">Avbryt</button><button class="btn primary" id="pinRevealSave">Lagre kode</button></div>
   </div>
 </div>
 
@@ -2590,7 +2718,7 @@ const lunchboxSVG = (color) => `<svg viewBox="0 0 20 16" fill="none" xmlns="http
 
 // ---------- state ----------
 let weekStart = mondayOf(new Date());
-let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys', avatars:{Milla:'',Jonathan:''}, chores:[], points:{Milla:0,Jonathan:0} };
+let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0] }, theme:'lys', avatars:{Milla:'',Jonathan:''}, avatarHistory:{Milla:[],Jonathan:[]}, chores:[], points:{Milla:0,Jonathan:0}, calendarSources:[], calendarVisibility:{template:true,manual:true}, hiddenEventIds:[], deletedCalendarIds:[], transparentColors:{} };
 let template = [];
 let weekEvents = [];
 let editing = null;
@@ -2741,9 +2869,22 @@ function matpakkeFor(child, dayIdx){
   return arr ? (arr[dayIdx]||0) : 0;
 }
 
+function calendarIsVisible(calendarId){
+  const vis = settings.calendarVisibility || {};
+  if(calendarId==='template') return vis.template !== false;
+  if(calendarId==='manual') return vis.manual !== false;
+  if((settings.deletedCalendarIds||[]).includes(calendarId)) return false;
+  const src = (settings.calendarSources||[]).find(c=>c.id===calendarId);
+  return src ? src.visible !== false : true;
+}
+function eventIsVisible(it, src){
+  if((settings.hiddenEventIds||[]).includes(it.id)) return false;
+  if(src==='template') return calendarIsVisible('template');
+  return calendarIsVisible(it.calendarId || 'manual');
+}
 function itemsForDay(dayIdx){
-  const t = template.filter(i=>i.day===dayIdx).map(i=>({...i, _src:'template'}));
-  const w = weekEvents.filter(i=>i.day===dayIdx).map(i=>({...i, _src:'week'}));
+  const t = template.filter(i=>i.day===dayIdx && eventIsVisible(i,'template')).map(i=>({...i, _src:'template'}));
+  const w = weekEvents.filter(i=>i.day===dayIdx && eventIsVisible(i,'week')).map(i=>({...i, _src:'week'}));
   return [...t, ...w].sort((a,b)=> (a.start||'').localeCompare(b.start||''));
 }
 
@@ -2751,7 +2892,7 @@ function renderWeekendItem(it){
   const timeStr = it.end ? `${it.start}–${it.end}` : (it.start || '');
   const who = it.who || 'Begge';
   const whoClass = who.toLowerCase();
-  return `<div class="weekend-item" data-src="${it._src}" data-id="${it.id}">
+  return `<div class="weekend-item ${isRecessItem(it)?'recess':''}" data-src="${it._src}" data-id="${it.id}">
     <span class="weekend-emo">${emojiFor(it)}</span>
     <div class="weekend-copy">
       ${timeStr ? `<div class="weekend-time">${timeStr}</div>` : ''}
@@ -2791,17 +2932,17 @@ function renderWeekendDay(dayIdx, idx){
 function kidLunchboxSVG(child){
   const pink = child==='Milla';
   const main = pink ? '#F45B91' : '#3D8BF2';
-  const dark = pink ? '#D93C78' : '#2470D5';
-  const light = pink ? '#FFD9E7' : '#DCEBFF';
-  return `<svg class="kid-lunchbox" viewBox="0 0 44 42" aria-hidden="true" focusable="false">
-    <path d="M14 11V8.5C14 4.9 16.9 2 20.5 2h3C27.1 2 30 4.9 30 8.5V11" fill="none" stroke="${dark}" stroke-width="3.2" stroke-linecap="round"/>
-    <rect x="5" y="10" width="34" height="27" rx="8" fill="${main}"/>
-    <rect x="8" y="13" width="28" height="6" rx="3" fill="${light}" opacity=".72"/>
-    <path d="M5 23.5h34" stroke="${dark}" stroke-width="2" opacity=".48"/>
-    <rect x="19" y="20.5" width="6" height="6" rx="2" fill="#fff" opacity=".95"/>
-    <path d="M22 31.2c-4.2-2.2-6.3-4.2-6.3-6.5 0-1.8 1.4-3.2 3.2-3.2 1.2 0 2.3.6 3.1 1.6.8-1 1.9-1.6 3.1-1.6 1.8 0 3.2 1.4 3.2 3.2 0 2.3-2.1 4.3-6.3 6.5z" fill="#fff" transform="scale(.54) translate(18 23)" opacity=".96"/>
-    <circle cx="10" cy="27" r="1.4" fill="#fff" opacity=".8"/>
-    <circle cx="34" cy="27" r="1.4" fill="#fff" opacity=".8"/>
+  const dark = pink ? '#C93B70' : '#256CC7';
+  const pale = pink ? '#FFE4EE' : '#E2EEFF';
+  return `<svg class="kid-lunchbox" viewBox="0 0 52 48" role="img" aria-label="Matpakke">
+    <path d="M18 12V9.5C18 6.5 20.4 4 23.5 4h5C31.6 4 34 6.5 34 9.5V12" fill="none" stroke="${dark}" stroke-width="3.4" stroke-linecap="round"/>
+    <rect x="6" y="12" width="40" height="31" rx="9" fill="${main}" stroke="${dark}" stroke-width="1.7"/>
+    <path d="M8 22h36" stroke="${dark}" stroke-width="1.7" opacity=".5"/>
+    <path d="M13 18h26" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".72"/>
+    <rect x="14" y="26" width="24" height="11" rx="4" fill="${pale}" opacity=".98"/>
+    <path d="M17 29.5h18L31 34H21z" fill="#fff" opacity=".96"/>
+    <path d="M21 34l5-3 5 3" fill="none" stroke="${dark}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity=".48"/>
+    <circle cx="41" cy="17" r="2" fill="#fff" opacity=".9"/>
   </svg>`;
 }
 function matboksSVG(color){
@@ -2922,8 +3063,9 @@ function emojiFor(it){
   const hit = EMOJI_RULES.find(([rx])=>rx.test(it.title));
   return hit ? hit[1] : '✨';
 }
+function isRecessItem(it){ return /fri\s*minutt|friminutt|frikvarter|\bpause\b/i.test((it&&it.title)||''); }
 function renderItem(it){
-  const whoClass = it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase();
+  const whoClass = isRecessItem(it) ? 'recess' : (it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase());
   const timeStr = it.end ? `${it.start}–${it.end}` : it.start;
   return `<div class="item ${whoClass}" data-src="${it._src}" data-id="${it.id}" title="${it.title}">
     <span class="emo">${emojiFor(it)}</span>
@@ -3043,6 +3185,10 @@ function openSettings(){
   document.getElementById('avMilla').value = settings.avatars.Milla || '';
   document.getElementById('icloudAlbumUrl').value = settings.icloudAlbumUrl || '';
   document.getElementById('avJonathan').value = settings.avatars.Jonathan || '';
+  renderProfileHistory();
+  renderCalendarManager();
+  fillTransparentInputs();
+  fillCurrentStarPoints();
   settingsOverlay.classList.add('open');
 }
 document.getElementById('settingsFab').addEventListener('click', openSettings);
@@ -3374,28 +3520,26 @@ function renderRuleTable(){
 
 function renderTplList(){
   const list = document.getElementById('tplList');
-  const groups = [
-    {who:'Milla', label:'⚽ Milla'},
-    {who:'Jonathan', label:'🏒 Jonathan'},
-    {who:'Begge', label:'✨ Felles'}
-  ];
-  const sortFn = (a,b)=> a.day-b.day || a.start.localeCompare(b.start);
-  const hasAny = template.length>0;
-  list.innerHTML = hasAny ? groups.map(g=>{
-    const items = template.filter(it=>it.who===g.who).sort(sortFn);
-    return `<div class="tpl-group">
-      <div class="tpl-group-head">${g.label}</div>
-      ${items.length ? items.map(it=>`
-        <div class="tplitem" data-id="${it.id}">
-          <span>${WD[it.day]} ${it.start}${it.end?'–'+it.end:''} · ${it.title}</span>
-          <span>✏️</span>
-        </div>`).join('') : '<div class="hint" style="margin:0 0 10px;">Ingen faste avtaler.</div>'}
-    </div>`;
-  }).join('') : '<div class="hint">Ingen faste avtaler ennå.</div>';
+  const sortFn = (a,b)=> (a.start||'').localeCompare(b.start||'') || (a.title||'').localeCompare(b.title||'');
+  const whoClass = who => (who||'Begge').toLowerCase();
+  const dayCard = day => {
+    const items = template.filter(it=>it.day===day).sort(sortFn);
+    return `<section class="routine-day-card">
+      <div class="routine-day-head"><b>${WD[day]}</b><span>${items.length} ${items.length===1?'rutine':'rutiner'}</span></div>
+      <div class="routine-day-items">
+        ${items.length ? items.map(it=>`<div class="tplitem" data-id="${it.id}">
+          <span class="routine-who-dot ${whoClass(it.who)}" title="${it.who||'Begge'}"></span>
+          <span class="routine-copy"><span class="routine-time">${it.start||''}${it.end?'–'+it.end:''} · ${it.who||'Begge'}</span><span class="routine-title">${it.title}</span></span>
+          <span class="routine-edit">✎</span>
+        </div>`).join('') : '<div class="routine-day-empty">Ingen faste rutiner</div>'}
+      </div>
+    </section>`;
+  };
+  list.innerHTML = `<div class="routine-days-grid">${[0,1,2,3,4].map(dayCard).join('')}</div><div class="routine-weekend">${[5,6].map(dayCard).join('')}</div>`;
   list.querySelectorAll('.tplitem').forEach(el=>{
     el.addEventListener('click', ()=>{
       const it = template.find(x=>x.id===el.dataset.id);
-      openEventModal(it, it.day, 'template', null, null, true);
+      if(it) openEventModal(it, it.day, 'template', null, null, true);
     });
   });
 }
@@ -3520,13 +3664,16 @@ function renderSpondPreview(){
   document.getElementById('spondAdd').style.display='block';
 }
 document.getElementById('spondAdd').addEventListener('click', async ()=>{
+  const sourceId = pendingImportCalendarId || ensureCalendarSource('import','Importert kalender','');
   parsedSpond.filter(p=>p.include).forEach(p=>{
-    weekEvents.push({id:uid(), day:p.day, start:p.start, end:p.end, title:p.title, who:p.who, type:'aktivitet'});
+    weekEvents.push({id:uid(), day:p.day, start:p.start, end:p.end, title:p.title, who:p.who, type:'aktivitet', calendarId:sourceId});
   });
-  await saveWeek();
+  await Promise.all([saveWeek(),saveSettings()]);
   document.getElementById('spondInput').value='';
   document.getElementById('spondPreview').innerHTML='';
   document.getElementById('spondAdd').style.display='none';
+  pendingImportCalendarId = null;
+  renderCalendarManager();
   renderAll();
 });
 
@@ -3775,27 +3922,28 @@ function renderStars(){
       <div class="progresswrap"><div class="progressfill" style="width:${pct}%"></div></div>
       ${reward? `<div class="rewardlabel ${reached?'reached':''}">${reached?'🎉 ':'🎁 '}${reward}</div>` : ''}
       <div class="chorelist">
-        ${list.length? list.map(c=>`
-          <div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
-            <span class="cbox">+</span><span class="ctxt">${c.title}</span><span class="cpts">+${c.points}</span>
-          </div>`).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
+        ${list.length? list.map(c=>{
+          const count = weeklyChoreCounts[c.id] || 0;
+          return `<div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
+            <span class="cbox">+</span><span class="ctxt">${c.title} (${count})</span><span class="cpts">+${c.points}</span>
+          </div>`;
+        }).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
       </div>
     </div>`;
   }).join('');
   box.querySelectorAll('.chore').forEach(el=>{
     el.addEventListener('click', async ()=>{
-      const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title;
+      const who = el.dataset.who, pts = parseInt(el.dataset.pts)||0, title = el.dataset.title, choreId=el.dataset.id;
       if(settings.requirePin){
         const code = await askForPin(`Kode for å godkjenne "${title}" (${who})`);
         if(code===null) return;
-        if(code !== (settings.pin || '1234')){
-          alert('Feil kode.');
-          return;
-        }
+        if(code !== (settings.pin || '1234')){ alert('Feil kode.'); return; }
       }
       weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
-      await saveWeeklyPoints();
+      weeklyChoreCounts[choreId] = (weeklyChoreCounts[choreId]||0) + 1;
+      await Promise.all([saveWeeklyPoints(), saveWeeklyChoreCounts()]);
       renderStars();
+      fillCurrentStarPoints();
     });
   });
 }
@@ -3897,12 +4045,24 @@ document.getElementById('starSettingsSave').addEventListener('click', async ()=>
   renderStars();
 });
 document.getElementById('starPinReveal').addEventListener('click', ()=>{
-  document.getElementById('pinRevealValue').textContent = document.getElementById('starPin').value || settings.pin || '1234';
+  const input = document.getElementById('pinRevealValue');
+  input.value = settings.pin || '1234';
   document.getElementById('pinRevealOverlay').classList.add('open');
+  setTimeout(()=>input.focus(),40);
 });
 document.getElementById('pinRevealClose').addEventListener('click', ()=>{
   document.getElementById('pinRevealOverlay').classList.remove('open');
 });
+document.getElementById('pinRevealSave').addEventListener('click', async ()=>{
+  const input = document.getElementById('pinRevealValue');
+  const code = input.value.replace(/[^0-9]/g,'');
+  if(!code){ alert('Koden må inneholde tall.'); return; }
+  settings.pin = code;
+  document.getElementById('starPin').value = code;
+  await saveSettings();
+  document.getElementById('pinRevealOverlay').classList.remove('open');
+});
+document.getElementById('pinRevealValue').addEventListener('input', e=>{ e.target.value=e.target.value.replace(/[^0-9]/g,''); });
 document.getElementById('pinRevealOverlay').addEventListener('click', e=>{
   if(e.target.id==='pinRevealOverlay') e.currentTarget.classList.remove('open');
 });
@@ -3929,21 +4089,32 @@ async function uploadAvatarFile(file, who, statusEl){
     return null;
   }
 }
+async function commitUploadedAvatar(who,url){
+  if(!url) return;
+  await addAvatarToHistory(who,url);
+  document.getElementById('av'+who).value = url;
+  await saveSettings();
+  renderProfileHistory(); renderAll(); renderStars();
+}
 document.getElementById('fileMilla').addEventListener('change', async (e)=>{
   const file = e.target.files[0]; if(!file) return;
   const url = await uploadAvatarFile(file, 'Milla', document.getElementById('avMillaStatus'));
-  if(url) document.getElementById('avMilla').value = url;
+  if(url) await commitUploadedAvatar('Milla',url);
+  e.target.value='';
 });
 document.getElementById('fileJonathan').addEventListener('change', async (e)=>{
   const file = e.target.files[0]; if(!file) return;
   const url = await uploadAvatarFile(file, 'Jonathan', document.getElementById('avJonathanStatus'));
-  if(url) document.getElementById('avJonathan').value = url;
+  if(url) await commitUploadedAvatar('Jonathan',url);
+  e.target.value='';
 });
 document.getElementById('avatarSave').addEventListener('click', async ()=>{
-  settings.avatars.Milla = document.getElementById('avMilla').value.trim();
-  settings.avatars.Jonathan = document.getElementById('avJonathan').value.trim();
+  const m=document.getElementById('avMilla').value.trim();
+  const j=document.getElementById('avJonathan').value.trim();
+  if(m) await addAvatarToHistory('Milla',m);
+  if(j) await addAvatarToHistory('Jonathan',j);
   await saveSettings();
-  renderAll(); renderStars();
+  renderProfileHistory(); renderAll(); renderStars();
 });
 
 // ---------- Handleliste ----------
@@ -4167,6 +4338,247 @@ async function autoRefreshIcloudAlbumIfDue(){
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
 
+
+// ---------- V3 calendar/profile/star/admin helpers ----------
+let pendingImportCalendarId = null;
+let weeklyChoreCounts = {};
+
+function ensureCalendarSource(type, name, url){
+  settings.calendarSources = settings.calendarSources || [];
+  const cleanUrl = (url||'').trim();
+  let src = settings.calendarSources.find(c => cleanUrl && c.url===cleanUrl && c.type===type);
+  if(!src){
+    src = {id:'cal-'+uid(), type:type||'import', name:name||'Importert kalender', url:cleanUrl, visible:true, createdAt:Date.now()};
+    settings.calendarSources.push(src);
+  }else{
+    src.name = name || src.name;
+    src.visible = src.visible !== false;
+  }
+  return src.id;
+}
+function sourceNameFromPublicSelection(){
+  const selected = document.querySelector('.public-calendar-card.selected b');
+  return selected ? selected.textContent.trim() : 'Offentlig kalender';
+}
+function visibleEventsForSource(id){
+  if(id==='template') return template;
+  if(id==='manual') return weekEvents.filter(e=>!e.calendarId);
+  return weekEvents.filter(e=>e.calendarId===id);
+}
+function renderCalendarManager(){
+  const box=document.getElementById('calendarSourceList');
+  if(!box) return;
+  const builtins=[
+    {id:'template',name:'Fast ukeplan',type:'fast',visible:calendarIsVisible('template'),removable:false},
+    {id:'manual',name:'Egne hendelser',type:'manual',visible:calendarIsVisible('manual'),removable:false}
+  ];
+  const imported=(settings.calendarSources||[]).filter(c=>!(settings.deletedCalendarIds||[]).includes(c.id));
+  const rows=[...builtins,...imported];
+  box.innerHTML=rows.map(c=>{
+    const evs=visibleEventsForSource(c.id);
+    const visible = c.id==='template'||c.id==='manual' ? calendarIsVisible(c.id) : c.visible!==false;
+    return `<div class="calendar-source-row" data-cal="${c.id}">
+      <div class="calendar-source-main">
+        <span class="calendar-dot"></span>
+        <div class="calendar-source-copy"><b>${c.name}</b><small>${c.type==='fast'?'Fast kalender':c.type==='manual'?'Hendelser lagt inn manuelt':(c.type||'Importert')} · ${evs.length} hendelser denne uken</small></div>
+        <label class="calendar-toggle" title="${visible?'Skjul':'Vis'} kalender"><input type="checkbox" data-cal-toggle="${c.id}" ${visible?'checked':''}><span></span></label>
+        ${c.removable===false?'<button class="calendar-expand" type="button" data-cal-expand="'+c.id+'">Hendelser</button>':'<button class="calendar-remove" type="button" data-cal-remove="'+c.id+'" title="Fjern kalender">✕</button>'}
+      </div>
+      <div class="calendar-event-list">
+        ${evs.length?evs.map(e=>`<label class="calendar-event-row"><input type="checkbox" data-event-toggle="${e.id}" ${!(settings.hiddenEventIds||[]).includes(e.id)?'checked':''}><span>${WD[e.day]||''} ${e.start||''} · ${e.title}</span></label>`).join(''):'<div class="hint" style="margin:6px 0;">Ingen hendelser denne uken.</div>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  box.querySelectorAll('[data-cal-toggle]').forEach(inp=>inp.addEventListener('change',async()=>{
+    const id=inp.dataset.calToggle;
+    if(id==='template'||id==='manual'){
+      settings.calendarVisibility=settings.calendarVisibility||{};
+      settings.calendarVisibility[id]=inp.checked;
+    }else{
+      const src=(settings.calendarSources||[]).find(c=>c.id===id);
+      if(src) src.visible=inp.checked;
+    }
+    await saveSettings(); renderAll();
+  }));
+  box.querySelectorAll('[data-cal-expand]').forEach(btn=>btn.addEventListener('click',()=>btn.closest('.calendar-source-row').classList.toggle('open')));
+  box.querySelectorAll('.calendar-source-copy').forEach(el=>el.addEventListener('click',()=>el.closest('.calendar-source-row').classList.toggle('open')));
+  box.querySelectorAll('[data-event-toggle]').forEach(inp=>inp.addEventListener('change',async()=>{
+    settings.hiddenEventIds=settings.hiddenEventIds||[];
+    const id=inp.dataset.eventToggle;
+    if(inp.checked) settings.hiddenEventIds=settings.hiddenEventIds.filter(x=>x!==id);
+    else if(!settings.hiddenEventIds.includes(id)) settings.hiddenEventIds.push(id);
+    await saveSettings(); renderAll();
+  }));
+  box.querySelectorAll('[data-cal-remove]').forEach(btn=>btn.addEventListener('click',async()=>{
+    const id=btn.dataset.calRemove;
+    const src=(settings.calendarSources||[]).find(c=>c.id===id);
+    if(!confirm(`Fjern kalenderen "${src?src.name:'Importert kalender'}"? Hendelsene skjules fra ukeplanen.`)) return;
+    settings.deletedCalendarIds=settings.deletedCalendarIds||[];
+    if(!settings.deletedCalendarIds.includes(id)) settings.deletedCalendarIds.push(id);
+    settings.calendarSources=(settings.calendarSources||[]).filter(c=>c.id!==id);
+    await saveSettings(); renderCalendarManager(); renderAll();
+  }));
+}
+function openAllCalendarRows(){
+  document.querySelectorAll('#calendarSourceList .calendar-source-row').forEach(r=>r.classList.add('open'));
+}
+
+function applyTransparentColors(){
+  const tc=settings.transparentColors||{};
+  ['milla','jonathan','skole','today'].forEach(k=>{
+    if(tc[k]) document.documentElement.setAttribute('data-trans-'+k,'1');
+    else document.documentElement.removeAttribute('data-trans-'+k);
+  });
+}
+function fillTransparentInputs(){
+  const tc=settings.transparentColors||{};
+  [['Milla','milla'],['Jonathan','jonathan'],['Skole','skole'],['Today','today']].forEach(([cap,k])=>{
+    const el=document.getElementById('trans'+cap); if(el) el.checked=!!tc[k];
+  });
+}
+['Milla','Jonathan','Skole','Today'].forEach(cap=>{
+  const el=document.getElementById('trans'+cap);
+  if(el) el.addEventListener('change',async()=>{
+    const key=cap.toLowerCase();
+    settings.transparentColors=settings.transparentColors||{};
+    settings.transparentColors[key]=el.checked;
+    applyTransparentColors(); await saveSettings();
+  });
+});
+
+function normalizeAvatarHistory(){
+  settings.avatarHistory=settings.avatarHistory||{Milla:[],Jonathan:[]};
+  ['Milla','Jonathan'].forEach(who=>{
+    let a=Array.isArray(settings.avatarHistory[who])?settings.avatarHistory[who].filter(Boolean):[];
+    const active=settings.avatars&&settings.avatars[who];
+    if(active && !a.includes(active)) a.push(active);
+    settings.avatarHistory[who]=a.slice(-5);
+  });
+}
+async function deleteAvatarStorageUrl(url){
+  try{
+    const prefix=`${SUPABASE_URL}/storage/v1/object/public/avatars/`;
+    if(!url || !url.startsWith(prefix)) return;
+    const path=url.slice(prefix.length);
+    await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`,{
+      method:'DELETE',
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}
+    });
+  }catch(e){ console.warn('Could not delete old avatar object',e); }
+}
+async function addAvatarToHistory(who,url){
+  if(!url) return;
+  normalizeAvatarHistory();
+  let arr=settings.avatarHistory[who].filter(x=>x!==url);
+  arr.push(url);
+  if(arr.length>5){
+    const removed=arr.splice(0,arr.length-5);
+    removed.forEach(old=>deleteAvatarStorageUrl(old));
+  }
+  settings.avatarHistory[who]=arr;
+  settings.avatars[who]=url;
+}
+function renderProfileHistory(){
+  normalizeAvatarHistory();
+  ['Milla','Jonathan'].forEach(who=>{
+    const hist=document.getElementById('profileHistory'+who);
+    const prev=document.getElementById('activeProfile'+who);
+    const count=document.getElementById('profileCount'+who);
+    const arr=settings.avatarHistory[who]||[];
+    const active=settings.avatars[who]||'';
+    if(count) count.textContent=`(${arr.length}/5)`;
+    if(prev) prev.innerHTML=active?`<img src="${active}" alt="${who}">`:`<span class="hint">Ingen profilbilde</span>`;
+    if(hist){
+      hist.innerHTML=arr.map((url,i)=>`<button type="button" class="${url===active?'active':''}" data-profile-url="${url}" data-who="${who}" title="Bruk bilde ${i+1}"><img src="${url}" alt=""><span class="profile-delete" data-profile-delete="${url}">×</span></button>`).join('');
+      hist.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',async e=>{
+        if(e.target.closest('[data-profile-delete]')) return;
+        settings.avatars[who]=btn.dataset.profileUrl;
+        document.getElementById('av'+who).value=btn.dataset.profileUrl;
+        await saveSettings(); renderProfileHistory(); renderAll(); renderStars();
+      }));
+      hist.querySelectorAll('[data-profile-delete]').forEach(del=>del.addEventListener('click',async e=>{
+        e.stopPropagation();
+        const url=del.dataset.profileDelete;
+        settings.avatarHistory[who]=settings.avatarHistory[who].filter(x=>x!==url);
+        if(settings.avatars[who]===url) settings.avatars[who]=settings.avatarHistory[who].slice(-1)[0]||'';
+        await deleteAvatarStorageUrl(url); await saveSettings(); renderProfileHistory(); renderAll(); renderStars();
+      }));
+    }
+  });
+}
+
+function fillCurrentStarPoints(){
+  const m=document.getElementById('currentPointsMilla'),j=document.getElementById('currentPointsJonathan');
+  if(m) m.value=weeklyPoints.Milla||0;if(j) j.value=weeklyPoints.Jonathan||0;
+}
+async function saveWeeklyChoreCounts(){
+  const key='starcounts:'+isoDate(mondayOf(new Date()));
+  try{await window.storage.set(key,JSON.stringify(weeklyChoreCounts));return true}catch(e){reportSaveError('save star counts failed',e);return false}
+}
+document.querySelectorAll('[data-star-adjust]').forEach(btn=>btn.addEventListener('click',async()=>{
+  const who=btn.dataset.starAdjust,delta=parseInt(btn.dataset.delta)||0;
+  weeklyPoints[who]=Math.max(0,(weeklyPoints[who]||0)+delta);
+  await saveWeeklyPoints();renderStars();fillCurrentStarPoints();
+}));
+['Milla','Jonathan'].forEach(who=>{
+  const inp=document.getElementById('currentPoints'+who);
+  if(inp) inp.addEventListener('change',async()=>{
+    weeklyPoints[who]=Math.max(0,parseInt(inp.value)||0);await saveWeeklyPoints();renderStars();fillCurrentStarPoints();
+  });
+});
+document.querySelectorAll('[data-star-reset]').forEach(btn=>btn.addEventListener('click',async()=>{
+  const who=btn.dataset.starReset;
+  if(!confirm(`Nullstill stjerner og tellinger for ${who}?`)) return;
+  weeklyPoints[who]=0;
+  (settings.chores||[]).filter(c=>c.who===who).forEach(c=>{weeklyChoreCounts[c.id]=0});
+  await Promise.all([saveWeeklyPoints(),saveWeeklyChoreCounts()]);renderStars();fillCurrentStarPoints();
+}));
+
+document.getElementById('shopClearAll')?.addEventListener('click',async()=>{
+  if(!shoppingList.length) return;
+  if(!confirm('Fjern alt fra Handle og Huske-listen?')) return;
+  shoppingList=[];await saveShopping();renderShopping();
+});
+
+// augment existing save profile behavior
+document.getElementById('avatarSave')?.addEventListener('click',async()=>{
+  const m=document.getElementById('avMilla').value.trim(),j=document.getElementById('avJonathan').value.trim();
+  if(m) await addAvatarToHistory('Milla',m);
+  if(j) await addAvatarToHistory('Jonathan',j);
+  await saveSettings();renderProfileHistory();renderAll();renderStars();
+});
+
+// Set source identity before imports are copied into weekEvents
+document.getElementById('spondFetch')?.addEventListener('click',()=>{
+  const url=document.getElementById('spondUrl').value.trim();
+  pendingImportCalendarId=ensureCalendarSource('spond','Spond',url);
+},{capture:true});
+document.getElementById('spondParse')?.addEventListener('click',()=>{
+  if(!pendingImportCalendarId) pendingImportCalendarId=ensureCalendarSource('spond','Spond / limt inn','');
+},{capture:true});
+document.getElementById('icsFile')?.addEventListener('change',()=>{
+  pendingImportCalendarId=ensureCalendarSource('ics','Importert ICS-fil','file');
+},{capture:true});
+document.getElementById('publicCalendarSave')?.addEventListener('click',()=>{
+  const url=document.getElementById('publicCalendarUrl').value.trim();
+  pendingImportCalendarId=ensureCalendarSource('public',sourceNameFromPublicSelection(),url);
+},{capture:true});
+document.getElementById('otherCalendarSave')?.addEventListener('click',()=>{
+  const ical=document.getElementById('icalCalendarUrl').value.trim();
+  const google=document.getElementById('googleCalendarUrl').value.trim();
+  const raw=document.getElementById('otherCalendarIcs').value.trim();
+  pendingImportCalendarId=ensureCalendarSource(google?'google':ical?'ical':'ics',google?'Google Calendar':ical?'iCal-kalender':'Importert ICS',google||ical||(raw?'raw-ics':''));
+},{capture:true});
+
+// keep settings screens refreshed
+document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{
+  if(btn.dataset.tab==='profil') renderProfileHistory();
+  if(btn.dataset.tab==='spond') renderCalendarManager();
+  if(btn.dataset.tab==='tema'){fillTransparentInputs();applyTransparentColors();}
+  if(btn.dataset.tab==='stjerner') fillCurrentStarPoints();
+}));
+
 // ---------- fast init ----------
 function safeParseValue(r, fallback){
   if(!r || r.value == null) return fallback;
@@ -4190,6 +4602,12 @@ function normalizeSettings(){
   if(settings.showPhotosSection===undefined) settings.showPhotosSection = true;
   if(!settings.publicCalendars) settings.publicCalendars = [];
   if(!settings.otherCalendars) settings.otherCalendars = [];
+  if(!settings.avatarHistory) settings.avatarHistory = {Milla:[],Jonathan:[]};
+  if(!settings.calendarSources) settings.calendarSources = [];
+  if(!settings.calendarVisibility) settings.calendarVisibility = {template:true,manual:true};
+  if(!settings.hiddenEventIds) settings.hiddenEventIds = [];
+  if(!settings.deletedCalendarIds) settings.deletedCalendarIds = [];
+  if(!settings.transparentColors) settings.transparentColors = {};
 }
 
 function applySnapshot(getter, {authoritative=false}={}){
@@ -4222,18 +4640,26 @@ function applySnapshot(getter, {authoritative=false}={}){
   const sp = getter(starWeekKey);
   if(sp) weeklyPoints = safeParseValue(sp, {Milla:0,Jonathan:0});
   else if(authoritative) weeklyPoints = {Milla:0,Jonathan:0};
+
+  const sc = getter('starcounts:'+isoDate(mondayOf(new Date())));
+  if(sc) weeklyChoreCounts = safeParseValue(sc, {});
+  else if(authoritative) weeklyChoreCounts = {};
 }
 
 function paint(){
   applyTheme(settings.theme);
   applyLayout();
   applySectionVisibility();
+  applyTransparentColors();
   renderStars();
   renderAll();
   renderShopping();
   renderPhotos();
   document.getElementById('photoInput').value = photos.filter(x=>/^https?:\/\//i.test(x)).join('\n');
   renderPhotoManager();
+  renderProfileHistory();
+  renderCalendarManager();
+  fillCurrentStarPoints();
 }
 
 function currentSyncKeys(){
@@ -4243,7 +4669,8 @@ function currentSyncKeys(){
     'week:'+isoDate(weekStart),
     'shopping',
     'photos',
-    'starweek:'+isoDate(mondayOf(new Date()))
+    'starweek:'+isoDate(mondayOf(new Date())),
+    'starcounts:'+isoDate(mondayOf(new Date()))
   ];
 }
 
