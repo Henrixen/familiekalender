@@ -2307,6 +2307,101 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
 @media(max-width:580px){.event-scope-actions{grid-template-columns:1fr}.event-scope-actions .btn{width:100%}}
 </style>
 
+
+<style id="calendar-column-alignment-fix">
+/* Hold alle aktivitetslag på nøyaktig samme 50/50-grid, også når én side er tom */
+.day.weekday .schedule-layer{
+  width:100%!important;
+  min-width:0!important;
+  align-self:stretch!important;
+  box-sizing:border-box!important;
+}
+.day.weekday .schedule-layer .split{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  align-items:stretch!important;
+}
+.day.weekday .schedule-layer .col{
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+.day.weekday .schedule-layer .col.milla{
+  border-right:1px solid var(--line)!important;
+}
+.day.weekday .schedule-layer .col.jonathan{
+  border-left:0!important;
+}
+.day.weekday .schedule-layer .shared{
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+</style>
+
+
+<style id="final-text-husk-shopping-fix">
+/* Aktivitetstekst skal alltid ende med … i stedet for å bryte/renne ut */
+.item,.weekend-item,.huskchip,.shopitem{min-width:0}
+.item .ti,
+.weekend-name,
+.huskchip > span:last-child,
+.shopitem .txt{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+/* Handle og Huske: redusert = tittel + én linje */
+#shoppingPanel.shopping-collapsed{
+  min-height:0!important;
+  height:auto!important;
+  padding-bottom:10px!important;
+}
+#shoppingPanel.shopping-collapsed .panelhead{margin-bottom:5px!important}
+#shoppingPanel.shopping-collapsed .shopadd{display:none!important}
+#shoppingPanel.shopping-collapsed .shoplist{
+  display:block!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  flex:none!important;
+}
+#shoppingPanel.shopping-collapsed .shopitem{display:none!important}
+#shoppingPanel.shopping-collapsed .shopitem:first-child{display:flex!important}
+#shoppingPanel.shopping-collapsed .shopempty{
+  display:block!important;
+  padding:5px 8px!important;
+  min-height:30px!important;
+  text-align:left!important;
+}
+
+/* Ekspandert følger faktisk antall punkter, uten fast 360px-høyde */
+#shoppingPanel.shopping-expanded{
+  min-height:0!important;
+  height:auto!important;
+}
+#shoppingPanel.shopping-expanded .shoplist{
+  max-height:none!important;
+  overflow:visible!important;
+  flex:none!important;
+}
+#shoppingPanel.shopping-expanded .shopempty{
+  min-height:32px!important;
+  padding:7px 8px!important;
+}
+
+/* Normalmodus oppfører seg også innholdsbasert */
+#shoppingPanel:not(.shopping-collapsed) .shoplist{
+  max-height:none!important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3346,6 +3441,8 @@ function calendarIsVisible(calendarId){
 }
 function eventIsVisible(it, src){
   if((settings.hiddenEventIds||[]).includes(it.id)) return false;
+  // Husk-lapper er en egen kalenderfunksjon og skal alltid vises på valgt dag.
+  if(it && it.type==='husk') return true;
   if(src==='template'){
     if(!calendarIsVisible('template')) return false;
     const vis=settings.calendarVisibility||{};
@@ -3773,6 +3870,11 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
     id: editing?editing.id:uid(),
     day,start,end,title,who,type:currentType,emoji:currentEmoji||''
   };
+  if(isHusk){
+    delete obj.calendarId;
+    delete obj.externalKey;
+    obj.localReminder=true;
+  }
 
   let scope='one';
   if(editing && editing.src!=='template' && isRecurringImportedEvent(original)){
@@ -4078,11 +4180,11 @@ function applyShoppingPanelMode(){
 }
 
 document.getElementById('shopMinimize')?.addEventListener('click',async()=>{
-  settings.shoppingPanelMode=(settings.shoppingPanelMode==='collapsed')?'normal':'collapsed';
+  settings.shoppingPanelMode='collapsed';
   applyShoppingPanelMode(); await saveSettings();
 });
 document.getElementById('shopExpand')?.addEventListener('click',async()=>{
-  settings.shoppingPanelMode=(settings.shoppingPanelMode==='expanded')?'normal':'expanded';
+  settings.shoppingPanelMode='expanded';
   applyShoppingPanelMode(); await saveSettings();
 });
 
@@ -5274,7 +5376,10 @@ async function addShopItem(){
   if(!text) return;
   shoppingList.push({id:uid(), text, done:false});
   input.value='';
-  await saveShopping(); renderShopping();
+  if(settings.shoppingPanelMode!=='collapsed') settings.shoppingPanelMode='expanded';
+  await Promise.all([saveShopping(),saveSettings()]);
+  renderShopping();
+  applyShoppingPanelMode();
 }
 
 // ---------- Bilder (rotasjon) ----------
