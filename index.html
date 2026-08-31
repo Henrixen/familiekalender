@@ -2034,6 +2034,29 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
   }
 </style>
 
+
+<style id="header-layout-bullseye-fix">
+header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;gap:18px!important}
+.brand-copy{min-width:0}
+.brand-title-row{display:flex;align-items:center;gap:9px;min-width:0}
+.brand-title-row h1{font-size:20px!important;line-height:1!important;white-space:nowrap}
+.brand-sync{display:inline-flex!important;align-items:center;gap:4px;font-size:8.5px!important;color:var(--ink-soft);white-space:nowrap;transform:translateY(1px)}
+.brand-sync .dot{width:6px;height:6px}
+.brand .sub{font-size:10.5px!important;margin-top:3px!important}
+.weeknav{flex-direction:row!important;align-items:center!important;justify-content:center;gap:8px!important}
+.weeknav-main{order:0!important}
+.weeknav .bullseye-btn{order:1!important;width:39px!important;height:39px!important;min-width:39px!important;padding:0!important;margin:0!important;border-radius:50%!important;border:1px solid var(--line)!important;background:var(--surface)!important;display:grid!important;place-items:center!important;box-shadow:none!important}
+.bullseye-icon{position:relative;width:18px;height:18px;border:2px solid #716960;border-radius:50%;display:block}
+.bullseye-icon:before{content:"";position:absolute;inset:4px;border:2px solid #716960;border-radius:50%}
+.bullseye-icon span{position:absolute;width:4px;height:4px;border-radius:50%;background:#716960;left:50%;top:50%;transform:translate(-50%,-50%)}
+.header-actions{justify-self:end!important;display:flex!important;align-items:center!important;gap:9px!important}
+.header-settings-icon{width:39px;height:39px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:#716960;cursor:pointer;display:grid;place-items:center;font-size:17px;line-height:1;box-shadow:none}
+.header-settings-icon:hover{background:var(--surface-alt);color:var(--ink)}
+#settingsFab{display:none!important}
+@media(max-width:980px){header{grid-template-columns:1fr auto!important}.weeknav{grid-row:2;grid-column:1/-1;width:100%}.header-actions{grid-column:2;grid-row:1}.brand-sync{display:inline-flex!important}}
+@media(max-width:760px){.brand-sync{font-size:7.5px!important}.weeknav-main{flex:1}.weeknav .range{flex:1;min-width:0!important}.header-settings-icon{width:36px;height:36px}.weeknav .bullseye-btn{width:36px!important;height:36px!important;min-width:36px!important}}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2043,21 +2066,26 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
         <span class="cal-rings"></span>
         <span class="cal-face"><span class="cal-dot"></span></span>
       </div>
-      <div>
-        <h1>Ukeplan</h1>
+      <div class="brand-copy">
+        <div class="brand-title-row">
+          <h1>Ukeplan</h1>
+          <div class="sync-status brand-sync" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div>
+        </div>
         <span class="sub">Familiekalender</span>
       </div>
     </div>
     <div class="weeknav">
-      <button class="thisweek" id="thisWeekBtn" title="Gå til denne uken"><span class="today-ico">▣</span><span>Denne uken</span></button>
       <div class="weeknav-main">
         <button id="prevWeek" aria-label="Forrige uke">‹</button>
         <div class="range" id="weekRange">–</div>
         <button id="nextWeek" aria-label="Neste uke">›</button>
       </div>
+      <button class="thisweek bullseye-btn" id="thisWeekBtn" title="Gå til denne uken" aria-label="Denne uken">
+        <span class="bullseye-icon" aria-hidden="true"><span></span></span>
+      </button>
     </div>
     <div class="header-actions">
-      <div class="sync-status" id="syncStatus" title="Supabase synkronisering"><span class="dot"></span><span id="syncStatusText">Kobler til…</span></div>
+      <button class="header-settings-icon" id="headerSettingsBtn" title="Innstillinger" aria-label="Innstillinger">⚙</button>
       <div class="clock" id="clock">--:--</div>
     </div>
   </header>
@@ -2326,7 +2354,7 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
 
               <div class="field">
                 <label>Kalenderlenke (webcal / https)</label>
-                <input type="text" id="spondUrl" placeholder="webcal://p165-caldav.icloud.com/publish/...">
+                <input type="text" id="spondUrl" placeholder="webcal://p165-caldav.icloud.com/published/2/...">
               </div>
               <button class="btn primary" id="spondFetch" style="width:100%;margin-bottom:16px;">Hent fra lenke</button>
 
@@ -3410,11 +3438,17 @@ document.querySelectorAll('.public-calendar-card').forEach(card=>{
 
 // ---------- ICS-henting via server-proxy (bypasser CORS) ----------
 async function fetchICSViaProxy(rawUrl){
-  const url = (rawUrl||'').trim();
+  let url = (rawUrl||'').trim();
   if(!url) throw new Error('Lim inn en kalenderlenke først.');
+  if(/^webcal:\/\//i.test(url)) url = url.replace(/^webcal:\/\//i,'https://');
   const res = await fetch('/api/ics-proxy?url=' + encodeURIComponent(url));
   const text = await res.text();
-  if(!res.ok) throw new Error(text || ('Feil '+res.status));
+  if(!res.ok){
+    let message = text || ('Feil '+res.status);
+    try{ const json=JSON.parse(text); if(json?.error) message=json.error; }catch(_){}
+    throw new Error(message);
+  }
+  if(!/BEGIN:VCALENDAR/i.test(text)) throw new Error('Lenken svarte, men innholdet ser ikke ut som en ICS/iCalendar-kalender.');
   return text;
 }
 function showSpondFetchResult(text){
