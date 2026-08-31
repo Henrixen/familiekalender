@@ -225,6 +225,9 @@
 
   .overlay{position:fixed;inset:0;background:rgba(20,24,17,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.open{display:flex;}
+  #eventOverlay{z-index:60;}
+  #pinOverlay{z-index:70;}
+  #pinRevealOverlay{z-index:80;}
   .modal{
     background:var(--surface);border-radius:20px;padding:22px;width:100%;max-width:440px;
     max-height:88vh;overflow-y:auto;
@@ -811,6 +814,26 @@ html[data-layout="5"] .grid{
 html[data-layout="5"] .day.weekday{grid-column:span 2;}
 html[data-layout="5"] .weekend-section{grid-column:1/-1;}
 
+html[data-layout="4"] .grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+html[data-layout="4"] .day.weekday{
+  grid-column:span 1;
+  min-height:440px;
+}
+html[data-layout="4"] .weekend-section{
+  grid-column:span 1;
+  min-height:440px;
+  display:flex;
+  flex-direction:column;
+}
+html[data-layout="4"] .weekend-divider{width:100%;height:1px;flex:none;}
+html[data-layout="4"] .weekend-day{flex:1;min-height:0;padding:12px 13px 10px;}
+html[data-layout="4"] .weekend-list{min-height:45px;}
+html[data-layout="4"] .weekend-item{min-height:34px;padding:6px 8px;}
+html[data-layout="4"] .weekend-head{margin-bottom:7px;}
+
 html[data-layout="3"] .grid{
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
@@ -854,8 +877,6 @@ html[data-layout="2"] .grid{
   grid-template-columns:repeat(2,minmax(0,1fr));
 }
 html[data-layout="2"] .day.weekday{grid-column:span 1;min-height:390px;}
-/* With five weekdays, Friday becomes row 3 / column 1. Keep the weekend card
-   as the sixth grid item so it fills row 3 / column 2 instead of creating row 4. */
 html[data-layout="2"] .weekend-section{
   grid-column:span 1;
   min-height:390px;
@@ -881,13 +902,14 @@ html[data-layout="2"] .weekend-add{padding:5px 8px;font-size:9.5px;}
 
 html[data-layout="3"] .starpanel,
 html[data-layout="5"] .starpanel,
+html[data-layout="4"] .starpanel,
 html[data-layout="2"] .starpanel{
   margin-top:12px;
 }
 
 .layout-picker{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:10px;
 }
 .layout-option{
@@ -917,6 +939,7 @@ html[data-layout="2"] .starpanel{
 }
 .layout-option[data-layout-v="auto"] .layout-mini{grid-template-columns:repeat(5,1fr);}
 .layout-option[data-layout-v="5"] .layout-mini{grid-template-columns:repeat(5,1fr);}
+.layout-option[data-layout-v="4"] .layout-mini{grid-template-columns:repeat(4,1fr);}
 .layout-option[data-layout-v="3"] .layout-mini{grid-template-columns:repeat(3,1fr);}
 .layout-option[data-layout-v="2"] .layout-mini{grid-template-columns:repeat(2,1fr);}
 .layout-option .layout-mini span{
@@ -937,6 +960,10 @@ html[data-layout="2"] .starpanel{
   html[data-layout="3"] .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
   html[data-layout="3"] .day.weekday{grid-column:span 1!important;min-height:430px!important;}
   html[data-layout="3"] .weekend-section{grid-column:span 1!important;}
+
+  html[data-layout="4"] .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+  html[data-layout="4"] .day.weekday{grid-column:span 1!important;min-height:440px!important;}
+  html[data-layout="4"] .weekend-section{grid-column:span 1!important;}
 
   html[data-layout="5"] .grid{grid-template-columns:repeat(10,minmax(0,1fr))!important;}
   html[data-layout="5"] .day.weekday{grid-column:span 2!important;}
@@ -1386,16 +1413,24 @@ html[data-layout="2"] .starpanel{
   align-items:center;
   text-align:left;
   color:var(--ink);
+  transition:.15s ease;
 }
 .public-calendar-card:hover{
   border-color:color-mix(in srgb,var(--jonathan) 35%,var(--line));
   background:color-mix(in srgb,var(--jonathan-soft) 18%,var(--surface) 82%);
 }
+.public-calendar-card.selected{
+  border-color:var(--jonathan);
+  background:var(--jonathan-soft);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--jonathan) 14%,transparent);
+}
+.public-calendar-card.selected .pub-icon{background:var(--jonathan);color:#fff;border-color:var(--jonathan);}
 .pub-icon{
   width:36px;height:36px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;
   background:var(--surface);
   border:1px solid var(--line);
+  transition:.15s ease;
 }
 .public-calendar-card b,
 .calendar-source-card b{display:block;font-size:11px;}
@@ -1763,6 +1798,22 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
   .day-title-center .dname{font-size:15px;}
 }
 
+/* ---------- V2 patch: compact single-line events ---------- */
+.item{padding:6px 9px;gap:6px;align-items:center;white-space:nowrap;overflow:hidden;}
+.item .emo{flex:none;}
+.item .t{flex:none;white-space:nowrap;}
+.item .ti{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:0;}
+.item .who{display:none;}
+
+/* ---------- V2 patch: masked admin PIN with reveal toggle ---------- */
+.pin-field-wrap{position:relative;}
+.pin-field-wrap input{padding-right:44px!important;}
+.pin-reveal{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);cursor:pointer;font-size:14px;
+}
+
 </style>
 </head>
 <body>
@@ -1999,9 +2050,9 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
         </div>
 
         <div id="tab-ukeplan" style="display:none;">
-          <div class="settings-section">
+          <div class="settings-section" style="min-height:calc(100dvh - 320px);display:flex;flex-direction:column;">
             <p class="hint">Faste aktiviteter gjentas automatisk hver uke. Bruk dette for skole, trening og andre rutiner.</p>
-            <div class="tplist" id="tplList"></div>
+            <div class="tplist" id="tplList" style="flex:1;max-height:none;"></div>
             <button class="btn ghost" id="tplAdd" style="width:100%;margin-top:10px;">＋ Legg til fast avtale</button>
           </div>
         </div>
@@ -2075,7 +2126,7 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                 <div class="calendar-import-badge public">◎</div>
               </div>
 
-              <div class="public-calendar-grid">
+              <div class="public-calendar-grid" id="publicCalendarGrid">
                 <button type="button" class="public-calendar-card" data-public-calendar="norske-helligdager">
                   <span class="pub-icon">🇳🇴</span>
                   <span><b>Norske helligdager</b><small>Offentlige fridager og merkedager</small></span>
@@ -2251,15 +2302,20 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
                 <b>Auto</b>
                 <small>Tilpasser seg skjermen automatisk</small>
               </button>
-              <button class="layout-option" data-layout-v="3" type="button">
-                <span class="layout-mini"><span></span><span></span><span></span></span>
-                <b>3 kolonner</b>
-                <small>3 dager / 2 dager + helg</small>
-              </button>
               <button class="layout-option" data-layout-v="5" type="button">
                 <span class="layout-mini"><span></span><span></span><span></span><span></span><span></span></span>
                 <b>5 kolonner</b>
                 <small>Alle ukedager på én rad</small>
+              </button>
+              <button class="layout-option" data-layout-v="4" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span><span></span></span>
+                <b>4 kolonner</b>
+                <small>4 dager per rad</small>
+              </button>
+              <button class="layout-option" data-layout-v="3" type="button">
+                <span class="layout-mini"><span></span><span></span><span></span></span>
+                <b>3 kolonner</b>
+                <small>3 dager / 2 dager + helg</small>
               </button>
               <button class="layout-option" data-layout-v="2" type="button">
                 <span class="layout-mini"><span></span><span></span></span>
@@ -2322,7 +2378,11 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
           <div class="settings-section">
             <p class="hint">Barna kan trykke på et gjøremål for å legge det til. Poengene nullstilles hver mandag.</p>
             <label class="chk"><input type="checkbox" id="starRequirePin" checked> Krev voksen-kode for å godkjenne et trykk</label>
-            <div class="field"><label>Voksen-kode (kun tall)</label><input type="text" id="starPin" inputmode="numeric" pattern="[0-9]*" placeholder="f.eks. 1234"></div>
+            <div class="field pin-field-wrap">
+              <label>Voksen-kode (kun tall)</label>
+              <input type="password" id="starPin" inputmode="numeric" pattern="[0-9]*" placeholder="f.eks. 1234" autocomplete="off">
+              <button type="button" class="pin-reveal" id="starPinReveal" title="Vis kode">👁</button>
+            </div>
             <div class="row2">
               <div class="field"><label>Milla — ukemål</label><input type="text" id="goalMilla" value="100"></div>
               <div class="field"><label>Jonathan — ukemål</label><input type="text" id="goalJonathan" value="100"></div>
@@ -2379,6 +2439,15 @@ header{grid-template-columns:minmax(220px,1fr) auto minmax(180px,1fr);}
   </div>
 </div>
 
+<!-- Reveal-popup for admin-koden (ekstra dekket, vises kun midlertidig) -->
+<div class="overlay" id="pinRevealOverlay">
+  <div class="modal" style="max-width:300px;text-align:center;">
+    <h2 style="font-size:16px;">Voksen-koden</h2>
+    <div id="pinRevealValue" style="font-size:32px;font-weight:800;letter-spacing:6px;margin:14px 0;font-family:'Inter',sans-serif;"></div>
+    <button class="btn primary" id="pinRevealClose" style="width:100%;">Lukk</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
 <script>
@@ -2427,7 +2496,6 @@ window.storage = {
       localCacheSet(row.key, row.value);
       result[row.key] = { key:row.key, value:row.value, shared:true };
     });
-    // Supabase er master: fjern gammel lokal cache for nøkler som ikke finnes sentralt.
     (keys || []).forEach(key=>{ if(!found.has(key)) localCacheDelete(key); });
     return result;
   },
@@ -2441,7 +2509,6 @@ window.storage = {
       setSyncStatus('error', 'Ikke synkronisert');
       throw error;
     }
-    // Lokal cache oppdateres først når Supabase har bekreftet lagringen.
     localCacheSet(key, value);
     setSyncStatus('ok', 'Synkronisert');
     return { key, value, shared: true };
@@ -2527,6 +2594,7 @@ let settings = { matpakkeRule: { Milla:[1,1,1,1,1,0,0], Jonathan:[2,1,2,1,1,0,0]
 let template = [];
 let weekEvents = [];
 let editing = null;
+let openedEventModalFromSettings = false;
 
 const DEFAULT_TEMPLATE = () => ([
   {id:uid(), day:0, start:'08:30', end:'14:00', title:'Skole', who:'Begge', type:'skole'},
@@ -2736,10 +2804,19 @@ function kidLunchboxSVG(child){
     <circle cx="34" cy="27" r="1.4" fill="#fff" opacity=".8"/>
   </svg>`;
 }
+function matboksSVG(color){
+  return `<svg viewBox="0 0 20 16" width="17" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1.5" y="4.5" width="17" height="10" rx="3" fill="${color}"/>
+    <path d="M6.5 4.5V3.2C6.5 2 7.4 1 8.6 1h2.8C12.6 1 13.5 2 13.5 3.2V4.5" stroke="${color}" stroke-width="1.6" fill="none"/>
+    <path d="M5.5 9.2H14.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity="0.9"/>
+    <circle cx="10" cy="6.6" r="0.9" fill="#fff" opacity="0.85"/>
+  </svg>`;
+}
 function renderLunchIcons(child, count){
   const cls = child.toLowerCase();
   if(!count) return `<span class="lunch-icons empty-lunch" aria-label="0 matpakker"></span>`;
-  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>kidLunchboxSVG(child)).join('')}</span>`;
+  const color = child==='Milla' ? '#F45B91' : '#3D8BF2';
+  return `<span class="lunch-icons ${cls}" aria-label="${count} matpakker">${Array.from({length:count},()=>matboksSVG(color)).join('')}</span>`;
 }
 
 function renderReminderLane(items, who){
@@ -2848,13 +2925,10 @@ function emojiFor(it){
 function renderItem(it){
   const whoClass = it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase();
   const timeStr = it.end ? `${it.start}–${it.end}` : it.start;
-  return `<div class="item ${whoClass}" data-src="${it._src}" data-id="${it.id}">
+  return `<div class="item ${whoClass}" data-src="${it._src}" data-id="${it.id}" title="${it.title}">
     <span class="emo">${emojiFor(it)}</span>
-    <div>
-      <div class="t">${timeStr}</div>
-      <div class="ti">${it.title}</div>
-      ${it.type!=='skole' && it.who==='Begge' ? `<div class="who">Begge</div>` : ''}
-    </div>
+    <span class="t">${timeStr}</span>
+    <span class="ti">${it.title}</span>
   </div>`;
 }
 function renderHusk(it){
@@ -2899,8 +2973,9 @@ document.getElementById('fType').addEventListener('click', e=>{
   currentType = b.dataset.v; updateTypeUI();
 });
 
-function openEventModal(item, dayIdx, src, presetWho, presetType){
+function openEventModal(item, dayIdx, src, presetWho, presetType, fromSettings){
   editing = item ? {id:item.id, src} : null;
+  openedEventModalFromSettings = !!fromSettings;
   document.getElementById('eventTitle').textContent = item ? 'Rediger' : 'Ny oppføring';
   const daySel = document.getElementById('fDay');
   daySel.innerHTML = WD.map((n,i)=>`<option value="${i}">${n}</option>`).join('');
@@ -2916,6 +2991,13 @@ function openEventModal(item, dayIdx, src, presetWho, presetType){
   document.getElementById('fDelete').style.display = item ? 'block' : 'none';
   eventOverlay.classList.add('open');
 }
+function closeEventModalReturn(){
+  eventOverlay.classList.remove('open');
+  if(openedEventModalFromSettings){
+    renderTplList();
+    openedEventModalFromSettings = false;
+  }
+}
 function updateWhoButtons(){
   document.querySelectorAll('#fWho button').forEach(b=>{
     b.classList.toggle('active', b.dataset.v===currentWho);
@@ -2925,7 +3007,7 @@ document.getElementById('fWho').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
   currentWho = b.dataset.v; updateWhoButtons();
 });
-document.getElementById('fCancel').addEventListener('click', ()=> eventOverlay.classList.remove('open'));
+document.getElementById('fCancel').addEventListener('click', ()=> closeEventModalReturn());
 document.getElementById('fSave').addEventListener('click', async ()=>{
   const day = parseInt(document.getElementById('fDay').value);
   const isHusk = currentType==='husk';
@@ -2942,7 +3024,7 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
   const obj = {id: editing?editing.id:uid(), day, start, end, title, who, type:currentType};
   if(repeat) template.push(obj); else weekEvents.push(obj);
   await saveTemplate(); await saveWeek();
-  eventOverlay.classList.remove('open');
+  closeEventModalReturn();
   renderAll();
 });
 document.getElementById('fDelete').addEventListener('click', async ()=>{
@@ -2950,7 +3032,7 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
   if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
   else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
   await saveTemplate(); await saveWeek();
-  eventOverlay.classList.remove('open');
+  closeEventModalReturn();
   renderAll();
 });
 
@@ -2992,6 +3074,8 @@ if(calendarImportTabs){
 
 document.querySelectorAll('.public-calendar-card').forEach(card=>{
   card.addEventListener('click', ()=>{
+    document.querySelectorAll('.public-calendar-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
     const input = document.getElementById('publicCalendarUrl');
     if(card.dataset.publicCalendar === 'norske-helligdager'){
       input.placeholder = 'Lim inn ICS/webcal-lenke for norske helligdager';
@@ -3017,7 +3101,6 @@ function showSpondFetchResult(text){
   document.getElementById('spondInput').value = text;
   parsedSpond = parseICS(text);
   renderSpondPreview();
-  // Bytt til Spond-underfanen så resultatet er synlig, uansett hvilken kilde det kom fra.
   const spondSubTab = document.querySelector('#calendarImportTabs button[data-import-tab="spond"]');
   if(spondSubTab) spondSubTab.click();
 }
@@ -3312,14 +3395,12 @@ function renderTplList(){
   list.querySelectorAll('.tplitem').forEach(el=>{
     el.addEventListener('click', ()=>{
       const it = template.find(x=>x.id===el.dataset.id);
-      settingsOverlay.classList.remove('open');
-      openEventModal(it, it.day, 'template');
+      openEventModal(it, it.day, 'template', null, null, true);
     });
   });
 }
 document.getElementById('tplAdd').addEventListener('click', ()=>{
-  settingsOverlay.classList.remove('open');
-  openEventModal(null, 0);
+  openEventModal(null, 0, null, null, null, true);
   document.getElementById('fRepeat').checked = true;
 });
 
@@ -3446,7 +3527,6 @@ document.getElementById('spondAdd').addEventListener('click', async ()=>{
   document.getElementById('spondInput').value='';
   document.getElementById('spondPreview').innerHTML='';
   document.getElementById('spondAdd').style.display='none';
-  settingsOverlay.classList.remove('open');
   renderAll();
 });
 
@@ -3466,19 +3546,17 @@ document.getElementById('timetableType').addEventListener('click', e=>{
   document.querySelectorAll('#timetableType button').forEach(x=>x.classList.toggle('active', x===b));
   document.getElementById('timetableWeekPickWrap').style.display = (timetableTypeSel==='uke') ? 'block' : 'none';
 });
-// Default the week-picker to today, so "denne uken" works with zero clicks.
 document.getElementById('timetableWeekPick').value = isoDate(new Date());
 
 function fileToBase64(file){
   return new Promise((resolve,reject)=>{
     const reader = new FileReader();
     reader.onerror = reject;
-    reader.onload = ()=> resolve(reader.result.split(',')[1]); // strip data:...;base64,
+    reader.onload = ()=> resolve(reader.result.split(',')[1]);
     reader.readAsDataURL(file);
   });
 }
 
-// ---------- drag/drop + lim inn (paste) for timeplan-fil ----------
 function setFileInputFiles(input, file){
   const dt = new DataTransfer();
   dt.items.add(file);
@@ -3606,10 +3684,8 @@ document.getElementById('timetableAdd').addEventListener('click', async ()=>{
     const key = isoDate(targetMonday);
     let targetEvents;
     if(key === isoDate(weekStart)){
-      targetEvents = weekEvents; // currently displayed week — edit in place
+      targetEvents = weekEvents;
     } else {
-      // Load (or start fresh) that other week's events, add to them, save, but
-      // don't disturb the week the user is currently looking at.
       try{
         const w = await window.storage.get('week:'+key);
         targetEvents = (w && w.value) ? JSON.parse(w.value) : [];
@@ -3627,7 +3703,6 @@ document.getElementById('timetableAdd').addEventListener('click', async ()=>{
   document.getElementById('timetableAdd').style.display = 'none';
   document.getElementById('timetableStatus').textContent = 'Lagt til!';
   document.getElementById('timetableFile').value = '';
-  settingsOverlay.classList.remove('open');
   renderAll();
 });
 
@@ -3655,7 +3730,6 @@ async function loadWeeklyPoints(){
 async function saveWeeklyPoints(){
   try{ await window.storage.set(starWeekKey, JSON.stringify(weeklyPoints)); return true; }catch(e){ reportSaveError('save weekly points failed', e); return false; }
 }
-// ---------- PIN-modal (numerisk tastatur, ikke fullt tastatur) ----------
 const pinOverlay = document.getElementById('pinOverlay');
 const pinInput = document.getElementById('pinInput');
 let pinResolve = null;
@@ -3678,7 +3752,6 @@ document.getElementById('pinCancel').addEventListener('click', ()=> closePinModa
 document.getElementById('pinConfirm').addEventListener('click', ()=> closePinModal(pinInput.value));
 pinInput.addEventListener('keydown', e=>{ if(e.key==='Enter') closePinModal(pinInput.value); });
 pinInput.addEventListener('input', ()=>{
-  // tving rent tall, uansett hva tastaturet tillater
   pinInput.value = pinInput.value.replace(/[^0-9]/g,'');
 });
 pinOverlay.addEventListener('click', e=>{ if(e.target===pinOverlay) closePinModal(null); });
@@ -3823,6 +3896,16 @@ document.getElementById('starSettingsSave').addEventListener('click', async ()=>
   await saveSettings();
   renderStars();
 });
+document.getElementById('starPinReveal').addEventListener('click', ()=>{
+  document.getElementById('pinRevealValue').textContent = document.getElementById('starPin').value || settings.pin || '1234';
+  document.getElementById('pinRevealOverlay').classList.add('open');
+});
+document.getElementById('pinRevealClose').addEventListener('click', ()=>{
+  document.getElementById('pinRevealOverlay').classList.remove('open');
+});
+document.getElementById('pinRevealOverlay').addEventListener('click', e=>{
+  if(e.target.id==='pinRevealOverlay') e.currentTarget.classList.remove('open');
+});
 async function uploadAvatarFile(file, who, statusEl){
   statusEl.textContent = 'Laster opp…';
   const path = `${who.toLowerCase()}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'_')}`;
@@ -3861,7 +3944,6 @@ document.getElementById('avatarSave').addEventListener('click', async ()=>{
   settings.avatars.Jonathan = document.getElementById('avJonathan').value.trim();
   await saveSettings();
   renderAll(); renderStars();
-  settingsOverlay.classList.remove('open');
 });
 
 // ---------- Handleliste ----------
@@ -4044,7 +4126,6 @@ async function runIcloudAlbumFetch(url, {silent=false, statusEl=null, btn=null}=
     if(!newUrls.length){
       if(statusEl) statusEl.textContent = 'Fant ingen bilder i albumet. Sjekk at "Offentlig nettsted" er påslått.';
     }else{
-      // Erstatt tidligere iCloud-hentede lenker, behold manuelt opplastede/limte inn.
       const existingManualUrls = photos.filter(x=>/^https?:\/\//i.test(x) && !x.includes('icloud-content.com'));
       const uploadedImages = photos.filter(x=>!/^https?:\/\//i.test(x));
       photos = [...uploadedImages, ...existingManualUrls, ...newUrls];
@@ -4074,7 +4155,7 @@ document.getElementById('icloudAlbumFetch').addEventListener('click', ()=>{
   runIcloudAlbumFetch(url, {statusEl: status, btn: document.getElementById('icloudAlbumFetch')});
 });
 
-const ICLOUD_REFRESH_INTERVAL = 24*60*60*1000; // én gang om dagen
+const ICLOUD_REFRESH_INTERVAL = 24*60*60*1000;
 async function autoRefreshIcloudAlbumIfDue(){
   if(!settings.icloudAlbumUrl) return;
   const last = settings.icloudLastFetch || 0;
@@ -4209,14 +4290,12 @@ function startRealtimeSync(){
     console.error('initial refresh failed', e);
   }
   startRealtimeSync();
+  loadWeather();
 
   setInterval(renderClock, 15000);
   setInterval(nextPhoto, 7000);
   setInterval(()=>{ renderClock(); }, 60000);
 
-  // Sjekk iCloud-albumet på nytt ved sideoppstart (hvis over 24t siden sist),
-  // og deretter hver time — den gjør ingenting med mindre 24t faktisk har gått,
-  // slik at tavlen holder seg oppdatert selv om skjermen aldri lastes på nytt.
   autoRefreshIcloudAlbumIfDue();
   setInterval(autoRefreshIcloudAlbumIfDue, 60*60*1000);
 })();
