@@ -2402,6 +2402,32 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
 }
 </style>
 
+
+<style id="event-color-performance-v1">
+.event-color-row{display:flex;align-items:center;gap:10px}
+#fColor{width:48px;height:36px;border:1px solid var(--line);border-radius:10px;padding:3px;background:var(--surface);cursor:pointer}
+#fColorHint{margin:0;font-size:10px}
+.item.custom-event-color{
+  background:var(--manual-event-color)!important;
+  border-color:color-mix(in srgb,var(--manual-event-color) 78%,#CFC8BA 22%)!important;
+  color:#514B40!important;
+  box-shadow:none!important;
+}
+.item.custom-event-color .t{color:color-mix(in srgb,#514B40 68%,var(--manual-event-color) 32%)!important}
+.item.custom-event-color .ti{color:#39352E!important}
+.huskchip.custom-husk-color{
+  background:var(--manual-event-color)!important;
+  border-color:color-mix(in srgb,var(--manual-event-color) 76%,#B9C8B8 24%)!important;
+  color:#35513A!important;
+  box-shadow:none!important;
+}
+.weekend-item.custom-event-color{
+  background:var(--manual-event-color)!important;
+  border-color:color-mix(in srgb,var(--manual-event-color) 78%,#CFC8BA 22%)!important;
+  box-shadow:none!important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2485,6 +2511,13 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
         <button data-v="aktivitet" class="active">📅 Aktivitet</button>
         <button data-v="skole">🏫 Skole</button>
         <button data-v="husk">🎒 Husk å ta med</button>
+      </div>
+    </div>
+    <div class="field event-color-field">
+      <label>Farge</label>
+      <div class="event-color-row">
+        <input type="color" id="fColor" value="#FFFBEA" aria-label="Velg farge på hendelsen">
+        <span id="fColorHint" class="hint">Standard for aktivitet</span>
       </div>
     </div>
     <div class="row2" id="timeRow">
@@ -3485,8 +3518,9 @@ function renderWeekendItem(it){
   const who = it.who || 'Begge';
   const whoClass = who.toLowerCase();
   const isExternal=!!it.calendarId;
-  const extClass=isExternal?' external-calendar-event':'';
-  const extStyle=isExternal ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"` : '';
+  const hasManualColor=!isExternal && !!it.color;
+  const extClass=isExternal?' external-calendar-event':(hasManualColor?' custom-event-color':'');
+  const extStyle=isExternal ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"` : (hasManualColor?` style="--manual-event-color:${safeCssColor(it.color,defaultEventColor(it.type,it.who))}"`:'');
   return `<div class="weekend-item ${isRecessItem(it)?'recess':''}${extClass}"${extStyle} data-src="${it._src}" data-id="${it.id}">
     <span class="weekend-emo">${emojiFor(it)}</span>
     <div class="weekend-copy">
@@ -3565,8 +3599,8 @@ function renderGrid(){
     const schedule = items.filter(it=>it.type!=='husk');
     const husk = items.filter(it=>it.type==='husk');
 
-    const fastItems = schedule.filter(it=>it._src==='template');
-    const otherItems = schedule.filter(it=>it._src!=='template');
+    const fastItems = schedule.filter(it=>it.type==='skole');
+    const otherItems = schedule.filter(it=>it.type!=='skole');
 
     const millaHusk = husk.filter(it=>it.who==='Milla');
     const jonathanHusk = husk.filter(it=>it.who==='Jonathan');
@@ -3660,9 +3694,12 @@ function isRecessItem(it){ return /fri\s*minutt|friminutt|frikvarter|\bpause\b/i
 function renderItem(it){
   const isExternal=!!it.calendarId;
   const baseClass = isRecessItem(it) ? 'recess' : (it.type==='skole' ? 'skole' : (it.who||'begge').toLowerCase());
-  const whoClass = `${baseClass}${isExternal?' external-calendar-event':''}`;
+  const hasManualColor=!isExternal && !!it.color;
+  const whoClass = `${baseClass}${isExternal?' external-calendar-event':''}${hasManualColor?' custom-event-color':''}`;
   const timeStr = it.end ? `${it.start}–${it.end}` : it.start;
-  const extStyle=isExternal ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"` : '';
+  const extStyle=isExternal
+    ? ` style="--external-calendar-color:${safeCssColor(calendarColorFor(it.calendarId))}"`
+    : (hasManualColor ? ` style="--manual-event-color:${safeCssColor(it.color,defaultEventColor(it.type,it.who))}"` : '');
   return `<div class="item ${whoClass}"${extStyle} data-src="${it._src}" data-id="${it.id}" title="${it.title}">
     <span class="emo">${emojiFor(it)}</span>
     <span class="t">${timeStr}</span>
@@ -3671,8 +3708,9 @@ function renderItem(it){
 }
 function renderHusk(it){
   const cls = (it.who||'Begge').toLowerCase();
-  return `<div class="huskchip ${cls}" data-src="${it._src}" data-id="${it.id}">
-    <span class="husk-ico">🎒</span><span>${it.title}</span>
+  const color=safeCssColor(it.color||defaultEventColor('husk',it.who),'#EAF7EC');
+  return `<div class="huskchip ${cls} custom-husk-color" style="--manual-event-color:${color}" data-src="${it._src}" data-id="${it.id}">
+    <span class="husk-ico">${emojiFor(it)}</span><span>${it.title}</span>
   </div>`;
 }
 
@@ -3696,6 +3734,28 @@ const eventOverlay = document.getElementById('eventOverlay');
 let currentWho = 'Begge';
 let currentType = 'aktivitet';
 let currentEmoji = '';
+let currentEventColor = '#FFFBEA';
+let eventColorTouched = false;
+function defaultEventColor(type,who){
+  if(type==='husk') return '#EAF7EC';
+  if(type==='skole'){
+    if(who==='Milla') return '#FFF1F6';
+    if(who==='Jonathan') return '#EEF5FF';
+    return '#F3F6F4';
+  }
+  return '#FFFBEA';
+}
+function updateEventColorUI(forceDefault=false){
+  const input=document.getElementById('fColor');
+  const hint=document.getElementById('fColorHint');
+  if(forceDefault || !eventColorTouched){
+    currentEventColor=defaultEventColor(currentType,currentWho);
+    if(input) input.value=currentEventColor;
+  }
+  if(hint){
+    hint.textContent=currentType==='husk'?'Standard grønn for Husk':currentType==='skole'?'Standard skolefarge for valgt barn':'Standard diskret gul aktivitet';
+  }
+}
 const EVENT_EMOJIS = ['✨','📚','✏️','📖','🔢','💬','🌍','🌿','👥','🎨','🎵','⚽','🏒','🏊','💃','🏋️','⛷️','🎂','🎈','🩺','🍎','🥪','🚌','🏠','⭐','❤️','🧪','💻','🧩','🎭','🏃','🚲','🎾','🤸','☀️','🌧️'];
 function renderEventEmojiPicker(){
   const box=document.getElementById('fEmojiPicker');
@@ -3716,6 +3776,10 @@ document.getElementById('fEmojiAuto')?.addEventListener('click',()=>{
 document.getElementById('fEmoji')?.addEventListener('input',e=>{
   currentEmoji=e.target.value.trim(); renderEventEmojiPicker();
 });
+document.getElementById('fColor')?.addEventListener('input',e=>{
+  currentEventColor=e.target.value;
+  eventColorTouched=true;
+});
 
 function updateTypeUI(){
   document.querySelectorAll('#fType button').forEach(b=>{
@@ -3726,6 +3790,7 @@ function updateTypeUI(){
   document.getElementById('repeatRow').style.display = isHusk ? 'none' : 'flex';
   document.getElementById('fTitleLabel').textContent = isHusk ? 'Hva må huskes / tas med' : 'Hva';
   document.getElementById('fTitle').placeholder = isHusk ? 'F.eks. Saft, bursdagsgave, badetøy' : 'F.eks. Fotballtrening';
+  updateEventColorUI(false);
 }
 document.getElementById('fType').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
@@ -3748,6 +3813,9 @@ function openEventModal(item, dayIdx, src, presetWho, presetType, fromSettings){
   currentWho = item ? item.who : (presetWho || 'Begge');
   updateWhoButtons();
   currentType = item ? item.type : (presetType || 'aktivitet');
+  eventColorTouched=!!(item && item.color);
+  currentEventColor=(item && item.color) ? item.color : defaultEventColor(currentType,currentWho);
+  const colorInput=document.getElementById('fColor'); if(colorInput) colorInput.value=currentEventColor;
   updateTypeUI();
   document.getElementById('fRepeat').checked = item ? src==='template' : false;
   const allDays=document.getElementById('fAllWeekdays'); if(allDays) allDays.checked=false;
@@ -3769,7 +3837,7 @@ function updateWhoButtons(){
 }
 document.getElementById('fWho').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
-  currentWho = b.dataset.v; updateWhoButtons();
+  currentWho = b.dataset.v; updateWhoButtons(); updateEventColorUI(false);
 });
 document.getElementById('fCancel').addEventListener('click', ()=> closeEventModalReturn());
 let eventScopeResolve=null;
@@ -3802,7 +3870,7 @@ document.getElementById('eventScopeFuture')?.addEventListener('click',()=>closeI
 document.getElementById('eventScopeOverlay')?.addEventListener('click',e=>{if(e.target.id==='eventScopeOverlay') closeImportedEditScope('cancel');});
 
 function changedEventFields(original,next){
-  const fields=['day','start','end','title','who','type','emoji'];
+  const fields=['day','start','end','title','who','type','emoji','color'];
   const changed={};
   fields.forEach(k=>{ if((original?.[k]??'') !== (next?.[k]??'')) changed[k]=next[k]; });
   return changed;
@@ -3868,7 +3936,8 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
   const obj = {
     ...(original||{}),
     id: editing?editing.id:uid(),
-    day,start,end,title,who,type:currentType,emoji:currentEmoji||''
+    day,start,end,title,who,type:currentType,emoji:currentEmoji||'',
+    color:safeCssColor(currentEventColor,defaultEventColor(currentType,who))
   };
   if(isHusk){
     delete obj.calendarId;
@@ -3890,17 +3959,28 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
     else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
   }
 
+  let changedTemplate=false, changedWeek=false;
   const addAllWeekdays = repeat && document.getElementById('fAllWeekdays') && document.getElementById('fAllWeekdays').checked;
   if(addAllWeekdays){
-    [0,1,2,3,4].forEach((d,idx)=>template.push({id:(editing && idx===0)?editing.id:uid(),day:d,start,end,title,who,type:currentType,emoji:currentEmoji||''}));
+    [0,1,2,3,4].forEach((d,idx)=>template.push({...obj,id:(editing && idx===0)?editing.id:uid(),day:d}));
+    changedTemplate=true;
   }else if(repeat && (!editing || editing.src==='template')){
-    template.push({id:editing?editing.id:uid(),day,start,end,title,who,type:currentType,emoji:currentEmoji||''});
+    template.push(obj);
+    changedTemplate=true;
   }else{
     weekEvents.push(obj);
+    changedWeek=true;
   }
+  if(editing?.src==='template') changedTemplate=true;
+  if(editing && editing.src!=='template') changedWeek=true;
 
-  await saveTemplate();
-  await saveWeek();
+  closeEventModalReturn();
+  renderAll();
+
+  const saves=[];
+  if(changedTemplate) saves.push(saveTemplate());
+  if(changedWeek) saves.push(saveWeek());
+  await Promise.all(saves);
 
   if(scope==='future' && original){
     const changes=changedEventFields(original,obj);
@@ -3912,9 +3992,6 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
       alert('Denne hendelsen ble lagret, men jeg klarte ikke å oppdatere alle fremtidige hendelser.');
     }
   }
-
-  closeEventModalReturn();
-  renderAll();
 });
 document.getElementById('fDelete').addEventListener('click', async ()=>{
   if(!editing) return;
