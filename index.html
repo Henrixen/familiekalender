@@ -2106,6 +2106,13 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
   }
 </style>
 
+
+<style id="import-who-target-fix">
+  .import-who-field{margin:12px 0 10px;}
+  #importWho{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  #importWho button{min-height:38px;}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2421,6 +2428,16 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
                 <label>Eller lim inn kalenderdata direkte</label>
                 <textarea id="spondInput" rows="8" placeholder="BEGIN:VCALENDAR …&#10;&#10;eller:&#10;Mandag 17:00 Fotballtrening - Jonathan&#10;Onsdag 16:30-17:30 Håndball Milla"></textarea>
               </div>
+              <div class="field import-who-field">
+                <label>Hvem gjelder kalenderen?</label>
+                <div class="typepick" id="importWho">
+                  <button type="button" data-v="Begge" class="active">👨‍👩‍👧‍👦 Alle</button>
+                  <button type="button" data-v="Milla">Milla</button>
+                  <button type="button" data-v="Jonathan">Jonathan</button>
+                </div>
+                <div class="hint" style="margin-top:6px;">Dette valget brukes på alle hendelser som importeres fra denne kalenderen.</div>
+              </div>
+
               <div class="calendar-import-note">
                 Hele kalenderperioden importeres. Hendelsene fordeles automatisk på riktige uker, også fremover.
                 <span id="spondImportRange"></span>
@@ -3820,6 +3837,14 @@ document.getElementById('tplAdd').addEventListener('click', ()=>{
 const DAY_RX = new RegExp(WD.map(w=>w.toLowerCase()).join('|'),'i');
 const TIME_RX = /(\d{1,2})[:.](\d{2})(?:\s*-\s*(\d{1,2})[:.](\d{2}))?/;
 let parsedSpond = [];
+let importWhoSel = 'Begge';
+
+
+document.getElementById('importWho')?.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-v]'); if(!b) return;
+  importWhoSel=b.dataset.v;
+  document.querySelectorAll('#importWho button').forEach(x=>x.classList.toggle('active',x===b));
+});
 
 function unescapeICS(s){
   return (s||'').replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\').trim();
@@ -4106,7 +4131,7 @@ async function importCalendarAcrossWeeks(events,sourceId){
         start:p.start||'',
         end:p.end||'',
         title:p.title,
-        who:p.who||'Begge',
+        who:importWhoSel || p.who || 'Begge',
         type:'aktivitet',
         calendarId:sourceId,
         externalKey,
@@ -4139,7 +4164,7 @@ document.getElementById('spondAdd').addEventListener('click', async ()=>{
     pendingImportCalendarId = null;
     renderCalendarManager();
     renderAll();
-    alert(`Kalender importert.\n\n${result.added} hendelser lagt til${result.updated?`\n${result.updated} eksisterende hendelser oppdatert`:''}\nFordelt på ${result.weeks} uker.`);
+    alert(`Kalender importert for ${importWhoSel==='Begge'?'alle':importWhoSel}.\n\n${result.added} hendelser lagt til${result.updated?`\n${result.updated} eksisterende hendelser oppdatert`:''}\nFordelt på ${result.weeks} uker.`);
   }catch(e){
     console.error('whole calendar import failed',e);
     alert('Kunne ikke importere hele kalenderen: '+e.message);
