@@ -1932,6 +1932,108 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
 .profile-side .foodbox-svg.lunch-sandwich-img{width:31px!important;height:31px!important;object-fit:contain!important;display:block!important;filter:drop-shadow(0 2px 2px rgba(43,33,24,.10))}html[data-layout="5"] .profile-side .foodbox-svg.lunch-sandwich-img{width:28px!important;height:28px!important}
 </style>
 
+
+<style id="star-routine-polish-0831">
+/* Stjerner – større, tydeligere og mer kompakt */
+.starpanel{padding:16px 18px 17px!important}
+.starcols{gap:22px!important}
+.starcol{min-width:0}
+.star-profile{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto auto;align-items:center;margin:0 0 8px;min-height:58px}
+.star-profile-avatar{grid-column:2;grid-row:1 / span 2;display:grid;place-items:center;color:var(--milla)}
+.star-profile.jonathan .star-profile-avatar{color:var(--jonathan)}
+.star-profile-avatar img,.star-profile-avatar .avcircle{width:46px!important;height:46px!important;box-shadow:0 0 0 3px var(--surface),0 0 0 5px currentColor,0 5px 14px rgba(43,33,24,.10)}
+.star-profile-name{grid-column:1;grid-row:1 / span 2;justify-self:end;padding-right:14px;font-size:13.5px;font-weight:800}
+.star-profile-points{grid-column:3;grid-row:1 / span 2;padding-left:14px;font-size:13px;font-weight:750;white-space:nowrap}
+.star-profile-points b{font-size:14px}.star-goal-total{color:#AAA39B;font-weight:700}
+.progresswrap{height:12px!important;border-radius:999px!important;background:#ECE9E5!important;box-shadow:inset 0 1px 2px rgba(43,33,24,.08);margin:0 0 10px!important}
+.progressfill{border-radius:999px!important;box-shadow:inset 0 -1px 0 rgba(0,0,0,.08);min-width:0}
+.chorelist.two-chore-rows{display:grid!important;grid-template-rows:repeat(2,minmax(38px,auto));grid-auto-flow:column;grid-auto-columns:minmax(145px,1fr);gap:7px!important;overflow-x:auto;padding:1px 1px 5px;scrollbar-width:thin}
+.chorelist.two-chore-rows .chore{min-width:145px;padding:8px 9px!important}.chore-count{color:var(--ink-soft);font-size:10px;font-weight:650}
+@media(max-width:760px){.starcols{grid-template-columns:1fr!important}.chorelist.two-chore-rows{grid-auto-columns:minmax(130px,1fr)}}
+
+/* Konfetti */
+.star-celebration{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .12s ease}
+.star-celebration.go{opacity:1}.confetti-field{position:absolute;inset:0}.confetti-field i{position:absolute;left:var(--x);top:48%;width:9px;height:15px;border-radius:2px;background:var(--c);transform:translate(-50%,-50%) scale(.1);opacity:0}.confetti-field i.star-piece{background:none;width:auto;height:auto;font-style:normal;font-size:17px}
+.star-celebration.go .confetti-field i{animation:starBurst var(--dur) cubic-bezier(.12,.72,.28,1) var(--delay) forwards}
+.star-good-job{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%) scale(.65);padding:13px 22px;border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 14px 45px rgba(43,33,24,.22);font-size:24px;font-weight:900;letter-spacing:-.03em;color:var(--ink);opacity:0;white-space:nowrap}
+.star-celebration.go .star-good-job{animation:goodJobPop 1.45s ease forwards}
+@keyframes starBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + 52vh)) scale(1) rotate(var(--rot))}}
+@keyframes goodJobPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}35%{transform:translate(-50%,-50%) scale(1)}78%{opacity:1}100%{opacity:0;transform:translate(-50%,-57%) scale(.96)}}
+@media(prefers-reduced-motion:reduce){.confetti-field{display:none}.star-celebration.go .star-good-job{animation:none;opacity:1}}
+
+/* Faste rutiner – tid over tekst */
+.routine-copy{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:2px!important;min-width:0}
+.routine-time{display:block!important;line-height:1.05!important}.routine-title{display:block!important;line-height:1.15!important;width:100%}
+.all-weekdays-choice{display:none;align-items:center;gap:9px;margin-top:9px;padding:9px 10px;border:1px solid var(--line);border-radius:11px;background:var(--surface-alt);cursor:pointer;font-size:11px}
+.all-weekdays-choice input{width:17px;height:17px}.all-weekdays-choice span{display:flex;flex-direction:column;gap:2px}.all-weekdays-choice small{color:var(--ink-soft);font-size:9.5px}
+
+/* Matpakkeinnstillinger bruker nøyaktig samme render som kalenderen */
+.lunch-person-icon.calendar-lunch-icon{background:transparent!important;width:54px!important;height:48px!important;padding:0!important;border-radius:0!important;overflow:visible}
+.lunch-person-icon.calendar-lunch-icon .foodbox-svg{width:48px!important;height:48px!important;object-fit:contain!important;display:block!important}
+
+/* Stjerneinnstillinger – gjøremål fordelt på barna */
+#choreList{max-height:none!important;overflow:visible!important}
+.settings-chore-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.settings-chore-child{border:1px solid var(--line);border-radius:16px;background:var(--surface-alt);padding:11px;min-width:0}
+.settings-chore-child-head{display:flex;align-items:center;gap:9px;padding:1px 2px 10px;color:var(--milla)}.settings-chore-child.jonathan .settings-chore-child-head{color:var(--jonathan)}
+.settings-chore-child-head img,.settings-chore-child-head .avcircle{width:34px!important;height:34px!important;box-shadow:0 0 0 2px var(--surface),0 0 0 4px currentColor}
+.settings-chore-child-head b{display:block;font-size:12px}.settings-chore-child-head small{display:block;color:var(--ink-soft);font-size:9px;margin-top:2px}
+.settings-chore-items{display:flex;flex-direction:column;gap:6px}.settings-chore-items .tplitem{margin:0!important;min-width:0}.settings-chore-items .chore-edit-target{display:flex;flex-direction:column;min-width:0}.settings-chore-items .chore-edit-target b{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.settings-chore-items .chore-edit-target small{font-size:9px;color:var(--ink-soft);margin-top:2px}
+@media(max-width:760px){.settings-chore-columns{grid-template-columns:1fr}}
+</style>
+
+
+<style id="day-weather-emoji-picker-v1">
+  /* Day header hierarchy: weather is largest, day second, date clearly readable */
+  .compact-day-head{min-height:116px!important;}
+  .day-title-center{min-width:132px!important;}
+  .day-title-line{gap:3px!important;}
+  .day-title-center .dname{
+    font-size:20px!important;
+    line-height:1.05!important;
+    font-weight:850!important;
+    letter-spacing:-.025em!important;
+  }
+  .day-title-line .day-weather{
+    min-height:32px!important;
+    font-size:12px!important;
+    line-height:1!important;
+    gap:4px!important;
+    margin-top:3px!important;
+    font-weight:750!important;
+  }
+  .day-title-line .weather-icon{
+    font-size:28px!important;
+    line-height:1!important;
+    filter:drop-shadow(0 2px 2px rgba(43,33,24,.10));
+  }
+  .day-title-center .ddate{
+    font-size:12px!important;
+    line-height:1.15!important;
+    margin-top:4px!important;
+    font-weight:700!important;
+    color:var(--ink-soft)!important;
+  }
+
+  /* Icon picker in event/routine editor */
+  .event-icon-field{margin-top:-2px;}
+  .event-icon-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:center;}
+  .event-icon-current{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:var(--surface-alt);font-size:24px;display:grid;place-items:center;cursor:pointer;}
+  .event-emoji-picker{display:flex;gap:5px;overflow-x:auto;padding:3px 2px;scrollbar-width:thin;}
+  .emoji-choice{width:34px;height:34px;min-width:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:18px;display:grid;place-items:center;cursor:pointer;transition:.12s ease;}
+  .emoji-choice:hover{transform:translateY(-1px);background:var(--surface-alt);}
+  .emoji-choice.active{border-color:var(--jonathan);box-shadow:0 0 0 2px color-mix(in srgb,var(--jonathan) 12%,transparent);background:color-mix(in srgb,var(--jonathan-soft) 55%,var(--surface) 45%);}
+  .event-emoji-auto{height:34px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface-alt);color:var(--ink-soft);font-size:10.5px;font-weight:750;cursor:pointer;}
+  #fEmoji{margin-top:7px!important;padding:8px 10px!important;font-size:13px!important;}
+  @media(max-width:760px){
+    .day-title-center .dname{font-size:18px!important;}
+    .day-title-line .weather-icon{font-size:25px!important;}
+    .day-title-center .ddate{font-size:11px!important;}
+    .event-icon-row{grid-template-columns:40px minmax(0,1fr) auto;}
+    .event-icon-current{width:40px;height:40px;font-size:22px;}
+  }
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1998,6 +2100,15 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
       <label id="fTitleLabel">Hva</label>
       <input type="text" id="fTitle" placeholder="F.eks. Fotballtrening">
     </div>
+    <div class="field event-icon-field">
+      <label>Ikon / emoji <span style="font-weight:500;color:var(--ink-soft);">(valgfritt)</span></label>
+      <div class="event-icon-row">
+        <button type="button" class="event-icon-current" id="fEmojiCurrent" title="Valgt ikon">✨</button>
+        <div class="event-emoji-picker" id="fEmojiPicker"></div>
+        <button type="button" class="event-emoji-auto" id="fEmojiAuto">Auto</button>
+      </div>
+      <input type="text" id="fEmoji" maxlength="8" inputmode="text" placeholder="Eller skriv/lim inn emoji" aria-label="Egendefinert emoji">
+    </div>
     <div class="field">
       <label>Type</label>
       <div class="typepick" id="fType">
@@ -2021,6 +2132,7 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
     <div class="field event-day-field">
       <label>Ukedag</label>
       <select id="fDay"></select>
+      <label class="all-weekdays-choice" id="allWeekdaysRow"><input type="checkbox" id="fAllWeekdays"> <span><b>Alle ukedager</b><small>Legg samme aktivitet til mandag–fredag</small></span></label>
     </div>
     <label class="chk" id="repeatRow"><input type="checkbox" id="fRepeat"> Gjenta hver uke (fast del av ukeplanen)</label>
     <div class="modalbtns">
@@ -2106,7 +2218,7 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
                       <div class="lunch-person-name">Milla</div>
                       <div class="lunch-person-sub">Matpakker på skoledager</div>
                     </div>
-                    <div class="lunch-person-icon" aria-label="Matpakke">🍱</div>
+                    <div class="lunch-person-icon calendar-lunch-icon" id="lunchIconMilla" aria-label="Matpakke"></div>
                   </div>
 
                   <div class="lunch-family-divider"></div>
@@ -2117,7 +2229,7 @@ html[data-recess-style="line"] .item.recess{background:transparent!important;bor
                       <div class="lunch-person-name">Jonathan</div>
                       <div class="lunch-person-sub">Matpakker på skoledager</div>
                     </div>
-                    <div class="lunch-person-icon" aria-label="Matpakke">🍱</div>
+                    <div class="lunch-person-icon calendar-lunch-icon" id="lunchIconJonathan" aria-label="Matpakke"></div>
                   </div>
                 </div>
               </div>
@@ -3090,6 +3202,7 @@ const EMOJI_RULES = [
   [/tannlege|lege|time/i,'🩺'], [/bursdagsselskap|selskap/i,'🎈']
 ];
 function emojiFor(it){
+  if(it && it.emoji) return it.emoji;
   if(it.type==='skole') return '📚';
   const hit = EMOJI_RULES.find(([rx])=>rx.test(it.title));
   return hit ? hit[1] : '✨';
@@ -3130,6 +3243,27 @@ async function renderAll(){
 const eventOverlay = document.getElementById('eventOverlay');
 let currentWho = 'Begge';
 let currentType = 'aktivitet';
+let currentEmoji = '';
+const EVENT_EMOJIS = ['✨','📚','✏️','📖','🔢','💬','🌍','🌿','👥','🎨','🎵','⚽','🏒','🏊','💃','🏋️','⛷️','🎂','🎈','🩺','🍎','🥪','🚌','🏠','⭐','❤️','🧪','💻','🧩','🎭','🏃','🚲','🎾','🤸','☀️','🌧️'];
+function renderEventEmojiPicker(){
+  const box=document.getElementById('fEmojiPicker');
+  if(!box) return;
+  box.innerHTML=EVENT_EMOJIS.map(e=>`<button type="button" class="emoji-choice ${currentEmoji===e?'active':''}" data-emoji="${e}" aria-label="Velg ${e}">${e}</button>`).join('');
+  const cur=document.getElementById('fEmojiCurrent'); if(cur) cur.textContent=currentEmoji || '✨';
+  const inp=document.getElementById('fEmoji'); if(inp && inp.value!==currentEmoji) inp.value=currentEmoji;
+}
+document.getElementById('fEmojiPicker')?.addEventListener('click',e=>{
+  const b=e.target.closest('[data-emoji]'); if(!b) return;
+  currentEmoji=b.dataset.emoji; renderEventEmojiPicker();
+});
+document.getElementById('fEmojiAuto')?.addEventListener('click',()=>{
+  currentEmoji='';
+  const inp=document.getElementById('fEmoji'); if(inp) inp.value='';
+  renderEventEmojiPicker();
+});
+document.getElementById('fEmoji')?.addEventListener('input',e=>{
+  currentEmoji=e.target.value.trim(); renderEventEmojiPicker();
+});
 
 function updateTypeUI(){
   document.querySelectorAll('#fType button').forEach(b=>{
@@ -3156,11 +3290,15 @@ function openEventModal(item, dayIdx, src, presetWho, presetType, fromSettings){
   document.getElementById('fStart').value = item ? item.start : '15:00';
   document.getElementById('fEnd').value = item && item.end ? item.end : '';
   document.getElementById('fTitle').value = item ? item.title : '';
+  currentEmoji = item && item.emoji ? item.emoji : '';
+  renderEventEmojiPicker();
   currentWho = item ? item.who : (presetWho || 'Begge');
   updateWhoButtons();
   currentType = item ? item.type : (presetType || 'aktivitet');
   updateTypeUI();
   document.getElementById('fRepeat').checked = item ? src==='template' : false;
+  const allDays=document.getElementById('fAllWeekdays'); if(allDays) allDays.checked=false;
+  const allDaysRow=document.getElementById('allWeekdaysRow'); if(allDaysRow) allDaysRow.style.display=(fromSettings && (!item || src==='template'))?'flex':'none';
   document.getElementById('fDelete').style.display = item ? 'block' : 'none';
   eventOverlay.classList.add('open');
 }
@@ -3194,8 +3332,13 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
     if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
     else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
   }
-  const obj = {id: editing?editing.id:uid(), day, start, end, title, who, type:currentType};
-  if(repeat) template.push(obj); else weekEvents.push(obj);
+  const addAllWeekdays = repeat && document.getElementById('fAllWeekdays') && document.getElementById('fAllWeekdays').checked;
+  if(addAllWeekdays){
+    [0,1,2,3,4].forEach((d,idx)=>template.push({id:(editing && idx===0)?editing.id:uid(),day:d,start,end,title,who,type:currentType,emoji:currentEmoji||''}));
+  }else{
+    const obj = {id: editing?editing.id:uid(), day, start, end, title, who, type:currentType, emoji:currentEmoji||''};
+    if(repeat) template.push(obj); else weekEvents.push(obj);
+  }
   await saveTemplate(); await saveWeek();
   closeEventModalReturn();
   renderAll();
@@ -3503,6 +3646,9 @@ document.getElementById('colorReset').addEventListener('click', async ()=>{
 });
 
 function renderRuleTable(){
+  const liM=document.getElementById('lunchIconMilla'); if(liM) liM.innerHTML=matboksSVG('#F45B91');
+  const liJ=document.getElementById('lunchIconJonathan'); if(liJ) liJ.innerHTML=matboksSVG('#3D8BF2');
+
   const rows = document.getElementById('lunchSettingsRows');
   const avM = document.getElementById('lunchAvatarMilla');
   const avJ = document.getElementById('lunchAvatarJonathan');
@@ -3951,18 +4097,18 @@ function renderStars(){
     const reward = settings.rewardText && settings.rewardText[who];
     return `
     <div class="starcol ${who.toLowerCase()}">
-      <div class="starhead ${who.toLowerCase()}">
-        <span class="avwrap glyph">${avatarHTML(who,26)}</span>
-        <span class="sname">${who}</span>
-        <span class="pts">⭐ ${pts}/${goal}</span>
+      <div class="star-profile ${who.toLowerCase()}">
+        <span class="star-profile-avatar">${avatarHTML(who,46)}</span>
+        <span class="star-profile-name">${who}</span>
+        <span class="star-profile-points">⭐ <b>${pts}</b><span class="star-goal-total"> / ${goal}</span></span>
       </div>
-      <div class="progresswrap"><div class="progressfill" style="width:${pct}%"></div></div>
+      <div class="progresswrap" aria-label="${pts} av ${goal} stjerner"><div class="progressfill" style="width:${pct}%"></div></div>
       ${reward? `<div class="rewardlabel ${reached?'reached':''}">${reached?'🎉 ':'🎁 '}${reward}</div>` : ''}
-      <div class="chorelist">
+      <div class="chorelist two-chore-rows">
         ${list.length? list.map(c=>{
           const count = weeklyChoreCounts[c.id] || 0;
           return `<div class="chore" data-id="${c.id}" data-who="${who}" data-pts="${c.points}" data-title="${c.title}">
-            <span class="cbox">+</span><span class="ctxt">${c.title} (${count})</span><span class="cpts">+${c.points}</span>
+            <span class="cbox">+</span><span class="ctxt">${c.title} <span class="chore-count">(${count})</span></span><span class="cpts">+${c.points}</span>
           </div>`;
         }).join('') : '<div class="shopempty">Ingen gjøremål lagt til</div>'}
       </div>
@@ -3981,8 +4127,32 @@ function renderStars(){
       await Promise.all([saveWeeklyPoints(), saveWeeklyChoreCounts()]);
       renderStars();
       fillCurrentStarPoints();
+      launchStarConfetti(who);
     });
   });
+}
+
+function launchStarConfetti(who){
+  const old=document.querySelector('.star-celebration'); if(old) old.remove();
+  const layer=document.createElement('div');
+  layer.className='star-celebration '+who.toLowerCase();
+  layer.innerHTML='<div class="star-good-job">⭐ Bra jobba! ⭐</div><div class="confetti-field"></div>';
+  const field=layer.querySelector('.confetti-field');
+  const colors=who==='Milla'?['#FF4FA0','#FF8BC0','#FFD24C','#7BD88F','#63A4FF']:['#2F80ED','#69A7FF','#FFD24C','#7BD88F','#FF7A7A'];
+  for(let i=0;i<54;i++){
+    const p=document.createElement('i');
+    p.style.setProperty('--x',(Math.random()*100)+'vw');
+    p.style.setProperty('--dx',((Math.random()-.5)*260)+'px');
+    p.style.setProperty('--rot',(Math.random()*720-360)+'deg');
+    p.style.setProperty('--delay',(Math.random()*.18)+'s');
+    p.style.setProperty('--dur',(.85+Math.random()*.7)+'s');
+    p.style.setProperty('--c',colors[i%colors.length]);
+    if(i%9===0){p.className='star-piece';p.textContent='⭐';}
+    field.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  requestAnimationFrame(()=>layer.classList.add('go'));
+  setTimeout(()=>layer.remove(),1900);
 }
 document.getElementById('starQuickAdd').addEventListener('click', ()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
@@ -3996,36 +4166,32 @@ document.getElementById('starQuickAdd').addEventListener('click', ()=>{
 let editingChoreId = null;
 function renderChoreList(){
   const list = document.getElementById('choreList');
-  list.innerHTML = settings.chores.length ? settings.chores.map(c=>`
-    <div class="tplitem" data-id="${c.id}">
-      <span class="chore-edit-target" style="cursor:pointer;">${c.who==='Milla'?'⚽':'🏒'} ${c.title} — +${c.points}p</span>
-      <span class="del" style="cursor:pointer;">✕</span>
-    </div>`).join('') : '<div class="hint">Ingen gjøremål ennå.</div>';
+  const childCol = who => {
+    const chores=settings.chores.filter(c=>c.who===who);
+    return `<div class="settings-chore-child ${who.toLowerCase()}">
+      <div class="settings-chore-child-head"><span>${avatarHTML(who,34)}</span><div><b>${who}</b><small>${chores.length} gjøremål</small></div></div>
+      <div class="settings-chore-items">
+        ${chores.length?chores.map(c=>`<div class="tplitem" data-id="${c.id}">
+          <span class="chore-edit-target" style="cursor:pointer;"><b>${c.title}</b><small>+${c.points} poeng</small></span>
+          <span class="del" style="cursor:pointer;">✕</span>
+        </div>`).join(''):'<div class="hint">Ingen gjøremål ennå.</div>'}
+      </div>
+    </div>`;
+  };
+  list.innerHTML=`<div class="settings-chore-columns">${childCol('Milla')}${childCol('Jonathan')}</div>`;
   list.querySelectorAll('.chore-edit-target').forEach(el=>{
     el.addEventListener('click', ()=>{
-      const id = el.closest('.tplitem').dataset.id;
-      const c = settings.chores.find(x=>x.id===id);
-      if(!c) return;
-      editingChoreId = id;
-      choreWhoSel = c.who;
-      document.querySelectorAll('#choreWho button').forEach(x=>x.classList.toggle('active', x.dataset.v===c.who));
-      document.getElementById('choreTitle').value = c.title;
-      document.getElementById('chorePoints').value = c.points;
-      document.getElementById('choreAdd').textContent = '💾 Lagre endring';
-      document.getElementById('choreCancelEdit').style.display = 'inline-block';
-      document.getElementById('choreTitle').focus();
+      const c=settings.chores.find(x=>x.id===el.closest('.tplitem').dataset.id); if(!c)return;
+      editingChoreId=c.id; choreWhoSel=c.who;
+      document.querySelectorAll('#choreWho button').forEach(b=>b.classList.toggle('active',b.dataset.v===choreWhoSel));
+      document.getElementById('choreTitle').value=c.title; document.getElementById('chorePoints').value=c.points;
+      document.getElementById('choreAdd').textContent='Lagre endring'; document.getElementById('choreCancelEdit').style.display='block';
     });
   });
-  list.querySelectorAll('.del').forEach(el=>{
-    el.addEventListener('click', async (e)=>{
-      e.stopPropagation();
-      const id = el.closest('.tplitem').dataset.id;
-      settings.chores = settings.chores.filter(c=>c.id!==id);
-      if(editingChoreId===id) resetChoreForm();
-      await saveSettings();
-      renderChoreList(); renderStars();
-    });
-  });
+  list.querySelectorAll('.del').forEach(el=>el.addEventListener('click',async e=>{
+    e.stopPropagation(); const id=el.closest('.tplitem').dataset.id;
+    settings.chores=settings.chores.filter(c=>c.id!==id); await saveSettings(); renderChoreList(); renderStars();
+  }));
 }
 function resetChoreForm(){
   editingChoreId = null;
