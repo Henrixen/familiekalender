@@ -2430,6 +2430,16 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
 }
 </style>
 
+
+<style id="compact-sync-status-v2">
+.sync-status.brand-sync{
+  min-width:0!important;width:auto!important;gap:3px!important;
+  padding:3px 6px!important;font-size:8px!important;line-height:1!important;
+  box-shadow:none!important
+}
+.sync-status.brand-sync .dot{width:5px!important;height:5px!important;flex:0 0 5px!important}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3597,15 +3607,19 @@ function renderReminderLane(items, who){
 
 
 function normalizeCalendarLayers(){
-  const fix=(it)=>{
-    if(!it) return it;
+  template.forEach(it=>{
+    if(!it) return;
+    if(it.type==='husk'){ it.calendarLayer='husk'; return; }
+    if(it.type==='skole'){ it.calendarLayer='school'; return; }
+    if(it.calendarLayer==='activity') return;
+    it.calendarLayer = it.color ? 'activity' : 'school';
+  });
+  weekEvents.forEach(it=>{
+    if(!it) return;
     if(it.type==='husk') it.calendarLayer='husk';
     else if(it.type==='skole') it.calendarLayer='school';
     else if(!it.calendarLayer || it.calendarLayer==='school') it.calendarLayer='activity';
-    return it;
-  };
-  template.forEach(fix);
-  weekEvents.forEach(fix);
+  });
 }
 
 function renderGrid(){
