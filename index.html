@@ -2440,6 +2440,28 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
 .sync-status.brand-sync .dot{width:5px!important;height:5px!important;flex:0 0 5px!important}
 </style>
 
+
+<style id="android-realtime-fix-v1">
+.star-celebration{display:none!important}
+.kid-celebration *{-webkit-user-select:none;user-select:none}
+</style>
+
+
+<style id="event-pastel-palette-v1">
+.event-color-presets{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.event-color-presets>button{
+  width:35px;height:35px;border-radius:11px;border:1px solid color-mix(in srgb,var(--swatch) 60%,#cfc8bd 40%);
+  background:var(--swatch);cursor:pointer;box-shadow:inset 0 0 0 2px rgba(255,255,255,.62);position:relative
+}
+.event-color-presets>button.active:after{
+  content:'✓';position:absolute;inset:0;display:grid;place-items:center;font-size:15px;font-weight:900;color:#4f4a42
+}
+.event-custom-color{width:35px;height:35px;border-radius:11px;border:1px dashed var(--line);background:var(--surface-alt);display:grid;place-items:center;position:relative;cursor:pointer;overflow:hidden}
+.event-custom-color>span{font-size:17px;font-weight:800;color:var(--ink-soft);pointer-events:none}
+.event-custom-color input{position:absolute;inset:0;width:100%!important;height:100%!important;opacity:0;cursor:pointer;padding:0!important;border:0!important}
+.event-color-hint{display:block;margin-top:7px!important}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2527,10 +2549,18 @@ header{grid-template-columns:minmax(250px,1fr) auto minmax(170px,1fr)!important;
     </div>
     <div class="field event-color-field">
       <label>Farge</label>
-      <div class="event-color-row">
-        <input type="color" id="fColor" value="#FFFBEA" aria-label="Velg farge på hendelsen">
-        <span id="fColorHint" class="hint">Standard for aktivitet</span>
+      <div class="event-color-presets" id="eventColorPresets" aria-label="Velg hendelsesfarge">
+        <button type="button" data-event-color="#FFF1F6" style="--swatch:#FFF1F6" title="Rosa"></button>
+        <button type="button" data-event-color="#EEF5FF" style="--swatch:#EEF5FF" title="Blå"></button>
+        <button type="button" data-event-color="#FFFBEA" style="--swatch:#FFFBEA" title="Gul"></button>
+        <button type="button" data-event-color="#EAF7EC" style="--swatch:#EAF7EC" title="Grønn"></button>
+        <button type="button" data-event-color="#FFF6E8" style="--swatch:#FFF6E8" title="Fersken"></button>
+        <button type="button" data-event-color="#F3F1FA" style="--swatch:#F3F1FA" title="Lilla"></button>
+        <label class="event-custom-color" title="Egen farge">
+          <span>+</span><input type="color" id="fColor" value="#FFFBEA" aria-label="Velg egen hendelsesfarge">
+        </label>
       </div>
+      <span id="fColorHint" class="hint event-color-hint">Standard for aktivitet</span>
     </div>
     <div class="row2" id="timeRow">
       <div class="field"><label>Fra</label><input type="time" id="fStart" value="15:00"></div>
@@ -3182,64 +3212,110 @@ function localCacheDelete(key){
   try{ localStorage.removeItem(LOCAL_CACHE_PREFIX + key); }catch(e){}
 }
 
+
+// ---------- optimistic UI + stale-response protection ----------
+let localMutationRevision = 0;
+let lastLocalMutationAt = 0;
+const pendingLocalWrites = new Map();
+let localPaintRAF = 0;
+function markLocalMutation(){
+  localMutationRevision++;
+  lastLocalMutationAt = Date.now();
+  return localMutationRevision;
+}
+function scheduleLocalPaint(){
+  if(localPaintRAF) return;
+  localPaintRAF = requestAnimationFrame(()=>{
+    localPaintRAF = 0;
+    try{ paint(); }catch(e){
+      try{ renderAll(); renderStars(); renderShopping(); }catch(_){}
+    }
+  });
+}
+function pendingValueFor(key){
+  const p=pendingLocalWrites.get(key);
+  if(!p) return null;
+  // Keep the optimistic value authoritative long enough for realtime/server reads to catch up.
+  if(Date.now()-p.ts > 3500){ pendingLocalWrites.delete(key); return null; }
+  return {key,value:p.value,shared:true};
+}
+
 window.storage = {
   getCached(key){
-    return localCacheGet(key);
+    return pendingValueFor(key) || localCacheGet(key);
   },
   async get(key){
+    const rev=localMutationRevision;
+    const pendingBefore=pendingValueFor(key);
+    if(pendingBefore) return pendingBefore;
     const { data, error } = await sb.from('family_store').select('value').eq('key', key).maybeSingle();
     if (error) throw error;
-    if (!data){
-      localCacheDelete(key);
-      return null;
-    }
+    const pendingAfter=pendingValueFor(key);
+    if(pendingAfter || rev!==localMutationRevision) return pendingAfter || localCacheGet(key);
+    if (!data){ localCacheDelete(key); return null; }
     localCacheSet(key, data.value);
-    return { key, value: data.value, shared: true };
+    return { key, value:data.value, shared:true };
   },
   async getMany(keys){
+    const rev=localMutationRevision;
     const { data, error } = await sb.from('family_store').select('key,value').in('key', keys);
     if (error) throw error;
-    const result = {};
-    const found = new Set();
-    (data || []).forEach(row=>{
-      found.add(row.key);
-      localCacheSet(row.key, row.value);
-      result[row.key] = { key:row.key, value:row.value, shared:true };
+    const result={};
+    const rows=new Map((data||[]).map(row=>[row.key,row.value]));
+    (keys||[]).forEach(key=>{
+      const pending=pendingValueFor(key);
+      if(pending){ result[key]=pending; return; }
+      // If a local mutation occurred while this request was in flight, prefer our cache.
+      if(rev!==localMutationRevision){
+        const cached=localCacheGet(key); if(cached) result[key]=cached; return;
+      }
+      if(rows.has(key)){
+        const value=rows.get(key); localCacheSet(key,value);
+        result[key]={key,value,shared:true};
+      }else{
+        localCacheDelete(key);
+      }
     });
-    (keys || []).forEach(key=>{ if(!found.has(key)) localCacheDelete(key); });
     return result;
   },
   async set(key, value){
-    setSyncStatus('saving', 'Lagrer…');
+    markLocalMutation();
+    localCacheSet(key,value);
+    pendingLocalWrites.set(key,{value,ts:Date.now()});
+    setSyncStatus('saving','Lagrer…');
     const { error } = await sb.from('family_store').upsert(
-      { key, value, updated_at: new Date().toISOString() },
-      { onConflict: 'key' }
+      { key, value, updated_at:new Date().toISOString() },
+      { onConflict:'key' }
     );
-    if (error){
-      setSyncStatus('error', 'Ikke synkronisert');
+    if(error){
+      setSyncStatus('error','Ikke synkronisert');
       throw error;
     }
-    localCacheSet(key, value);
-    setSyncStatus('ok', 'Synkronisert');
-    return { key, value, shared: true };
+    // Do not immediately drop the optimistic value: realtime can arrive before another reader sees the commit.
+    setTimeout(()=>{
+      const p=pendingLocalWrites.get(key);
+      if(p && p.value===value) pendingLocalWrites.delete(key);
+    },1200);
+    setSyncStatus('ok','Synkronisert');
+    return {key,value,shared:true};
   },
   async delete(key){
-    setSyncStatus('saving', 'Lagrer…');
-    const { error } = await sb.from('family_store').delete().eq('key', key);
-    if (error){
-      setSyncStatus('error', 'Ikke synkronisert');
-      throw error;
-    }
+    markLocalMutation();
     localCacheDelete(key);
-    setSyncStatus('ok', 'Synkronisert');
-    return { key, deleted: true, shared: true };
+    pendingLocalWrites.set(key,{value:null,ts:Date.now(),deleted:true});
+    setSyncStatus('saving','Lagrer…');
+    const { error } = await sb.from('family_store').delete().eq('key',key);
+    if(error){ setSyncStatus('error','Ikke synkronisert'); throw error; }
+    setTimeout(()=>pendingLocalWrites.delete(key),1200);
+    setSyncStatus('ok','Synkronisert');
+    return {key,deleted:true,shared:true};
   },
   async list(prefix){
-    let q = sb.from('family_store').select('key');
-    if (prefix) q = q.like('key', prefix + '%');
-    const { data, error } = await q;
-    if (error) throw error;
-    return { keys: (data || []).map(d => d.key) };
+    let q=sb.from('family_store').select('key');
+    if(prefix) q=q.like('key',prefix+'%');
+    const {data,error}=await q;
+    if(error) throw error;
+    return {keys:(data||[]).map(d=>d.key)};
   }
 };
 </script>
@@ -3365,9 +3441,11 @@ async function loadAll(){
   weekCache[isoDate(weekStart)] = weekEvents;
 }
 async function saveSettings(){
+  scheduleLocalPaint();
   try{ await window.storage.set('settings', JSON.stringify(settings)); return true; }catch(e){ reportSaveError('save settings failed', e); return false; }
 }
 async function saveTemplate(){
+  scheduleLocalPaint();
   try{ await window.storage.set('template', JSON.stringify(template)); return true; }catch(e){ reportSaveError('save template failed', e); return false; }
 }
 async function loadWeek(){
@@ -3388,7 +3466,13 @@ async function loadWeek(){
 
   renderAll();
   setSyncStatus('saving','Henter…');
+  const loadRevision=localMutationRevision;
   window.storage.get(storageKey).then(w=>{
+    // Never let an older fetch overwrite a mutation made after the fetch started.
+    if(loadRevision!==localMutationRevision || pendingValueFor(storageKey)){
+      setSyncStatus('ok','Synkronisert');
+      return;
+    }
     const fresh = (w && w.value) ? JSON.parse(w.value) : [];
     weekCache[key] = fresh;
     if(isoDate(weekStart)===key){
@@ -3402,12 +3486,13 @@ async function loadWeek(){
   });
 }
 async function saveWeek(){
-  const key = isoDate(weekStart);
+  const key=isoDate(weekStart);
+  weekCache[key]=(typeof structuredClone==='function') ? structuredClone(weekEvents) : JSON.parse(JSON.stringify(weekEvents));
+  renderAll();
   try{
-    await window.storage.set('week:'+key, JSON.stringify(weekEvents));
-    weekCache[key] = (typeof structuredClone==='function') ? structuredClone(weekEvents) : JSON.parse(JSON.stringify(weekEvents));
+    await window.storage.set('week:'+key,JSON.stringify(weekEvents));
     return true;
-  }catch(e){ reportSaveError('save week failed', e); return false; }
+  }catch(e){ reportSaveError('save week failed',e); return false; }
 }
 
 
@@ -3770,6 +3855,26 @@ let currentType = 'aktivitet';
 let currentEmoji = '';
 let currentEventColor = '#FFFBEA';
 let eventColorTouched = false;
+const EVENT_PASTELS=['#FFF1F6','#EEF5FF','#FFFBEA','#EAF7EC','#FFF6E8','#F3F1FA'];
+function pastelizeEventColor(hex){
+  const v=String(hex||'').trim();
+  if(!/^#[0-9a-f]{6}$/i.test(v)) return '#FFFBEA';
+  const upper=v.toUpperCase();
+  if(EVENT_PASTELS.includes(upper)) return upper;
+  const n=parseInt(v.slice(1),16);
+  const r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  // Match the very light event cards already used in the calendar.
+  const mix=.84;
+  const rr=Math.round(r*(1-mix)+255*mix);
+  const gg=Math.round(g*(1-mix)+255*mix);
+  const bb=Math.round(b*(1-mix)+255*mix);
+  return '#'+[rr,gg,bb].map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function refreshEventColorPresets(){
+  document.querySelectorAll('#eventColorPresets [data-event-color]').forEach(b=>{
+    b.classList.toggle('active',String(b.dataset.eventColor).toUpperCase()===String(currentEventColor).toUpperCase());
+  });
+}
 function defaultEventColor(type,who){
   if(type==='husk') return '#EAF7EC';
   if(type==='skole'){
@@ -3786,6 +3891,7 @@ function updateEventColorUI(forceDefault=false){
     currentEventColor=defaultEventColor(currentType,currentWho);
     if(input) input.value=currentEventColor;
   }
+  refreshEventColorPresets();
   if(hint){
     hint.textContent=currentType==='husk'?'Standard grønn for Husk':currentType==='skole'?'Standard skolefarge for valgt barn':'Standard diskret gul aktivitet';
   }
@@ -3810,9 +3916,18 @@ document.getElementById('fEmojiAuto')?.addEventListener('click',()=>{
 document.getElementById('fEmoji')?.addEventListener('input',e=>{
   currentEmoji=e.target.value.trim(); renderEventEmojiPicker();
 });
-document.getElementById('fColor')?.addEventListener('input',e=>{
-  currentEventColor=e.target.value;
+document.getElementById('fColor')?.addEventListener('change',e=>{
+  currentEventColor=pastelizeEventColor(e.target.value);
+  e.target.value=currentEventColor;
   eventColorTouched=true;
+  refreshEventColorPresets();
+});
+document.getElementById('eventColorPresets')?.addEventListener('click',e=>{
+  const b=e.target.closest('[data-event-color]'); if(!b) return;
+  currentEventColor=b.dataset.eventColor;
+  eventColorTouched=true;
+  const input=document.getElementById('fColor'); if(input) input.value=currentEventColor;
+  refreshEventColorPresets();
 });
 
 function updateTypeUI(){
@@ -3850,6 +3965,7 @@ function openEventModal(item, dayIdx, src, presetWho, presetType, fromSettings){
   eventColorTouched=!!(item && item.color);
   currentEventColor=(item && item.color) ? item.color : defaultEventColor(currentType,currentWho);
   const colorInput=document.getElementById('fColor'); if(colorInput) colorInput.value=currentEventColor;
+  refreshEventColorPresets();
   updateTypeUI();
   document.getElementById('fRepeat').checked = item ? src==='template' : false;
   const allDays=document.getElementById('fAllWeekdays'); if(allDays) allDays.checked=false;
@@ -3958,6 +4074,7 @@ async function updateImportedSeriesFuture(original, changed){
 }
 
 document.getElementById('fSave').addEventListener('click', async ()=>{
+  markLocalMutation();
   const day = parseInt(document.getElementById('fDay').value);
   const isHusk = currentType==='husk';
   const start = isHusk ? '' : (document.getElementById('fStart').value || '00:00');
@@ -4030,11 +4147,14 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
 });
 document.getElementById('fDelete').addEventListener('click', async ()=>{
   if(!editing) return;
-  if(editing.src==='template') template = template.filter(x=>x.id!==editing.id);
-  else weekEvents = weekEvents.filter(x=>x.id!==editing.id);
-  await saveTemplate(); await saveWeek();
+  const src=editing.src, id=editing.id;
+  markLocalMutation();
+  if(src==='template') template=template.filter(x=>x.id!==id);
+  else weekEvents=weekEvents.filter(x=>x.id!==id);
   closeEventModalReturn();
   renderAll();
+  if(src==='template') await saveTemplate();
+  else await saveWeek();
 });
 
 // ---------- settings modal ----------
@@ -5231,47 +5351,80 @@ function renderStars(){
       weeklyPoints[who] = (weeklyPoints[who]||0) + pts;
       weeklyChoreCounts[choreId] = (weeklyChoreCounts[choreId]||0) + 1;
       const chore=(settings.chores||[]).find(c=>c.id===choreId);
+      // Instant feedback first — never wait for Supabase before rewarding the child.
+      renderStars();
+      fillCurrentStarPoints();
+      launchStarCelebration(who,title,choreId);
       await Promise.all([
         saveWeeklyPoints(),
         saveWeeklyChoreCounts(),
         appendStarHistory({
-          ts:Date.now(),
-          date:isoDate(new Date()),
-          who,
-          choreId,
-          title,
-          points:pts,
+          ts:Date.now(), date:isoDate(new Date()), who, choreId, title, points:pts,
           color:defaultChoreColor(chore)
         })
       ]);
-      renderStars();
-      fillCurrentStarPoints();
-      launchStarConfetti(who);
     });
   });
 }
-function launchStarConfetti(who){
-  const old=document.querySelector('.star-celebration'); if(old) old.remove();
+function celebrationTheme(title,choreId){
+  const t=String(title||'').toLowerCase();
+  if(/rydde|rom|rydde opp/.test(t)) return {icons:['🧹','✨','🧸','⭐'],hero:'🧹',msg:'Super ryddet!'};
+  if(/skole|klar|kle på|tann/.test(t)) return {icons:['🎒','📚','✏️','⭐'],hero:'🎒',msg:'Klar for dagen!'};
+  if(/les|lekse|bok/.test(t)) return {icons:['📚','📖','🌟','✨'],hero:'📚',msg:'Kjempebra!'};
+  if(/hjelp|dekke|oppvask|mat/.test(t)) return {icons:['🙌','💚','⭐','✨'],hero:'🙌',msg:'Bra hjulpet!'};
+  const themes=[
+    {icons:['⭐','🌟','✨','🎉'],hero:'⭐',msg:'Bra jobba!'},
+    {icons:['🚀','⭐','✨','🌙'],hero:'🚀',msg:'Råbra!'},
+    {icons:['🦄','🌈','⭐','✨'],hero:'🦄',msg:'Fantastisk!'},
+    {icons:['🏆','🥇','⭐','🎉'],hero:'🏆',msg:'Yes! Bra jobba!'}
+  ];
+  let h=0; for(const c of String(choreId||title||'')) h=(h*31+c.charCodeAt(0))>>>0;
+  return themes[h%themes.length];
+}
+function launchStarCelebration(who,title,choreId){
+  document.querySelectorAll('.kid-celebration,.star-celebration').forEach(x=>x.remove());
+  const theme=celebrationTheme(title,choreId);
   const layer=document.createElement('div');
-  layer.className='star-celebration '+who.toLowerCase();
-  layer.innerHTML='<div class="star-good-job">⭐ Bra jobba! ⭐</div><div class="confetti-field"></div>';
-  const field=layer.querySelector('.confetti-field');
-  const colors=who==='Milla'?['#FF4FA0','#FF8BC0','#FFD24C','#7BD88F','#63A4FF']:['#2F80ED','#69A7FF','#FFD24C','#7BD88F','#FF7A7A'];
-  for(let i=0;i<110;i++){
-    const p=document.createElement('i');
-    p.style.setProperty('--x',(Math.random()*100)+'vw');
-    p.style.setProperty('--dx',((Math.random()-.5)*360)+'px');
-    p.style.setProperty('--drop',(Math.random()*18)+'vh');
-    p.style.setProperty('--rot',(Math.random()*1080-540)+'deg');
-    p.style.setProperty('--delay',(Math.random()*.7)+'s');
-    p.style.setProperty('--dur',(2.35+Math.random()*1.45)+'s');
-    p.style.setProperty('--c',colors[i%colors.length]);
-    if(i%11===0){p.className='star-piece';p.textContent='⭐';}
-    field.appendChild(p);
+  layer.className='kid-celebration';
+  Object.assign(layer.style,{position:'fixed',left:'0',top:'0',width:'100%',height:'100%',zIndex:'99999',pointerEvents:'none',overflow:'hidden'});
+  const card=document.createElement('div');
+  card.innerHTML=`<div style="font-size:58px;line-height:1">${theme.hero}</div><div style="font-weight:950;font-size:clamp(34px,6vw,66px);line-height:1.05">${theme.msg}</div><div style="font-weight:800;font-size:18px;margin-top:8px">${title||''}</div>`;
+  Object.assign(card.style,{position:'absolute',left:'50%',top:'42%',transform:'translate(-50%,-50%) scale(.65)',opacity:'0',textAlign:'center',background:'rgba(255,255,255,.96)',borderRadius:'28px',padding:'22px 34px',boxShadow:'0 18px 55px rgba(0,0,0,.20)',maxWidth:'78%',color:'#2d2925'});
+  layer.appendChild(card);
+  const particles=[];
+  const W=Math.max(document.documentElement.clientWidth,window.innerWidth||0), H=Math.max(document.documentElement.clientHeight,window.innerHeight||0);
+  const count=Math.min(64,Math.max(36,Math.round(W/18)));
+  for(let i=0;i<count;i++){
+    const el=document.createElement('span');
+    el.textContent=theme.icons[i%theme.icons.length];
+    Object.assign(el.style,{position:'absolute',left:'0',top:'0',fontSize:(18+Math.random()*18)+'px',willChange:'transform,opacity',opacity:'0'});
+    layer.appendChild(el);
+    particles.push({el,x:Math.random()*W,y:-30-Math.random()*H*.35,vx:(Math.random()-.5)*90,vy:120+Math.random()*120,spin:(Math.random()-.5)*260,rot:Math.random()*180,delay:Math.random()*.55});
   }
   document.body.appendChild(layer);
-  requestAnimationFrame(()=>layer.classList.add('go'));
-  setTimeout(()=>layer.remove(),4700);
+  const start=performance.now(), duration=3600;
+  function frame(now){
+    const elapsed=(now-start)/1000;
+    const p=Math.min(1,elapsed/(duration/1000));
+    // Card bounce implemented directly in JS for old Android WebViews/Fully Kiosk.
+    let cs=1,co=1;
+    if(p<.12){ const q=p/.12; cs=.65+.48*q; co=q; }
+    else if(p<.22){ const q=(p-.12)/.10; cs=1.13-.13*q; }
+    else if(p>.80){ const q=(p-.80)/.20; co=1-q; cs=1-.05*q; }
+    card.style.opacity=String(Math.max(0,co));
+    card.style.transform=`translate(-50%,-50%) scale(${cs})`;
+    particles.forEach(o=>{
+      const t=elapsed-o.delay;
+      if(t<0){o.el.style.opacity='0';return;}
+      const x=o.x+o.vx*t, y=o.y+o.vy*t+34*t*t;
+      o.rot+=o.spin*.016;
+      o.el.style.opacity=t<.18?String(t/.18):String(Math.max(0,1-(y-H*.82)/(H*.3)));
+      o.el.style.transform=`translate3d(${x}px,${y}px,0) rotate(${o.rot}deg)`;
+    });
+    if(p<1 && document.body.contains(layer)) requestAnimationFrame(frame); else layer.remove();
+  }
+  requestAnimationFrame(frame);
+  setTimeout(()=>{if(layer.parentNode) layer.remove();},4200);
 }
 document.getElementById('starQuickAdd').addEventListener('click', ()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
@@ -6066,29 +6219,36 @@ function currentSyncKeys(){
   ];
 }
 
-let refreshInFlight = false;
+let refreshInFlight=false;
+let refreshQueued=false;
 async function refreshFromSupabase(){
-  if(refreshInFlight) return;
-  refreshInFlight = true;
-  setSyncStatus('saving', 'Henter…');
+  if(refreshInFlight){ refreshQueued=true; return; }
+  refreshInFlight=true;
+  const rev=localMutationRevision;
+  setSyncStatus('saving','Henter…');
   try{
-    const fresh = await window.storage.getMany(currentSyncKeys());
-    applySnapshot(key => fresh[key] || null, {authoritative:true});
-    paint();
-    setSyncStatus('ok', 'Synkronisert');
+    const fresh=await window.storage.getMany(currentSyncKeys());
+    if(rev===localMutationRevision){
+      applySnapshot(key=>fresh[key]||pendingValueFor(key)||null,{authoritative:true});
+      paint();
+    }
+    setSyncStatus('ok','Synkronisert');
   }catch(e){
-    console.error('Supabase refresh failed', e);
-    setSyncStatus('error', 'Frakoblet');
+    console.error('Supabase refresh failed',e);
+    setSyncStatus('error','Frakoblet');
   }finally{
-    refreshInFlight = false;
+    refreshInFlight=false;
+    if(refreshQueued){ refreshQueued=false; setTimeout(refreshFromSupabase,220); }
   }
 }
 
+let realtimeRefreshTimer=null;
 function startRealtimeSync(){
   try{
     sb.channel('family-store-sync')
       .on('postgres_changes', {event:'*', schema:'public', table:'family_store'}, ()=>{
-        setTimeout(refreshFromSupabase, 120);
+        clearTimeout(realtimeRefreshTimer);
+        realtimeRefreshTimer=setTimeout(refreshFromSupabase,350);
       })
       .subscribe(status=>{
         if(status==='SUBSCRIBED') setSyncStatus('ok', 'Synkronisert');
