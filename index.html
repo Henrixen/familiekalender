@@ -3214,6 +3214,37 @@ function localCacheDelete(key){
 
 
 // ---------- optimistic UI + stale-response protection ----------
+// Event-level optimistic overlay. This is deliberately separate from the storage
+// cache: even if a stale realtime snapshot lands, the just-edited event remains
+// visually authoritative until Supabase has had time to converge.
+const optimisticEventOverrides = new Map();
+const optimisticEventDeletes = new Set();
+
+function cloneEventForUI(ev){
+  return ev ? (typeof structuredClone==='function' ? structuredClone(ev) : JSON.parse(JSON.stringify(ev))) : ev;
+}
+function rememberOptimisticEvent(ev){
+  if(!ev || !ev.id) return;
+  optimisticEventDeletes.delete(ev.id);
+  optimisticEventOverrides.set(ev.id, cloneEventForUI(ev));
+  setTimeout(()=>{
+    const cur=optimisticEventOverrides.get(ev.id);
+    if(cur && JSON.stringify(cur)===JSON.stringify(ev)) optimisticEventOverrides.delete(ev.id);
+  },8000);
+}
+function rememberOptimisticDelete(id){
+  if(!id) return;
+  optimisticEventOverrides.delete(id);
+  optimisticEventDeletes.add(id);
+  setTimeout(()=>optimisticEventDeletes.delete(id),8000);
+}
+function withOptimisticEvents(list){
+  return (list||[])
+    .filter(ev=>!optimisticEventDeletes.has(ev.id))
+    .map(ev=>optimisticEventOverrides.has(ev.id) ? cloneEventForUI(optimisticEventOverrides.get(ev.id)) : ev);
+}
+
+
 let localMutationRevision = 0;
 let lastLocalMutationAt = 0;
 const pendingLocalWrites = new Map();
@@ -3236,7 +3267,7 @@ function pendingValueFor(key){
   const p=pendingLocalWrites.get(key);
   if(!p) return null;
   // Keep the optimistic value authoritative long enough for realtime/server reads to catch up.
-  if(Date.now()-p.ts > 3500){ pendingLocalWrites.delete(key); return null; }
+  if(Date.now()-p.ts > 8000){ pendingLocalWrites.delete(key); return null; }
   return {key,value:p.value,shared:true};
 }
 
@@ -3295,8 +3326,9 @@ window.storage = {
     setTimeout(()=>{
       const p=pendingLocalWrites.get(key);
       if(p && p.value===value) pendingLocalWrites.delete(key);
-    },1200);
+    },6500);
     setSyncStatus('ok','Synkronisert');
+    scheduleLocalPaint();
     return {key,value,shared:true};
   },
   async delete(key){
@@ -3306,7 +3338,7 @@ window.storage = {
     setSyncStatus('saving','Lagrer…');
     const { error } = await sb.from('family_store').delete().eq('key',key);
     if(error){ setSyncStatus('error','Ikke synkronisert'); throw error; }
-    setTimeout(()=>pendingLocalWrites.delete(key),1200);
+    setTimeout(()=>pendingLocalWrites.delete(key),6500);
     setSyncStatus('ok','Synkronisert');
     return {key,deleted:true,shared:true};
   },
@@ -3588,8 +3620,10 @@ function eventIsVisible(it, src){
   return calendarIsVisible(it.calendarId || 'manual');
 }
 function itemsForDay(dayIdx){
-  const t = template.filter(i=>i.day===dayIdx && eventIsVisible(i,'template')).map(i=>({...i, _src:'template'}));
-  const w = weekEvents.filter(i=>i.day===dayIdx && eventIsVisible(i,'week')).map(i=>({...i, _src:'week'}));
+  const visibleTemplate=withOptimisticEvents(template);
+  const visibleWeek=withOptimisticEvents(weekEvents);
+  const t = visibleTemplate.filter(i=>i.day===dayIdx && eventIsVisible(i,'template')).map(i=>({...i, _src:'template'}));
+  const w = visibleWeek.filter(i=>i.day===dayIdx && eventIsVisible(i,'week')).map(i=>({...i, _src:'week'}));
   return [...t, ...w].sort((a,b)=> (a.start||'').localeCompare(b.start||''));
 }
 
@@ -4114,20 +4148,27 @@ document.getElementById('fSave').addEventListener('click', async ()=>{
   let changedTemplate=false, changedWeek=false;
   const addAllWeekdays = repeat && document.getElementById('fAllWeekdays') && document.getElementById('fAllWeekdays').checked;
   if(addAllWeekdays){
-    [0,1,2,3,4].forEach((d,idx)=>template.push({...obj,id:(editing && idx===0)?editing.id:uid(),day:d}));
+    [0,1,2,3,4].forEach((d,idx)=>{
+      const next={...obj,id:(editing && idx===0)?editing.id:uid(),day:d};
+      template.push(next);
+      rememberOptimisticEvent(next);
+    });
     changedTemplate=true;
   }else if(repeat && (!editing || editing.src==='template')){
     template.push(obj);
+    rememberOptimisticEvent(obj);
     changedTemplate=true;
   }else{
     weekEvents.push(obj);
+    rememberOptimisticEvent(obj);
     changedWeek=true;
   }
   if(editing?.src==='template') changedTemplate=true;
   if(editing && editing.src!=='template') changedWeek=true;
 
   closeEventModalReturn();
-  renderAll();
+  // Full synchronous repaint before any network await.
+  paint();
 
   const saves=[];
   if(changedTemplate) saves.push(saveTemplate());
@@ -4149,10 +4190,11 @@ document.getElementById('fDelete').addEventListener('click', async ()=>{
   if(!editing) return;
   const src=editing.src, id=editing.id;
   markLocalMutation();
+  rememberOptimisticDelete(id);
   if(src==='template') template=template.filter(x=>x.id!==id);
   else weekEvents=weekEvents.filter(x=>x.id!==id);
   closeEventModalReturn();
-  renderAll();
+  paint();
   if(src==='template') await saveTemplate();
   else await saveWeek();
 });
@@ -5884,12 +5926,14 @@ function renderCalendarManager(){
   box.querySelectorAll('[data-cal-color]').forEach(inp=>inp.addEventListener('input',async()=>{
     const src=(settings.calendarSources||[]).find(c=>c.id===inp.dataset.calColor);
     if(!src) return;
+    markLocalMutation();
     src.color=safeCssColor(inp.value,defaultCalendarColor(src.type));
     const row=inp.closest('.calendar-source-row');
     const dot=row?.querySelector('.calendar-dot');
     if(dot) dot.style.background=src.color;
-    await saveSettings();
+    // Update every event card immediately; never wait for Supabase.
     renderAll();
+    await saveSettings();
   }));
   box.querySelectorAll('[data-cal-toggle]').forEach(inp=>inp.addEventListener('change',async()=>{
     const id=inp.dataset.calToggle;
@@ -6248,7 +6292,11 @@ function startRealtimeSync(){
     sb.channel('family-store-sync')
       .on('postgres_changes', {event:'*', schema:'public', table:'family_store'}, ()=>{
         clearTimeout(realtimeRefreshTimer);
-        realtimeRefreshTimer=setTimeout(refreshFromSupabase,350);
+        const age=Date.now()-lastLocalMutationAt;
+        // A realtime event caused by our own write can arrive before all readers
+        // see the committed row. Let the optimistic/local state win for a moment.
+        const wait=age<5000 ? Math.max(650,5200-age) : 350;
+        realtimeRefreshTimer=setTimeout(refreshFromSupabase,wait);
       })
       .subscribe(status=>{
         if(status==='SUBSCRIBED') setSyncStatus('ok', 'Synkronisert');
